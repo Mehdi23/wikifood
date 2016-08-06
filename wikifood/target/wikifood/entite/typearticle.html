@@ -1,0 +1,35 @@
+<form role="form" id="entityform">
+<div class="box box-default">
+    <div class="box-header with-border">
+        <h3 class="box-title">Serveurs</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-6">     
+				<div class="form-group">
+                      <label>Nom</label>
+                      <input id="id" name="nom" type="text" class="form-control">
+				</div> 
+                <div class="form-group">
+                      <label>Description</label>
+                      <textarea id="description" name="description"  class="form-control" rows="3"></textarea>
+                </div>	   
+            </div><!-- /.col -->
+            <div class="col-md-6">
+			    <div class="form-group">
+			          <!--button type="button" class="btn btn-block btn-default">Parcourir ...</button-->
+					  <input type='file' class="btn btn-block btn-default" onchange="readURL(this);" />
+				</div>	
+				<div class="form-group">
+				    <div id="base64image">
+					  <img id="blah" src="image\profile.png" alt="photo de profile" style="width:250px; height:250px;"></img>
+					</div>
+                </div>						  
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.box-body -->
+</div><!-- /.box -->
+</form>
+<script>
+    $('#page-content').find('input, textarea, button, select').attr('disabled','true');
+</script>
