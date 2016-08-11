@@ -4,6 +4,7 @@ var datyp = "json";
 var index = 0;
 var crud = 0;
 var dataresult;
+var imagebase64;
 
 //Find
 $(document.body).on('click', '#r-crud' ,function(){
@@ -121,11 +122,9 @@ function echape() {
 
 function Create(){
   var jsonObject = JSON.parse($('#entityform').serializeJSON());
-  var imgElem = document.getElementById('blah');
-  var imgData = getBase64Image(imgElem);
   //console.log(imgData);
   var imageObject={"img" : ""};
-  imageObject["img"] = imgData;
+  imageObject["img"] = getImage();
   mix(jsonObject, imageObject);
 
   $.ajax({
@@ -176,11 +175,8 @@ function Search(){
 function Update(){
     if (confirm('Vous confirmez la modification?')) { 
 	var jsonObject = JSON.parse($('#entityform').serializeJSON());
-    var imgElem = document.getElementById('blah');
-    var imgData = getBase64Image(imgElem);
-    //console.log(imgData);
     var imageObject={"img" : ""};
-    imageObject["img"] = imgData;
+    imageObject["img"] = getImage();
     mix(jsonObject, imageObject);
     $.ajax({
         type: 'PUT',
@@ -225,13 +221,14 @@ function readURL(input) {
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                $('#blah')
-                    .attr('src', e.target.result);
+                $('#blah').attr('src', e.target.result);
                     //.width(100)
-                    //.height(120);
-            };
-
-            reader.readAsDataURL(input.files[0]);
+                    //.height(120);	
+				var imgElem = document.getElementById('blah');
+				imgElem.style = "width:250px; height:250px;";
+			    imagebase64 = e.target.result;
+            };        
+			reader.readAsDataURL(input.files[0]);
         }
 }
 function getBase64Image(imgElem) {
@@ -253,18 +250,28 @@ function mix(source, target) {
 
 }
 
-function setImage(source) {
+function getImage() {
+    var imgData = imagebase64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+	return imgData;
+	
+	//var imgElem = document.getElementById('blah');
+    //var imgData = getBase64Image(imgElem); 
+	//return imgData;
+}
+
+function setImage(source, width, height) {
 	var newim = document.createElement('img');
-	newim.style = "width:250px; height:250px;";
 	newim.setAttribute( 'src', 'data:image/png;base64,'+ source);
 	newim.setAttribute( 'id', 'blah');
-	$( "#base64image" ).html( newim );
+	$( "#base64image" ).html( newim );  
+    newim.style = "width:250px; height:250px;";	
 }
 
 function initImage() {
+	
 	var newim = document.createElement('img');
-	newim.style = "width:250px; height:250px;";
 	newim.setAttribute( 'src', 'image/profile.png');
 	newim.setAttribute( 'id', 'blah');
-	$( "#base64image" ).html( newim );
+	$( "#base64image" ).html( newim ); 
+	newim.style = "width:250px; height:250px;";
 }
