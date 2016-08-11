@@ -4,6 +4,7 @@ var datyp = "json";
 var index = 0;
 var crud = 0;
 var dataresult;
+var currentobj;
 var imagebase64;
 
 //Find
@@ -51,6 +52,7 @@ $(document.body).on('click', '#next' ,function(){
   if(index == 2) $("#prev").prop('disabled', false); 
   $('#entityform').loadJSON(dataresult[index-1]);
   setImage(dataresult[index-1].img);
+  currentobj = dataresult[index-1];
 });
 
 $(document.body).on('click', '#prev' ,function(){
@@ -63,6 +65,7 @@ $(document.body).on('click', '#prev' ,function(){
    if(index == 1) $("#prev").prop('disabled', true); 
    $('#entityform').loadJSON(dataresult[index-1]);
    setImage(dataresult[index-1].img);
+   currentobj = dataresult[index-1];
 });
 
 $(document.body).on('click', '#first' ,function(){
@@ -74,6 +77,7 @@ $(document.body).on('click', '#first' ,function(){
 	$("#next").prop('disabled', false);
 	$('#entityform').loadJSON(dataresult[0]);
 	setImage(dataresult[0].img);
+	currentobj = dataresult[0];
   
 });
 
@@ -84,6 +88,7 @@ $(document.body).on('click', '#last' ,function(){
 	$("#prev").prop('disabled', false);
 	$('#entityform').loadJSON(dataresult[dataresult.length-1]);
 	setImage(dataresult[dataresult.length-1].img);
+	currentobj = dataresult[dataresult.length-1];
 });
 	
 //Enter/Escape
@@ -162,7 +167,8 @@ function Search(){
 		    $("#total").text(data.length);
 			$('#entityform').loadJSON(data[index]);
 			$('#entityform')[0].reset();
-			setImage(dataresult[index].img);		    
+			setImage(dataresult[index].img);
+            currentobj = dataresult[index];		    
 		},
 		error: function(){
             alert('search error ');
@@ -173,9 +179,10 @@ function Search(){
 };
 
 function Update(){
+	var imageObject={"img" : ""};
+	imageObject["id"] = currentobj.id;
     if (confirm('Vous confirmez la modification?')) { 
 	var jsonObject = JSON.parse($('#entityform').serializeJSON());
-    var imageObject={"img" : ""};
     imageObject["img"] = getImage();
     mix(jsonObject, imageObject);
     $.ajax({
