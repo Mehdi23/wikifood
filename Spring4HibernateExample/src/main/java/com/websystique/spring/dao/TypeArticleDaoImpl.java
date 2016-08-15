@@ -3,7 +3,6 @@ package com.websystique.spring.dao;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -19,26 +18,28 @@ public class TypeArticleDaoImpl extends AbstractDao implements TypeArticleDao {
 	public void saveTypeArticle(TypeArticle TypeArticle) {
 		persist(TypeArticle);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TypeArticle> findAllTypeArticles() {
+		Criteria criteria = getSession().createCriteria(TypeArticle.class);
+		return (List<TypeArticle>) criteria.list();
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<TypeArticle> findAllTypeArticles(TypeArticle TypeArticle) {
 		Criteria criteria = getSession().createCriteria(TypeArticle.class)
-				.add(Restrictions.like("nom", "%" + TypeArticle.getNom() + "%"));
+				.add(Restrictions.like("itemLabelFr", "%" + TypeArticle.getItemLabelFr() + "%"))
+				.add(Restrictions.like("itemLabelEn", "%" + TypeArticle.getItemLabelEn() + "%"))
+				.add(Restrictions.like("itemLabelAr", "%" + TypeArticle.getItemLabelAr() + "%"));
 		return (List<TypeArticle>) criteria.list();
 	}
 
-	public void deleteTypeArticleById(String nom) {
-		Query query = getSession().createSQLQuery("delete from TypeArticle where nom = :nom");
-		query.setString("nom", nom);
-		query.executeUpdate();
+	public void deleteTypeArticle(TypeArticle typeArticle) {
+		getSession().delete(typeArticle);
 	}
-
-	public void updateTypeArticle(TypeArticle TypeArticle) {
-		Query query = getSession().createSQLQuery(
-				"update TypeArticle set nom = :nom, description = :description where nom like :nom");
-		query.setString("nom", TypeArticle.getNom());
-		query.setString("description", "" + TypeArticle.getDescription());
-		query.executeUpdate();
+	
+	public void updateTypeArticle(TypeArticle typeArticle) {
+		getSession().update(typeArticle);
+		   
 	}
-
 }

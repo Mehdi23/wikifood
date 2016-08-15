@@ -9,8 +9,10 @@ public interface TypeArticleService {
 	void saveTypeArticle(TypeArticle TypeArticle);
 
 	List<TypeArticle> findAllTypeArticles(TypeArticle TypeArticle);
+	
+	List<TypeArticle> findAllTypeArticles();
 
-	void deleteTypeArticleById(String nom);
+	void deleteTypeArticle(TypeArticle typeArticle);
 
 	void updateTypeArticle(TypeArticle TypeArticle);
 }

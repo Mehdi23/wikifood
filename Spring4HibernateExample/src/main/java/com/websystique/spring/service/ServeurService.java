@@ -11,6 +11,8 @@ public interface ServeurService {
 	List<Serveur> findAllServeurs(Serveur Serveur);
 
 	void deleteServeurById(String cin);
+	
+	void deleteServeur(Serveur serveur);
 
 	void updateServeur(Serveur Serveur);
 }

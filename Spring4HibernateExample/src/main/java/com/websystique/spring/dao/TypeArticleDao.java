@@ -8,9 +8,11 @@ public interface TypeArticleDao {
 
 	void saveTypeArticle(TypeArticle TypeArticle);
 	
+	List<TypeArticle> findAllTypeArticles();
+	
 	List<TypeArticle> findAllTypeArticles(TypeArticle TypeArticle);
 	
-	void deleteTypeArticleById(String id);
+	void deleteTypeArticle(TypeArticle TypeArticle);
 	
 	void updateTypeArticle(TypeArticle TypeArticle);
 }

@@ -14,11 +14,13 @@ public class Article {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String item;
 	private String itemLabelFr;
+	private String itemDescFr;
 	private String itemLabelEn;
-	private String itemLabelEs;
+	private String itemDescEn;
 	private String itemLabelAr;
+	private String itemDescAr;
+
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
 
@@ -32,14 +34,6 @@ public class Article {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getItem() {
-		return item;
-	}
-
-	public void setItem(String item) {
-		this.item = item;
 	}
 
 	public String getItemLabelFr() {
@@ -58,20 +52,36 @@ public class Article {
 		this.itemLabelEn = itemLabelEn;
 	}
 
-	public String getItemLabelEs() {
-		return itemLabelEs;
-	}
-
-	public void setItemLabelEs(String itemLabelEs) {
-		this.itemLabelEs = itemLabelEs;
-	}
-
 	public String getItemLabelAr() {
 		return itemLabelAr;
 	}
 
 	public void setItemLabelAr(String itemLabelAr) {
 		this.itemLabelAr = itemLabelAr;
+	}
+	
+	public String getItemDescFr() {
+		return itemDescFr;
+	}
+
+	public void setItemDescFr(String itemDescFr) {
+		this.itemDescFr = itemDescFr;
+	}
+
+	public String getItemDescEn() {
+		return itemDescEn;
+	}
+
+	public void setItemDescEn(String itemDescEn) {
+		this.itemDescEn = itemDescEn;
+	}
+
+	public String getItemDescAr() {
+		return itemDescAr;
+	}
+
+	public void setItemDescAr(String itemDescAr) {
+		this.itemDescAr = itemDescAr;
 	}
 
 	public byte[] getImg() {

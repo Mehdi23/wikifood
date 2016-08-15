@@ -14,8 +14,12 @@ public class TypeArticle {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String nom;
-	private String description;
+	private String itemLabelFr;
+	private String itemDescFr;
+	private String itemLabelEn;
+	private String itemDescEn;
+	private String itemLabelAr;
+	private String itemDescAr;
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
 
@@ -40,20 +44,54 @@ public class TypeArticle {
 		this.id = id;
 	}
 
-	public String getNom() {
-		return nom;
+	public String getItemLabelFr() {
+		return itemLabelFr;
 	}
 
-	public void setNom(String nom) {
-		this.nom = nom;
+	public void setItemLabelFr(String itemLabelFr) {
+		this.itemLabelFr = itemLabelFr;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getItemDescFr() {
+		return itemDescFr;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setItemDescFr(String itemDescFr) {
+		this.itemDescFr = itemDescFr;
 	}
+
+	public String getItemLabelEn() {
+		return itemLabelEn;
+	}
+
+	public void setItemLabelEn(String itemLabelEn) {
+		this.itemLabelEn = itemLabelEn;
+	}
+
+	public String getItemDescEn() {
+		return itemDescEn;
+	}
+
+	public void setItemDescEn(String itemDescEn) {
+		this.itemDescEn = itemDescEn;
+	}
+
+	public String getItemLabelAr() {
+		return itemLabelAr;
+	}
+
+	public void setItemLabelAr(String itemLabelAr) {
+		this.itemLabelAr = itemLabelAr;
+	}
+
+	public String getItemDescAr() {
+		return itemDescAr;
+	}
+
+	public void setItemDescAr(String itemDescAr) {
+		this.itemDescAr = itemDescAr;
+	}
+
+
 
 }

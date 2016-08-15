@@ -15,6 +15,8 @@ $(document.body).on('click', '#r-crud' ,function(){
 	//Search();
 	$('#page-content').find('input, textarea, button, select').attr('disabled', false);
     //$('#page-content').find('input, textarea, button, select').val("");
+	$("#exit-crud").prop('disabled', false);
+	$("#valid-crud").prop('disabled', false);
 });
 
 //Add
@@ -23,6 +25,8 @@ $(document.body).on('click', '#c-crud' ,function(){
 	$("#c-crud").prop('disabled', true);$("#r-crud").prop('disabled', true);$("#u-crud").prop('disabled', true);$("#d-crud").prop('disabled', true); 
 	$('#page-content').find('input, textarea, button, select').attr('disabled', false);
     $('#page-content').find('input, textarea, button, select').val("");
+	$("#exit-crud").prop('disabled', false);
+	$("#valid-crud").prop('disabled', false);
 	initImage();
 });
 
@@ -31,6 +35,8 @@ $(document.body).on('click', '#u-crud' ,function(){
 	crud=2;
 	$("#c-crud").prop('disabled', true);$("#r-crud").prop('disabled', true);$("#u-crud").prop('disabled', true);$("#d-crud").prop('disabled', true);  
 	$('#page-content').find('input, textarea, button, select').attr('disabled', false);
+	$("#exit-crud").prop('disabled', false);
+	$("#valid-crud").prop('disabled', false);
 });
 
 //Delete
@@ -91,13 +97,13 @@ $(document.body).on('click', '#last' ,function(){
 	currentobj = dataresult[dataresult.length-1];
 });
 	
-//Enter/Escape
-$(document).keyup(function(e) {
-  if (e.keyCode === 13) { // enter
+$(document.body).on('click', '#valid-crud' ,function(){
+	
     switch(crud) {
 		case 0:
 	       Search();		
 		   $('#page-content').find('input, textarea, button, select').attr('disabled', true);	
+		   $("#valid-crud").prop('disabled', true);
 		break;
 		case 1:
 		   Create();
@@ -111,17 +117,20 @@ $(document).keyup(function(e) {
 		   
 		break;		
 	}
-  }     
-  if (e.keyCode === 27) echape(); // esc  
+});   
+$(document.body).on('click', '#exit-crud' ,function(){ 
+    echape(); // esc  
 });
 
 function echape() {
 	$("#c-crud").prop('disabled', false);$("#r-crud").prop('disabled', false);$("#u-crud").prop('disabled', true);$("#d-crud").prop('disabled', true);
+	$('#page-content').find('input, textarea, button, select').val("");
 	$('#page-content').find('input, textarea, button, select').attr('disabled', true);
-    $('#page-content').find('input, textarea, button, select').val("");
 	$(".btn-crud").prop('disabled', true);
     $("#current").text(".");
     $("#total").text(".");	
+	$("#exit-crud").prop('disabled', true);
+	$("#valid-crud").prop('disabled', true);
 	initImage();
 };
 
@@ -208,12 +217,17 @@ function Update(){
 };
 
 function Delete(){ 
+    var imageObject={"id" : 0};
+	imageObject["id"] = currentobj.id;
     if (confirm('Vous confirmez la suppression?')) { 
+	    var jsonObject = JSON.parse($('#entityform').serializeJSON());
+        mix(jsonObject, imageObject);
         $.ajax({
             type: 'DELETE',
             contentType: 'application/json',
 		    dataType : datyp,
-            url: rootURL + '/' + $('#entity').text() + '/' + $("#id").val(),
+			data: JSON.stringify(imageObject),
+            url: rootURL + '/' + $('#entity').text(),
             success: function(textStatus, jqXHR){
                 alert('enregistrement supprimé ');
             },

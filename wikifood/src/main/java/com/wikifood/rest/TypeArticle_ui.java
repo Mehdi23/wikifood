@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -16,7 +17,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.support.AbstractApplicationContext;
 
 import com.websystique.spring.configuration.AppConfig;
+import com.websystique.spring.model.Article;
 import com.websystique.spring.model.TypeArticle;
+import com.websystique.spring.service.ArticleService;
 import com.websystique.spring.service.TypeArticleService;
 
 @Path("/typearticle")
@@ -28,11 +31,19 @@ public class TypeArticle_ui {
 		//ObjectifyService.register(TypeArticle.class);
 	}
 	
+	@GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    public List<TypeArticle> find() {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        service = (TypeArticleService) context.getBean("TypeArticleService");
+		return service.findAllTypeArticles();
+    }
+	
+	
 	@POST @Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public List<TypeArticle> findAll(TypeArticle TypeArticle) {
-		System.out.println("TypeArticle.nom"+TypeArticle.getNom());
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         service = (TypeArticleService) context.getBean("TypeArticleService");
 		return service.findAllTypeArticles(TypeArticle);
@@ -41,7 +52,6 @@ public class TypeArticle_ui {
 	@POST @Path("save")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(TypeArticle p) {
-		System.out.println("p.nom"+p.getNom());
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         service = (TypeArticleService) context.getBean("TypeArticleService");
 		service.saveTypeArticle(p);
@@ -55,12 +65,12 @@ public class TypeArticle_ui {
 		service.updateTypeArticle(p);
     }
  
-    @DELETE @Path("{id}")
+    @DELETE
     @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(@PathParam("id") String id) {
+    public void remove(TypeArticle typeArticle) {
     	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         service = (TypeArticleService) context.getBean("TypeArticleService");
-    	service.deleteTypeArticleById(id);
+    	service.deleteTypeArticle(typeArticle);
     	
     }
 

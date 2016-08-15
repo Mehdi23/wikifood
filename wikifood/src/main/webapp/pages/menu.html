@@ -5,7 +5,7 @@
 			  <div class="mailbox-controls">
                 <!-- Check all button -->
                 <div class="btn-group">
-                  <button class="btn btn-default btn-sm" type="button"><i class="fa fa-save"></i></button>
+                  <button id="menu-save" class="btn btn-default btn-sm" type="button"><i class="fa fa-save"></i></button>
 				  <button class="btn btn-default btn-sm" type="button"><i class="fa fa-trash-o"></i></button>
                 </div>
 		      </div>
@@ -13,20 +13,20 @@
                 <!-- text input -->
                 <div class="form-group">
                   <label>Article</label>
-                  <input type="text" placeholder="Enter ..." class="form-control">
+                  <input id="menu-article-input" type="text" placeholder="Enter ..." class="form-control">
                 </div>
 				<div class="form-group">
-                  <label>Categorie</label>
-                  <input type="text" placeholder="Enter ..." class="form-control">
+                  <label>Type Article</label>
+                  <input id="menu-typearticle-input" type="text" placeholder="Enter ..." class="form-control">
                 </div>
                 <div class="form-group">
                   <label>Prix</label>
-                  <input type="text" placeholder="Enter ..." class="form-control">
+                  <input id="menu-prix-input" type="number" placeholder="Enter ..." class="form-control">
                 </div>
 				<div class="form-group">
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox">
+                      <input id="menu-disponible-input" type="checkbox">
                       Disponible
                     </label>
                   </div>
@@ -47,8 +47,11 @@
               <table id="my-final-table" class="table table-hover">
                  <thead>
 				    <tr>
-                        <th>Band</th>
-                        <th>Song</th>
+                        <th data-dynatable-column="id">id</th>
+                        <th data-dynatable-column="articlelabel">articlelabel</th>
+						<th data-dynatable-column="typearticlelabel">typearticlelabel</th>
+						<th data-dynatable-column="prix">prix</th>
+						<th data-dynatable-column="disponible">disponible</th>
 					</tr>
                  </thead>
                  <tbody>
@@ -64,12 +67,72 @@
 </div>
 <!-- /.row -->
 <script>
-var olist  = "[ { \"band\": \"Weezer\",\"song\": \"El Scorcho\" },{\"band\": \"Chevelle\",\"song\": \"Family System\"},{ \"band\": \"Weezer\",\"song\": \"El Scorcho\" },{\"band\": \"Chevelle\",\"song\": \"Family System\"},{ \"band\": \"Weezer\",\"song\": \"El Scorcho\" },{\"band\": \"Chevelle\",\"song\": \"Family System\"},{ \"band\": \"Weezer\",\"song\": \"El Scorcho\" },{\"band\": \"Chevelle\",\"song\": \"Family System\"},{ \"band\": \"Weezer\",\"song\": \"El Scorcho\" },{\"band\": \"Chevelle\",\"song\": \"Family System\"},{ \"band\": \"Weezer\",\"song\": \"El Scorcho\" },{\"band\": \"Chevelle\",\"song\": \"Family System\"},{ \"band\": \"Weezer\",\"song\": \"El Scorcho\" },{\"band\": \"Chevelle\",\"song\": \"Family System\"},{ \"band\": \"Weezer\",\"song\": \"El Scorcho\" },{\"band\": \"Chevelle\",\"song\": \"Family System\"}]";
-var myRecords = JSON.parse(olist);
-$('#my-final-table').dynatable({
-  dataset: {
-    records: myRecords
+var menuitem = {"article" : 0};
+
+$.ajax({
+  url: rootURL + '/menuitem',
+  success: function(data){
+    $('#my-final-table').dynatable({
+      dataset: {
+        records: data
+      }
+    });
   }
 });
 
+
+var options = {
+	url: function() {
+		return rootURL + '/article'
+	},
+
+	getValue: "itemLabelFr",
+	
+	list: {
+
+		onSelectItemEvent: function() {
+			menuitem["article"] = $("#menu-article-input").getSelectedItemData().id;
+			menuitem["articlelabel"] = $("#menu-article-input").getSelectedItemData().itemLabelFr;
+		}
+	}
+};
+
+$("#menu-article-input").easyAutocomplete(options);
+
+var options = {
+	url: function() {
+		return rootURL + '/typearticle'
+	},
+
+	getValue: "itemLabelFr",
+	
+	list: {
+
+		onSelectItemEvent: function() {
+			//var value = $("#menu-typearticle-input").getSelectedItemData().id;		
+			menuitem["typearticle"] = $("#menu-typearticle-input").getSelectedItemData().id;
+			menuitem["typearticlelabel"] = $("#menu-typearticle-input").getSelectedItemData().itemLabelFr;
+		}
+	}
+};
+
+$("#menu-typearticle-input").easyAutocomplete(options);
+
+$( "#menu-save" ).click(function() {
+     menuitem["prix"] = $( "#menu-prix-input" ).val();
+	 menuitem["disponible"] = $( "#menu-disponible-input" ).prop( "checked" );
+	 $.ajax({
+		type : 'POST',
+		url : rootURL + '/menuitem/save',
+		contentType: 'application/json',
+		dataType : 'json',
+		data : JSON.stringify(menuitem),
+		success : function(data) {
+			alert('Saved ...');
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('Add error');
+		}
+	});
+});
 </script>

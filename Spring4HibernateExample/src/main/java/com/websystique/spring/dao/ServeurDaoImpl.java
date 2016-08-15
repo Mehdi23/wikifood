@@ -34,20 +34,11 @@ public class ServeurDaoImpl extends AbstractDao implements ServeurDao {
 		query.executeUpdate();
 	}
 
+	public void deleteServeur(Serveur serveur) {
+		getSession().delete(serveur);
+	}
+	
 	public void updateServeur(Serveur serveur) {
-//		Query query = getSession().createSQLQuery(
-//				"update Serveur set nom = :nom, cin = :cin, password = :password, img = quote(:img) where cin like :cin");
-//		query.setString("nom", serveur.getNom());
-//		query.setString("cin", "" + serveur.getCin());
-//		query.setString("password", "" + serveur.getPassword());
-//		query.setString("img", "" + serveur.getImg());
-//		query.executeUpdate();
-//		System.out.println(serveur.getImg());
-		
-
-		//Serveur serv = (Serveur) getSession().load(Serveur.class, serveur.getId() );
-		//serv.setNom("PK");
-		//getSession().flush();  // changes to cat are automatically detected and persisted
 		getSession().update(serveur);
 		   
 	}

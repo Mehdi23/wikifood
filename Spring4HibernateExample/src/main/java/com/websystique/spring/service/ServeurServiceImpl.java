@@ -27,6 +27,10 @@ public class ServeurServiceImpl implements ServeurService{
 	public void deleteServeurById(String id) {
 		dao.deleteServeurById(id);
 	}
+	
+	public void deleteServeur(Serveur serveur) {
+		dao.deleteServeur(serveur);
+	}
 
 
 	public void updateServeur(Serveur Serveur){

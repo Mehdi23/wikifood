@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -27,6 +28,14 @@ public class Article_ui {
 	public void init() {
 		//ObjectifyService.register(Article.class);
 	}
+	
+	@GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    public List<Article> find() {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        service = (ArticleService) context.getBean("articleService");
+		return service.findAllArticles();
+    }
 	
 	@POST @Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -53,12 +62,12 @@ public class Article_ui {
 		service.updateArticle(p);
     }
  
-    @DELETE @Path("{id}")
+    @DELETE 
     @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(@PathParam("id") String id) {
+    public void remove(Article article) {
     	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         service = (ArticleService) context.getBean("articleService");
-    	service.deleteArticleById(id);
+    	service.deleteArticle(article);
     	
     }
 

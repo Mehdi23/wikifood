@@ -23,9 +23,14 @@ public class TypeArticleServiceImpl implements TypeArticleService{
 	public List<TypeArticle> findAllTypeArticles(TypeArticle TypeArticle) {
 		return dao.findAllTypeArticles(TypeArticle);
 	}
+	
+	public List<TypeArticle> findAllTypeArticles() {
+		return dao.findAllTypeArticles();
+	}
 
-	public void deleteTypeArticleById(String id) {
-		dao.deleteTypeArticleById(id);
+
+	public void deleteTypeArticle(TypeArticle TypeArticle) {
+		dao.deleteTypeArticle(TypeArticle);
 	}
 
 

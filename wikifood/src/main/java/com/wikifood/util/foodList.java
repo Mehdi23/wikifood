@@ -65,12 +65,12 @@ public class foodList {
 				jsonArticle = iterator.next();
 				// System.out.println(jsonArticle.get("item"));
 				// System.out.println((String) jsonArticle.get("itemLabelAr"));
-				article.setItem("" + (String) jsonArticle.get("item"));
+				/*article.setItem("" + (String) jsonArticle.get("item"));
 				article.setItemLabelFr("" + (String) jsonArticle.get("itemLabelFr"));
 				article.setItemLabelEn("" + (String) jsonArticle.get("itemLabelEn"));
 				article.setItemLabelEs("" + (String) jsonArticle.get("itemLabelEs"));
 				article.setItemLabelAr("" + (String) jsonArticle.get("itemLabelAr"));
-				// article.setImage(""+(String) jsonArticle.get("image"));
+				// article.setImage(""+(String) jsonArticle.get("image"));*/
 				if ((String) jsonArticle.get("image") != null) {
 					str = ((String) jsonArticle.get("image")).replaceAll("http", "https");
 					;

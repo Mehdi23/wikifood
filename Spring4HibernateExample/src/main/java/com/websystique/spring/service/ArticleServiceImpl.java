@@ -23,16 +23,21 @@ public class ArticleServiceImpl implements ArticleService{
 	public List<Article> findAllArticles(Article article) {
 		return dao.findAllArticles(article);
 	}
-
-	public void deleteArticleById(String id) {
-		dao.deleteArticleById(id);
+	
+	public List<Article> findAllArticles() {
+		return dao.findAllArticles();
 	}
 
 	public Article findByName(String nom1) {
 		return dao.findByName(nom1);
 	}
+	
+	public void deleteArticle(Article article){
+		dao.deleteArticle(article);
+	}
 
 	public void updateArticle(Article article){
 		dao.updateArticle(article);
 	}
+
 }

@@ -1,54 +1,32 @@
 <div class="row">
-	<div class="col-md-6">
-	<!--select class="form-control" id="select-crud">
-		<option class="crud-option" value="1" selected="selected">Chercher</option>
-        <option class="crud-option" value="2">Ajouter</option>
-        <option class="crud-option" value="3">Modifier</option>
-        <option class="crud-option" value="4">Supprimer</option>
-    </select-->
-    <div class="box-body">
-		<button id="r-crud" class="btn btn-app crud">
-                <i class="fa fa-search"></i> Find
-        </button>
-		<button id="c-crud" class="btn btn-app crud">
-                <i class="fa fa-plus-square"></i> New
-        </button>
-        <button id="u-crud" class="btn btn-app crud" disabled="true">
-                <i class="fa fa-edit"></i> Update
-        </button>     
-        <button id="d-crud" class="btn btn-app crud" disabled="true">
-                <i class="fa fa-remove"></i> Remove
-        </button>
+	<div class="col-md-3">
+        <div class="box-body">
+		     <button id="r-crud" class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+		     <button id="c-crud" class="btn btn-default btn-sm" type="button"><i class="fa fa-plus-square"></i></button>
+	         <button id="u-crud" class="btn btn-default btn-sm" type="button" disabled="true"><i class="fa fa-edit"></i></button>
+		     <button id="d-crud" class="btn btn-default btn-sm" type="button" disabled="true"><i class="fa fa-trash-o"></i></button>
+		</div>
     </div>
- 
-	</div>
-	<div class="col-md-6">
-	    <!--button id="valid-crud" class="btn btn-info btn-flat" type="button">OK</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	    <button id="first" type="button" class="btn btn-default btn-crud btn-flat"><i class="fa fa-fast-backward"></i></button>&nbsp; 
-        <button id="prev" type="button" class="btn btn-default btn-crud btn-flat"><i class="fa fa-step-backward"></i></button>&nbsp;  
-        <button id="next" type="button" class="btn btn-default btn-crud btn-flat"><i class="fa fa-step-forward"></i></button>&nbsp;
-        <button id="last" type="button" class="btn btn-default btn-crud btn-flat"><i class="fa fa-fast-forward"></i></button> &nbsp;
-		-->
-		<div id= "paging" class="box-body">
-              <button id="first" class="btn btn-app btn-crud">
-                <i class="fa fa-backward"></i> First
-              </button>
-              <button id="prev" class="btn btn-app btn-crud">
-                <i class="fa fa-step-backward"></i> Prev
-              </button>
-              <button id="next" class="btn btn-app btn-crud">
-                <i class="fa fa-step-forward"></i> Next
-              </button>
-              <button id="last" class="btn btn-app btn-crud">
-                <i class="fa fa-forward"></i> Last
-              </button>
+    <div class="col-md-6">
+        <div class="box-body">
+		     <button id="exit-crud" class="btn btn-default btn-sm" type="button"  disabled="true"><i class="fa  fa-arrow-left"></i></button>
+	         <button id="valid-crud" class="btn btn-default btn-sm" type="button" disabled="true"><i class="fa  fa-check-square-o"></i></button>
         </div>
+	</div>
+	<div class="col-md-2">
+		<div class="box-body">
+            <button id="first" class="btn btn-default btn-sm" type="button"><i class="fa fa-backward"></i></button>
+		    <button id="prev" class="btn btn-default btn-sm" type="button"><i class="fa fa-step-backward"></i></button>
+			<button id="next" class="btn btn-default btn-sm" type="button"><i class="fa fa-step-forward"></i></button>
+		    <button id="last" class="btn btn-default btn-sm" type="button"><i class="fa fa-forward"></i></button>
+        </div>
+	</div>
+	<div class="col-md-1">
+	     <p id="counter" style="text-align: right;"> <span id="current">Record : .</span>/<span id="total">.</span></p>
 	</div>
 </div>
 
 <script>
 
-</script>	
-
-<p id="counter" style="text-align: right;"> <span id="current">Record : .</span>/<span id="total">.</span></p>	
+</script>		
                 

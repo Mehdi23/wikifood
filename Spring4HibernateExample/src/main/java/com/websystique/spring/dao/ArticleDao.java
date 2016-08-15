@@ -10,7 +10,9 @@ public interface ArticleDao {
 	
 	List<Article> findAllArticles(Article article);
 	
-	void deleteArticleById(String id);
+	List<Article> findAllArticles();
+	
+	void deleteArticle(Article article);
 	
 	Article findByName(String nom1);
 	

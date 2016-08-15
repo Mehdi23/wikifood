@@ -12,5 +12,7 @@ public interface ServeurDao {
 	
 	void deleteServeurById(String id);
 	
+	void deleteServeur(Serveur serveur);
+	
 	void updateServeur(Serveur serveur);
 }

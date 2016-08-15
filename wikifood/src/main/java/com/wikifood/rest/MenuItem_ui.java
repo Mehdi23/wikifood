@@ -5,10 +5,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -16,51 +16,57 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.support.AbstractApplicationContext;
 
 import com.websystique.spring.configuration.AppConfig;
-import com.websystique.spring.model.Serveur;
-import com.websystique.spring.service.ServeurService;
+import com.websystique.spring.model.MenuItem;
+import com.websystique.spring.service.MenuItemService;
 
-@Path("/serveur")
-public class Serveur_ui {
-	ServeurService service;
+@Path("/menuitem")
+public class MenuItem_ui {
+	MenuItemService service;
 
 	@PostConstruct
 	public void init() {
-		//ObjectifyService.register(Serveur.class);
+		//ObjectifyService.register(MenuItem.class);
 	}
+	
+	@GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    public List<MenuItem> find() {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        service = (MenuItemService) context.getBean("MenuItemService");
+		return service.findAllMenuItems();
+    }
 	
 	@POST @Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public List<Serveur> findAll(Serveur Serveur) {
-		System.out.println("Serveur.nom"+Serveur.getNom());
+    public List<MenuItem> findAll(MenuItem MenuItem) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ServeurService) context.getBean("ServeurService");
-		return service.findAllServeurs(Serveur);
+        service = (MenuItemService) context.getBean("MenuItemService");
+		return service.findAllMenuItems(MenuItem);
     }
 
 	@POST @Path("save")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public void create(Serveur p) {
-		System.out.println("p.nom"+p.getNom());
+	public void create(MenuItem p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ServeurService) context.getBean("ServeurService");
-		service.saveServeur(p);
+        service = (MenuItemService) context.getBean("MenuItemService");
+		service.saveMenuItem(p);
 	}
 	
 	@PUT
     @Consumes({ MediaType.APPLICATION_JSON})
-    public void update(Serveur p) {
+    public void update(MenuItem p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ServeurService) context.getBean("ServeurService");
-		service.updateServeur(p);
+        service = (MenuItemService) context.getBean("MenuItemService");
+		service.updateMenuItem(p);
     }
-	
-	@DELETE
+ 
+    @DELETE 
     @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(Serveur serveur) {
+    public void remove(MenuItem MenuItem) {
     	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ServeurService) context.getBean("ServeurService");
-    	service.deleteServeur(serveur);
+        service = (MenuItemService) context.getBean("MenuItemService");
+    	service.deleteMenuItem(MenuItem);
     	
     }
 
