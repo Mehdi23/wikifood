@@ -5,19 +5,21 @@
 			  <div class="mailbox-controls">
                 <!-- Check all button -->
                 <div class="btn-group">
-                  <button id="menu-save" class="btn btn-default btn-sm" type="button"><i class="fa fa-save"></i></button>
-				  <button class="btn btn-default btn-sm" type="button"><i class="fa fa-trash-o"></i></button>
+				  <button id="menu-add"      class="btn btn-default btn-sm" type="button"><i class="fa fa-plus-square"></i></button>
+	              <button id="menu-update"   class="btn btn-default btn-sm" type="button" disabled="true"><i class="fa fa-edit"></i></button>
+                  <button id="menu-save"     class="btn btn-default btn-sm" type="button" disabled="true"><i class="fa fa-save"></i></button>
+				  <button id="menu-delete"   class="btn btn-default btn-sm" type="button" disabled="true"><i class="fa fa-trash-o"></i></button>
                 </div>
 		      </div>
-			  <form role="form">
+			  <form id="menu-form" role="form" disabled="true">
                 <!-- text input -->
                 <div class="form-group">
                   <label>Article</label>
-                  <input id="menu-article-input" type="text" placeholder="Enter ..." class="form-control">
+                  <input id="menu-article-input" type="text" placeholder="Enter ..." class="form-control" >
                 </div>
 				<div class="form-group">
                   <label>Type Article</label>
-                  <input id="menu-typearticle-input" type="text" placeholder="Enter ..." class="form-control">
+                  <input id="menu-typearticle-input" type="text" placeholder="Enter ..." class="form-control" >
                 </div>
                 <div class="form-group">
                   <label>Prix</label>
@@ -68,17 +70,10 @@
 <!-- /.row -->
 <script>
 var menuitem = {"article" : 0};
+var menuitemdata;
 
-$.ajax({
-  url: rootURL + '/menuitem',
-  success: function(data){
-    $('#my-final-table').dynatable({
-      dataset: {
-        records: data
-      }
-    });
-  }
-});
+
+initdynatable();
 
 
 var options = {
@@ -118,7 +113,47 @@ var options = {
 
 $("#menu-typearticle-input").easyAutocomplete(options);
 
-$( "#menu-save" ).click(function() {
+$( "#menu-update" ).click(function() {
+    $("#menu-save").prop('disabled', false);
+	$("#menu-form").prop('disabled', false);
+	$("#menu-add").prop('disabled', true);
+	$("#menu-update").prop('disabled', true);
+	$("#menu-delete").prop('disabled', true);
+	$( "#menu-save" ).click(function() {
+         menuitem["prix"] = $( "#menu-prix-input" ).val();
+	     menuitem["disponible"] = $( "#menu-disponible-input" ).prop( "checked" );
+	     $.ajax({
+		     type : 'PUT',
+		     url : rootURL + '/menuitem',
+		     contentType: 'application/json',
+		     dataType : 'json',
+		     data : JSON.stringify(menuitem),
+		     success : function(data) {
+			     alert('Saved ...');
+				 $("#menu-add").prop('disabled', false);
+			     $("#menu-update").prop('disabled', true);
+	             $("#menu-delete").prop('disabled', true);
+			     $("#menu-save").prop('disabled', true);
+	             $("#menu-form").prop('disabled', true);
+	             $('#menu-form').find('input, textarea, button, select').val("");
+				 $( ".treeview-gesmenu" ).trigger( "click" );
+		    },
+		    error : function(jqXHR, textStatus, errorThrown) {
+			     alert('Add error');
+		    }
+	    });	
+    });
+});
+
+$( "#menu-add" ).click(function() {
+	$("#menu-save").prop('disabled', false);
+	$("#menu-form").prop('disabled', false);
+	$("#menu-add").prop('disabled', true);
+	$("#menu-update").prop('disabled', true);
+	$("#menu-delete").prop('disabled', true);
+	$('#menu-form').find('input, textarea, button, select').val("");
+	
+	$( "#menu-save" ).click(function() {
      menuitem["prix"] = $( "#menu-prix-input" ).val();
 	 menuitem["disponible"] = $( "#menu-disponible-input" ).prop( "checked" );
 	 $.ajax({
@@ -129,10 +164,72 @@ $( "#menu-save" ).click(function() {
 		data : JSON.stringify(menuitem),
 		success : function(data) {
 			alert('Saved ...');
+			$("#menu-add").prop('disabled', false);
+			$("#menu-update").prop('disabled', true);
+	        $("#menu-delete").prop('disabled', true);
+			$("#menu-save").prop('disabled', true);
+	        $("#menu-form").prop('disabled', true);
+	        $('#menu-form').find('input, textarea, button, select').val("");
+			$( ".treeview-gesmenu" ).trigger( "click" );
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert('Add error');
 		}
-	});
+	});	
+   });
 });
+
+$( "#menu-delete" ).click(function() { 
+	$.ajax({
+		type : 'DELETE',
+		url : rootURL + '/menuitem',
+		contentType: 'application/json',
+		dataType : 'json',
+		data : JSON.stringify(menuitem),
+		success : function(data) {
+			alert('deleted ...');
+			$("#menu-update").prop('disabled', true);
+	        $("#menu-delete").prop('disabled', true);
+	        $('#menu-form').find('input, textarea, button, select').val("");
+			$( ".treeview-gesmenu" ).trigger( "click" );
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('delete error');
+		}
+	});	
+});
+
+
+$("#my-final-table").on("click", "tr", function() {
+     $("#menu-update").prop('disabled', false);
+	 $("#menu-delete").prop('disabled', false);
+     var row= this;
+     console.log(menuitemdata[row.rowIndex -1]);
+	 $( "#menu-article-input" ).val(menuitemdata[row.rowIndex -1].articlelabel);
+	 $( "#menu-typearticle-input" ).val(menuitemdata[row.rowIndex -1].typearticlelabel);
+	 $( "#menu-prix-input" ).val(menuitemdata[row.rowIndex -1].prix);
+	 $( "#menu-disponible-input" ).attr('checked', menuitemdata[row.rowIndex -1].disponible);
+	 
+	 menuitem["id"] = menuitemdata[row.rowIndex -1].id;
+	 menuitem["article"] = menuitemdata[row.rowIndex -1].article;
+	 menuitem["articlelabel"] = menuitemdata[row.rowIndex -1].articlelabel;
+	 menuitem["typearticle"] = menuitemdata[row.rowIndex -1].typearticle;
+	 menuitem["typearticlelabel"] = menuitemdata[row.rowIndex -1].typearticlelabel;
+     menuitem["prix"] = menuitemdata[row.rowIndex -1].prix;
+	 menuitem["disponible"] = menuitemdata[row.rowIndex -1].disponible;
+});
+
+function initdynatable() {
+     $.ajax({
+         url: rootURL + '/menuitem',
+         success: function(data){
+         menuitemdata = data;
+         $('#my-final-table').dynatable({
+             dataset: {
+                 records: data
+            }
+         });
+        }
+    });
+}
 </script>
