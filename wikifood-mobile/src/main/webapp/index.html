@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Listview - jQuery Mobile Demos</title>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.min.css">
+</head>
+<body>
+    <div data-role="page" id="home">
+	    <div data-role="header">
+		    <h1>My App</h1>
+            <img src="image/my_logo.png" class="ui-btn-right" style="height:35;width:35px;"/>
+	    </div><!-- /header -->
+
+	    <div data-role="content">
+		   
+	    </div><!-- /content -->
+		<div data-role="footer" data-position="fixed">
+		     <div data-role="navbar" data-iconpos="bottom">
+			     <ul>
+				     <li><a href="#home" data-icon="home" class="ui-btn-active ui-state-persist">Home</a></li>
+					 <li><a href="#menu" data-icon="bullets">Articles</a></li>
+					 <li><a href="#panier" data-icon="shop">Panier</a></li>
+				 </ul>
+			 </div><!-- /navbar -->
+        </div><!-- /footer -->
+    </div><!-- /page -->
+	<div data-role="page" id="menu">
+	    <div data-role="header">
+		    <h1>My App</h1>
+            <img src="image/my_logo.png" class="ui-btn-right" style="height:35;width:35px;"/>
+	    </div><!-- /header -->
+
+	    <div data-role="content">
+		    <a class="ui-btn ui-icon-plus ui-btn-icon-left ui-mini ui-btn-inline">Ajouter au panier</a>
+            <a href="#popupMenu" data-rel="popup" data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-shop ui-btn-icon-left ui-btn-a ui-mini">Mon panier</a>
+            <div data-role="popup" id="popupMenu" data-theme="b">
+				<ul data-role="listview" data-inset="true" style="min-width:210px;">
+					<li data-role="list-divider">Choose an action</li>
+					<li><a href="#">View details</a></li>
+					<li><a href="#">Edit</a></li>
+		            <li><a href="#">Disable</a></li>
+  	                <li><a href="#">Delete</a></li>
+                </ul>
+            </div>		
+		    <form>
+			    <div data-role="fieldcontain">
+                    <label for="name">Type d'article:</label>
+                    <input type="search" name="name" id="name" value=""  class="ui-mini"/>
+                </div>	
+				<div data-role="fieldcontain">
+                    <label for="name">Article:</label>
+                    <input type="search" name="name" id="name" value="" class="ui-mini" />
+                </div>	
+				<div data-role="fieldcontain">
+                <label for="slider-fill">Quantité:</label>
+                    <input type="range" name="slider-fill" id="slider-fill" class="ui-mini" value="1" min="1" max="10" step="1" data-highlight="true">
+				</div>	
+				<div class="ui-grid-a">
+					<div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:70px"><p>Prix unitaire</p><p>2dh</p></div></div>
+					<div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:70px"><p>Prix total</p><p>20dh</p></div></div>
+			    </div><!-- /grid-a -->
+			</form>		
+	    </div><!-- /content -->
+		<div data-role="footer" data-position="fixed">
+		     <div data-role="navbar" data-iconpos="bottom">
+			     <ul>
+				     <li><a href="#home" data-icon="home">Home</a></li>
+					 <li><a href="#menu" data-icon="bullets" class="ui-btn-active ui-state-persist">Articles</a></li>
+					 <li><a href="#panier" data-icon="shop">Panier</a></li>
+				 </ul>
+			 </div><!-- /navbar -->
+        </div><!-- /footer -->
+    </div><!-- /page -->
+	<div data-role="page" id="panier">
+	    <div data-role="header">
+		    <h1>My App</h1>
+            <img src="image/my_logo.png" class="ui-btn-right" style="height:35;width:35px;"/>
+	    </div><!-- /header -->
+
+	    <div data-role="content">
+		   
+	    </div><!-- /content -->
+		<div data-role="footer" data-position="fixed">
+		     <div data-role="navbar" data-iconpos="bottom">
+			     <ul>
+				     <li><a href="#home" data-icon="home">Home</a></li>
+					 <li><a href="#menu" data-icon="bullets">Articles</a></li>
+					 <li><a href="#panier" data-icon="shop" class="ui-btn-active ui-state-persist">Panier</a></li>
+				 </ul>
+			 </div><!-- /navbar -->
+        </div><!-- /footer -->
+    </div><!-- /page -->
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.jsonp.js"></script>
+	<script src="js/jquery.mobile-1.4.5.min.js"></script>
+	<script src="js/myapp.js"></script>
+</body>
+</html>
