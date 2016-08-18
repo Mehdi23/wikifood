@@ -1,0 +1,52 @@
+<form role="form" id="entityform">
+<div class="box box-default">
+    <div class="box-header with-border">
+        <h3 class="box-title">Articles</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-4">      
+				<div class="form-group">
+                      <label>item Label Fr</label>
+                      <input id="itemLabelFr" name="itemLabelFr" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                      <label>item Label En</label>
+                      <input id="itemLabelEn" name="itemLabelEn" type="text" class="form-control">
+                </div>
+				<div class="form-group">
+                      <label>item Label Ar</label>
+                      <input id="itemLabelAr" name="itemLabelAr" type="text" class="form-control">
+                </div> 
+            </div><!-- /.col -->
+            <div class="col-md-4">
+			    <div class="form-group">
+                      <label>item Desc Fr</label>
+                      <textarea id="itemDescFr" name="itemDescFr"  class="form-control" rows="3"></textarea>
+                </div>	
+                <div class="form-group">
+                      <label>item Desc En</label>
+                      <textarea id="itemDescEn" name="itemDescEn"  class="form-control" rows="3"></textarea>
+                </div>	  
+                <div class="form-group">
+                      <label>item Desc Ar</label>
+                      <textarea id="itemDescAr" name="itemDescAr"  class="form-control" rows="3"></textarea>
+                </div>	  				
+            </div><!-- /.col -->
+			<div class="col-md-4">
+			    <div class="form-group">
+			          <!--button type="button" class="btn btn-block btn-default">Parcourir ...</button-->
+					  <input type='file' class="btn btn-block btn-default" onchange="readURL(this);" />
+				</div>	
+                <div id="base64image">
+					  <img id="blah" src="image\profile.png" alt="photo de profile" style="width:250px; height:250px;"></img>
+					  <!--canvas id="myCanvas" width="550" height="400"></canvas-->
+			    </div>				
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.box-body -->
+</div><!-- /.box -->
+</form>
+<script>
+    $('#page-content').find('input, textarea, button, select').attr('disabled','true');
+</script>
