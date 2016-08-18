@@ -40,9 +40,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.websystique.spring</groupId>
-			<artifactId>wikifood-dao</artifactId>
-			<version>1.0.0</version>
+			<groupId>org.mehdi.wikifood</groupId>
+			<artifactId>wikifood-service</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
