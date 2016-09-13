@@ -14,6 +14,9 @@ public class Article {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	private String user;
+	private String type;
+	private String prix;
 	private String itemLabelFr;
 	private String itemDescFr;
 	private String itemLabelEn;
@@ -26,6 +29,35 @@ public class Article {
 
 	public Article() {
 
+	}
+	
+	public String getUser() {
+		return user;
+	}
+
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	
+
+	public String getPrix() {
+		return prix;
+	}
+
+	public void setPrix(String prix) {
+		this.prix = prix;
 	}
 
 	public int getId() {

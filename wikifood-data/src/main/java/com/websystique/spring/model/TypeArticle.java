@@ -14,6 +14,7 @@ public class TypeArticle {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	private String user;
 	private String itemLabelFr;
 	private String itemDescFr;
 	private String itemLabelEn;
@@ -23,17 +24,16 @@ public class TypeArticle {
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
 
-
-	public byte[] getImg() {
-		return img;
-	}
-
-	public void setImg(byte[] img) {
-		this.img = img;
-	}
-
 	public TypeArticle() {
 
+	}
+	
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public int getId() {
@@ -91,7 +91,13 @@ public class TypeArticle {
 	public void setItemDescAr(String itemDescAr) {
 		this.itemDescAr = itemDescAr;
 	}
+	
+	public byte[] getImg() {
+		return img;
+	}
 
-
+	public void setImg(byte[] img) {
+		this.img = img;
+	}
 
 }

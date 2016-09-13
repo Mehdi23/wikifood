@@ -6,6 +6,8 @@
 	<title>Listview - jQuery Mobile Demos</title>
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/listview.css">
 </head>
 <body>
     <div data-role="page" id="home">
@@ -21,19 +23,58 @@
 		     <div data-role="navbar" data-iconpos="bottom">
 			     <ul>
 				     <li><a href="#home" data-icon="home" class="ui-btn-active ui-state-persist">Home</a></li>
-					 <li><a href="#menu" data-icon="bullets">Articles</a></li>
+					 <li><a href="#menu" data-icon="bullets">Menu</a></li>
 					 <li><a href="#panier" data-icon="shop">Panier</a></li>
 				 </ul>
 			 </div><!-- /navbar -->
         </div><!-- /footer -->
     </div><!-- /page -->
-	<div data-role="page" id="menu">
+	<div data-role="page" id="menu" class="listview-page">
 	    <div data-role="header">
 		    <h1>My App</h1>
             <img src="image/my_logo.png" class="ui-btn-right" style="height:35;width:35px;"/>
 	    </div><!-- /header -->
-
-	    <div data-role="content">
+		<div data-role="content">
+		    <ul id="menu-listview" data-role="listview" data-inset="true">
+					 
+            </ul>		     					 
+	    </div><!-- /content -->    
+		<div data-role="footer" data-position="fixed">
+		     <div data-role="navbar" data-iconpos="bottom">
+			     <ul>
+				     <li><a href="#home" data-icon="home">Home</a></li>
+					 <li><a href="#menu" data-icon="bullets" class="ui-btn-active ui-state-persist">Menu</a></li>
+					 <li><a href="#panier" data-icon="shop">Panier</a></li>
+				 </ul>
+			 </div><!-- /navbar -->
+        </div><!-- /footer -->
+    </div><!-- /page -->
+	<div data-role="page" id="menuitem" class="listview-page">
+	    <div data-role="header">
+		    <h1>My App</h1>
+            <img src="image/my_logo.png" class="ui-btn-right" style="height:35;width:35px;"/>
+	    </div><!-- /header -->
+		<div data-role="content">
+			<ul id="menuitem-listview" data-role="listview" data-inset="true">
+            
+            </ul>			 
+	    </div><!-- /content -->    
+		<div data-role="footer" data-position="fixed">
+		     <div data-role="navbar" data-iconpos="bottom">
+			     <ul>
+				     <li><a href="#home" data-icon="home">Home</a></li>
+					 <li><a href="#menu" data-icon="bullets" class="ui-btn-active ui-state-persist">Menu</a></li>
+					 <li><a href="#panier" data-icon="shop">Panier</a></li>
+				 </ul>
+			 </div><!-- /navbar -->
+        </div><!-- /footer -->
+    </div><!-- /page -->
+	<div data-role="page" id="panier">
+	    <div data-role="header">
+		    <h1>My App</h1>
+            <img src="image/my_logo.png" class="ui-btn-right" style="height:35;width:35px;"/>
+	    </div><!-- /header -->
+		<div data-role="content">
 		    <a class="ui-btn ui-icon-plus ui-btn-icon-left ui-mini ui-btn-inline">Ajouter au panier</a>
             <a href="#popupMenu" data-rel="popup" data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-shop ui-btn-icon-left ui-btn-a ui-mini">Mon panier</a>
             <div data-role="popup" id="popupMenu" data-theme="b">
@@ -48,11 +89,11 @@
 		    <form>
 			    <div data-role="fieldcontain">
                     <label for="name">Type d'article:</label>
-                    <input type="search" name="name" id="name" value=""  class="ui-mini"/>
+                    <ul id="typearticle-autocomplete" data-role="listview" data-inset="true" data-filter="true" class="ui-mini"></ul>
                 </div>	
 				<div data-role="fieldcontain">
                     <label for="name">Article:</label>
-                    <input type="search" name="name" id="name" value="" class="ui-mini" />
+                    <ul id="article-autocomplete" data-role="listview" data-inset="true" data-filter="true" class="ui-mini"></ul>
                 </div>	
 				<div data-role="fieldcontain">
                 <label for="slider-fill">Quantité:</label>
@@ -68,26 +109,7 @@
 		     <div data-role="navbar" data-iconpos="bottom">
 			     <ul>
 				     <li><a href="#home" data-icon="home">Home</a></li>
-					 <li><a href="#menu" data-icon="bullets" class="ui-btn-active ui-state-persist">Articles</a></li>
-					 <li><a href="#panier" data-icon="shop">Panier</a></li>
-				 </ul>
-			 </div><!-- /navbar -->
-        </div><!-- /footer -->
-    </div><!-- /page -->
-	<div data-role="page" id="panier">
-	    <div data-role="header">
-		    <h1>My App</h1>
-            <img src="image/my_logo.png" class="ui-btn-right" style="height:35;width:35px;"/>
-	    </div><!-- /header -->
-
-	    <div data-role="content">
-		   
-	    </div><!-- /content -->
-		<div data-role="footer" data-position="fixed">
-		     <div data-role="navbar" data-iconpos="bottom">
-			     <ul>
-				     <li><a href="#home" data-icon="home">Home</a></li>
-					 <li><a href="#menu" data-icon="bullets">Articles</a></li>
+					 <li><a href="#menu" data-icon="bullets">Menu</a></li>
 					 <li><a href="#panier" data-icon="shop" class="ui-btn-active ui-state-persist">Panier</a></li>
 				 </ul>
 			 </div><!-- /navbar -->
