@@ -2,17 +2,17 @@ package com.websystique.spring.service;
 
 import java.util.List;
 
-import com.websystique.spring.model.Serveur;
+import com.websystique.spring.model.User;
 
-public interface ServeurService {
+public interface UserService {
 
-	void saveServeur(Serveur Serveur);
+	void saveUser(User User);
 
-	List<Serveur> findAllServeurs(Serveur Serveur);
+	List<User> findAllUsers(User User);
 
-	void deleteServeurById(String cin);
+	void deleteUserById(String cin);
 	
-	void deleteServeur(Serveur serveur);
+	void deleteUser(User User);
 
-	void updateServeur(Serveur Serveur);
+	void updateUser(User User);
 }

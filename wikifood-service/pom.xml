@@ -41,5 +41,10 @@
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.mehdi.wikifood</groupId>
+			<artifactId>wikifood-dao</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 	</dependencies>
 </project>

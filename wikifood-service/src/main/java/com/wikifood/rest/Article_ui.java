@@ -11,6 +11,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -18,6 +19,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 
 import com.websystique.spring.configuration.AppConfig;
 import com.websystique.spring.model.Article;
+import com.websystique.spring.model.TypeArticle;
 import com.websystique.spring.service.ArticleService;
 
 @Path("/article")
@@ -29,13 +31,13 @@ public class Article_ui {
 		//ObjectifyService.register(Article.class);
 	}
 	
-	@GET
+	/*@GET 
     @Produces({ MediaType.APPLICATION_JSON })
     public List<Article> find() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         service = (ArticleService) context.getBean("articleService");
 		return service.findAllArticles();
-    }
+    }*/
 	
 	@POST @Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -53,6 +55,15 @@ public class Article_ui {
         service = (ArticleService) context.getBean("articleService");
 		service.saveArticle(p);
 	}
+	
+	@GET 
+    @Produces({ MediaType.APPLICATION_JSON })
+    public List<Article> find(@QueryParam("id")int typearticle) {
+		System.out.println("type : " + typearticle);
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        service = (ArticleService) context.getBean("articleService");
+		return service.findAllArticles(""+typearticle);
+    }
 	
 	@PUT
     @Consumes({ MediaType.APPLICATION_JSON})

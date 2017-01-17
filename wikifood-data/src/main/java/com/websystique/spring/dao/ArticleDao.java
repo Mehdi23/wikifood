@@ -3,12 +3,15 @@ package com.websystique.spring.dao;
 import java.util.List;
 
 import com.websystique.spring.model.Article;
+import com.websystique.spring.model.TypeArticle;
 
 public interface ArticleDao {
 
 	void saveArticle(Article article);
 	
 	List<Article> findAllArticles(Article article);
+	
+	List<Article> findAllArticles(String typearticle);
 	
 	List<Article> findAllArticles();
 	

@@ -7,7 +7,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.websystique.spring.model.Article;
+import com.websystique.spring.model.TypeArticle;
 
+import org.apache.commons.logging.impl.ServletContextCleaner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,6 +29,13 @@ public class ArticleDaoImpl extends AbstractDao implements ArticleDao {
 				.add(Restrictions.like("itemLabelFr", "%" + article.getItemLabelFr() + "%"))
 				.add(Restrictions.like("itemLabelEn", "%" + article.getItemLabelEn() + "%"))
 				.add(Restrictions.like("itemLabelAr", "%" + article.getItemLabelAr() + "%"));
+		return (List<Article>) criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Article> findAllArticles(String typearticle) {
+		Criteria criteria = getSession().createCriteria(Article.class);
+		criteria.add(Restrictions.eq("type", typearticle));
 		return (List<Article>) criteria.list();
 	}
 	

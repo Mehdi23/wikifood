@@ -6,34 +6,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.websystique.spring.dao.ServeurDao;
-import com.websystique.spring.model.Serveur;
+import com.websystique.spring.dao.UserDao;
+import com.websystique.spring.model.User;
 
-@Service("ServeurService")
+@Service("UserService")
 @Transactional
-public class ServeurServiceImpl implements ServeurService{
+public class UserServiceImpl implements UserService{
 
 	@Autowired
-	private ServeurDao dao;
+	private UserDao dao;
 	
-	public void saveServeur(Serveur Serveur) {
-		dao.saveServeur(Serveur);
+	public void saveUser(User User) {
+		dao.saveUser(User);
 	}
 
-	public List<Serveur> findAllServeurs(Serveur Serveur) {
-		return dao.findAllServeurs(Serveur);
+	public List<User> findAllUsers(User User) {
+		return dao.findAllUsers(User);
 	}
 
-	public void deleteServeurById(String id) {
-		dao.deleteServeurById(id);
+	public void deleteUserById(String id) {
+		dao.deleteUserById(id);
 	}
 	
-	public void deleteServeur(Serveur serveur) {
-		dao.deleteServeur(serveur);
+	public void deleteUser(User User) {
+		dao.deleteUser(User);
 	}
 
 
-	public void updateServeur(Serveur Serveur){
-		dao.updateServeur(Serveur);
+	public void updateUser(User User){
+		dao.updateUser(User);
 	}
 }

@@ -1,0 +1,16 @@
+/*div#slider, #slider div.sliderInner div.mcSlc { 
+     background-size: cover !important; 
+	 background-position: center center !important; 
+}*/
+@media only screen and (min-width: 64.1em){
+        .ui-page{
+            width: 55em !important;
+            margin: 0 auto !important;
+            position: relative !important;
+            border-right: 0.3em #666 outset !important;
+            border-left: 0.3em #666 outset !important;
+        }
+	.ui-overlay-d{
+		background: #333;
+	}
+}

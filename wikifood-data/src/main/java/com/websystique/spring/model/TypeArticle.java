@@ -21,6 +21,7 @@ public class TypeArticle {
 	private String itemDescEn;
 	private String itemLabelAr;
 	private String itemDescAr;
+	private String prix;
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
 
@@ -99,5 +100,14 @@ public class TypeArticle {
 	public void setImg(byte[] img) {
 		this.img = img;
 	}
+
+	public String getPrix() {
+		return prix;
+	}
+
+	public void setPrix(String prix) {
+		this.prix = prix;
+	}
+	
 
 }

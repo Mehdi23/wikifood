@@ -2,17 +2,17 @@ package com.websystique.spring.dao;
 
 import java.util.List;
 
-import com.websystique.spring.model.Serveur;
+import com.websystique.spring.model.User;
 
-public interface ServeurDao {
+public interface UserDao {
 
-	void saveServeur(Serveur serveur);
+	void saveUser(User User);
 	
-	List<Serveur> findAllServeurs(Serveur serveur);
+	List<User> findAllUsers(User User);
 	
-	void deleteServeurById(String id);
+	void deleteUserById(String id);
 	
-	void deleteServeur(Serveur serveur);
+	void deleteUser(User User);
 	
-	void updateServeur(Serveur serveur);
+	void updateUser(User User);
 }

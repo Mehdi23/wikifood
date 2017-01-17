@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.websystique.spring.dao.ArticleDao;
 import com.websystique.spring.model.Article;
+import com.websystique.spring.model.TypeArticle;
 
 @Service("articleService")
 @Transactional
@@ -22,6 +23,10 @@ public class ArticleServiceImpl implements ArticleService{
 
 	public List<Article> findAllArticles(Article article) {
 		return dao.findAllArticles(article);
+	}
+	
+	public List<Article> findAllArticles(String typearticle) {
+		return dao.findAllArticles(typearticle);
 	}
 	
 	public List<Article> findAllArticles() {

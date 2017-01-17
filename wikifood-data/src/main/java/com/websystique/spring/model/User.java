@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Serveur")
-public class Serveur {
+public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class Serveur {
 		this.img = img;
 	}
 
-	public Serveur() {
+	public User() {
 
 	}
 

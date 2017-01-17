@@ -7,39 +7,39 @@ import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.websystique.spring.model.Serveur;
+import com.websystique.spring.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Repository("serveurDao")
-public class ServeurDaoImpl extends AbstractDao implements ServeurDao {
+@Repository("UserDao")
+public class UserDaoImpl extends AbstractDao implements UserDao {
 
 	private static final Logger logger = LogManager.getLogger("HelloWorld");
 
-	public void saveServeur(Serveur serveur) {
-		persist(serveur);
+	public void saveUser(User User) {
+		persist(User);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Serveur> findAllServeurs(Serveur serveur) {
-		Criteria criteria = getSession().createCriteria(Serveur.class)
-				.add(Restrictions.like("nom", "%" + serveur.getNom() + "%"))
-				.add(Restrictions.like("cin", "%" + serveur.getCin() + "%"));
-		return (List<Serveur>) criteria.list();
+	public List<User> findAllUsers(User User) {
+		Criteria criteria = getSession().createCriteria(User.class)
+				.add(Restrictions.like("nom", "%" + User.getNom() + "%"))
+				.add(Restrictions.like("cin", "%" + User.getCin() + "%"));
+		return (List<User>) criteria.list();
 	}
 
-	public void deleteServeurById(String cin) {
-		Query query = getSession().createSQLQuery("delete from Serveur where cin = :cin");
+	public void deleteUserById(String cin) {
+		Query query = getSession().createSQLQuery("delete from User where cin = :cin");
 		query.setString("cin", cin);
 		query.executeUpdate();
 	}
 
-	public void deleteServeur(Serveur serveur) {
-		getSession().delete(serveur);
+	public void deleteUser(User User) {
+		getSession().delete(User);
 	}
 	
-	public void updateServeur(Serveur serveur) {
-		getSession().update(serveur);
+	public void updateUser(User User) {
+		getSession().update(User);
 		   
 	}
 

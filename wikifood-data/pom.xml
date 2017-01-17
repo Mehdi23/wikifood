@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.websystique.spring</groupId>
+	<groupId>org.mehdi.wikifood</groupId>
 	<artifactId>wikifood-dao</artifactId>
-	<version>1.0.0</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>wikifood-dao</name>
@@ -76,6 +76,11 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 
 	</dependencies>

@@ -16,51 +16,51 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.support.AbstractApplicationContext;
 
 import com.websystique.spring.configuration.AppConfig;
-import com.websystique.spring.model.Serveur;
-import com.websystique.spring.service.ServeurService;
+import com.websystique.spring.model.User;
+import com.websystique.spring.service.UserService;
 
-@Path("/serveur")
-public class Serveur_ui {
-	ServeurService service;
+@Path("/User")
+public class User_ui {
+	UserService service;
 
 	@PostConstruct
 	public void init() {
-		//ObjectifyService.register(Serveur.class);
+		//ObjectifyService.register(User.class);
 	}
 	
 	@POST @Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public List<Serveur> findAll(Serveur Serveur) {
-		System.out.println("Serveur.nom"+Serveur.getNom());
+    public List<User> findAll(User User) {
+		System.out.println("User.nom"+User.getNom());
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ServeurService) context.getBean("ServeurService");
-		return service.findAllServeurs(Serveur);
+        service = (UserService) context.getBean("UserService");
+		return service.findAllUsers(User);
     }
 
 	@POST @Path("save")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public void create(Serveur p) {
+	public void create(User p) {
 		System.out.println("p.nom"+p.getNom());
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ServeurService) context.getBean("ServeurService");
-		service.saveServeur(p);
+        service = (UserService) context.getBean("UserService");
+		service.saveUser(p);
 	}
 	
 	@PUT
     @Consumes({ MediaType.APPLICATION_JSON})
-    public void update(Serveur p) {
+    public void update(User p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ServeurService) context.getBean("ServeurService");
-		service.updateServeur(p);
+        service = (UserService) context.getBean("UserService");
+		service.updateUser(p);
     }
 	
 	@DELETE
     @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(Serveur serveur) {
+    public void remove(User User) {
     	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ServeurService) context.getBean("ServeurService");
-    	service.deleteServeur(serveur);
+        service = (UserService) context.getBean("UserService");
+    	service.deleteUser(User);
     	
     }
 
