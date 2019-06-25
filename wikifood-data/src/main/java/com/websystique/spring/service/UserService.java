@@ -7,6 +7,8 @@ import com.websystique.spring.model.User;
 public interface UserService {
 
 	void saveUser(User User);
+	
+	List<User> findAllUsers();
 
 	List<User> findAllUsers(User User);
 

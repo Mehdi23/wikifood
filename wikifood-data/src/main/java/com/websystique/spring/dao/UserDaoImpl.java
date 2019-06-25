@@ -24,7 +24,14 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 	public List<User> findAllUsers(User User) {
 		Criteria criteria = getSession().createCriteria(User.class)
 				.add(Restrictions.like("nom", "%" + User.getNom() + "%"))
-				.add(Restrictions.like("cin", "%" + User.getCin() + "%"));
+				.add(Restrictions.like("login", "%" + User.getLogin() + "%"));
+		return (List<User>) criteria.list();
+	}
+	
+	public List<User> findAllUsers() {
+		Criteria criteria = getSession().createCriteria(User.class)
+				.add(Restrictions.like("nom", "%%"));
+				//.add(Restrictions.like("nom", "%" + User.getNom() + "%"));
 		return (List<User>) criteria.list();
 	}
 

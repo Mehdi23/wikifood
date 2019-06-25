@@ -2,6 +2,7 @@ var rootURL = "http://localhost:8080/wikifood/rest";
 var datyp = "json";
 var dataresult = "";
 var typearticle;
+var user;
 var typearticleid=0;
 var mapCenter = new google.maps.LatLng(40.5968, 22.9683); //Google map Coordinates
 var map;
@@ -10,6 +11,34 @@ $(document).bind('mobileinit',function(){
     $.extend(  $.mobile , {
       defaultPageTransition: "none"
     });
+});
+
+$( document ).on( "pageinit", "#loadpage", function() {
+	$.ajax({
+		type : 'GET',
+		url : rootURL + '/user',
+		contentType: 'application/json',
+		dataType : datyp,
+		success : function(data) {
+			//$.mobile.changePage("#home");
+			user=data[0];
+			$('.user-nom').html(user.nom);
+			$('.user-description').html(user.description);
+			$('.user-tel').html(user.tel);
+			$('.user-email').html(user.email);
+			$('.user-adresse').html(user.adresse);
+			$('.user-horaires').html(user.horaires);
+		},
+		error: function(){
+            alert('serveur indisponible');
+        }
+	});
+	
+	function showhomepage() {     
+        $.mobile.changePage("#home");
+	}
+	
+	setTimeout(showhomepage, 5000);
 });
 
 $( document ).on( "pageinit", "#home", function() {
@@ -88,7 +117,7 @@ function getMenuItem(entity,typearticle){
                            '<h2>'+ value.itemLabelFr +'</h2>'+
                            '<p>'+value.itemDescFr+'</p>'+
                            '<!--p class="ui-li-aside">BlackBerry</p-->'+
-						   '<p class="ui-li-aside">'+value.prix+'</p>'+
+						   '<p class="ui-li-aside">'+value.prix+' '+user.devise+'</p>'+
                            '</a></li>';
             });		
 			

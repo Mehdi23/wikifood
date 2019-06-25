@@ -19,6 +19,10 @@ public class UserServiceImpl implements UserService{
 	public void saveUser(User User) {
 		dao.saveUser(User);
 	}
+	
+	public List<User> findAllUsers() {
+		return dao.findAllUsers();
+	}
 
 	public List<User> findAllUsers(User User) {
 		return dao.findAllUsers(User);

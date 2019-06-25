@@ -8,16 +8,23 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Serveur")
+@Table(name = "User")
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String nom;
-	private String cin;
+	private String login;
 	private String password;
 	private String description;
+	private String lng;
+	private String lat;
+	private String devise;
+	private String tel;
+	private String email;
+	private String adresse;
+	private String horaires;
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
 
@@ -50,14 +57,6 @@ public class User {
 		this.nom = nom;
 	}
 
-	public String getCin() {
-		return cin;
-	}
-
-	public void setCin(String cin) {
-		this.cin = cin;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -74,4 +73,69 @@ public class User {
 		this.description = description;
 	}
 
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getLng() {
+		return lng;
+	}
+
+	public void setLng(String lng) {
+		this.lng = lng;
+	}
+
+	public String getLat() {
+		return lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	public String getDevise() {
+		return devise;
+	}
+
+	public void setDevise(String devise) {
+		this.devise = devise;
+	}
+
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getAdresse() {
+		return adresse;
+	}
+
+	public void setAdresse(String adresse) {
+		this.adresse = adresse;
+	}
+
+	public String gethoraires() {
+		return horaires;
+	}
+
+	public void sethoraires(String horaires) {
+		this.horaires = horaires;
+	}
+	
+	
 }
