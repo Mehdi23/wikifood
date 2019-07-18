@@ -18,13 +18,9 @@ public class User {
 	private String login;
 	private String password;
 	private String description;
-	private String lng;
-	private String lat;
-	private String devise;
-	private String tel;
-	private String email;
-	private String adresse;
-	private String horaires;
+	private String lastconnect;
+	private String active;
+	private int merchantId;
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
 
@@ -81,61 +77,30 @@ public class User {
 		this.login = login;
 	}
 
-	public String getLng() {
-		return lng;
+	public String getLastconnect() {
+		return lastconnect;
 	}
 
-	public void setLng(String lng) {
-		this.lng = lng;
+	public void setLastconnect(String lastconnect) {
+		this.lastconnect = lastconnect;
 	}
 
-	public String getLat() {
-		return lat;
+	public String getActive() {
+		return active;
 	}
 
-	public void setLat(String lat) {
-		this.lat = lat;
+	public void setActive(String active) {
+		this.active = active;
 	}
 
-	public String getDevise() {
-		return devise;
+	public int getMerchantId() {
+		return merchantId;
 	}
 
-	public void setDevise(String devise) {
-		this.devise = devise;
+	public void setMerchantId(int merchantId) {
+		this.merchantId = merchantId;
 	}
 
-	public String getTel() {
-		return tel;
-	}
 
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getAdresse() {
-		return adresse;
-	}
-
-	public void setAdresse(String adresse) {
-		this.adresse = adresse;
-	}
-
-	public String gethoraires() {
-		return horaires;
-	}
-
-	public void sethoraires(String horaires) {
-		this.horaires = horaires;
-	}
-	
 	
 }
