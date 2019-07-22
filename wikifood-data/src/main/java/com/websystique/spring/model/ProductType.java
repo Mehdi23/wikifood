@@ -1,13 +1,16 @@
 package com.websystique.spring.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,6 +24,10 @@ public class ProductType {
 	private String label2;
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "producttype_id", cascade = CascadeType.ALL)
+	private Set<Product> product = new HashSet<Product>(0);
+	
  
 	public byte[] getImg() {
 		return img;
@@ -34,8 +41,6 @@ public class ProductType {
 
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRODUCTTYPE_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -59,5 +64,15 @@ public class ProductType {
 	public void setLabel2(String label2) {
 		this.label2 = label2;
 	}
+
+	public Set<Product> getProduct() {
+		return product;
+	}
+
+	public void setProduct(Set<Product> product) {
+		this.product = product;
+	}
+	
+	
 	
 }

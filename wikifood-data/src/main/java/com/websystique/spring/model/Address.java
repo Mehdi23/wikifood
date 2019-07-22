@@ -22,14 +22,14 @@ public class Address {
 	private String city; //Ville
 	private String country; //Country
 	private String geoloc; //Localisation geographique
+	private int merchant_id; // Id
 
 	
 	public Address() {
 
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ADDRESS_ID", nullable = false)
+	
 	public int getId() {
 		return id;
 	}
@@ -85,5 +85,16 @@ public class Address {
 	public void setGeoloc(String geoloc) {
 		this.geoloc = geoloc;
 	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "MERCHANT_ID", nullable = false)
+	public int getMerchant_id() {
+		return merchant_id;
+	}
+
+	public void setMerchant_id(int merchant_id) {
+		this.merchant_id = merchant_id;
+	}
+	
 	
 }

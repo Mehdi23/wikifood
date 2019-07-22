@@ -27,28 +27,22 @@ public class Product {
 	private String label2; //Libelle du produit en Français
 	private String desc1; //Description du produit en Francais
 	private String desc2; //Description du produit en Francais
+	private int merchant_id;
+	private int brand_id;
+	private int category_id;
+	private int producttype_id;
 
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img; // Image du produit
+		
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
-	private Set<Category> catogory = new HashSet<Category>(0);
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
-	private Set<ProductType> productType = new HashSet<ProductType>(0);
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
-	private Set<Brand> brand = new HashSet<Brand>(0);
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "product_id", cascade = CascadeType.ALL)
 	private Set<ProductPrice> productPrice = new HashSet<ProductPrice>(0);
 
 	public Product() {
 
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MERCHANT_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -106,22 +100,6 @@ public class Product {
 		this.img = img;
 	}
 
-	public Set<ProductType> getProductType() {
-		return productType;
-	}
-
-	public void setProductType(Set<ProductType> productType) {
-		this.productType = productType;
-	}
-
-	public Set<Brand> getBrand() {
-		return brand;
-	}
-
-	public void setBrand(Set<Brand> brand) {
-		this.brand = brand;
-	}
-
 	public Set<ProductPrice> getProductPrice() {
 		return productPrice;
 	}
@@ -129,13 +107,46 @@ public class Product {
 	public void setProductPrice(Set<ProductPrice> productPrice) {
 		this.productPrice = productPrice;
 	}
-
-	public Set<Category> getCatogory() {
-		return catogory;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "MERCHANT_ID", nullable = false)
+	public int getMerchant_id() {
+		return merchant_id;
 	}
 
-	public void setCatogory(Set<Category> catogory) {
-		this.catogory = catogory;
+	public void setMerchant_id(int merchant_id) {
+		this.merchant_id = merchant_id;
+	}
+	
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "BRAND_ID", nullable = false)
+	public int getBrand_id() {
+		return brand_id;
 	}
 
+	public void setBrand_id(int brand_id) {
+		this.brand_id = brand_id;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CATEGORY_ID", nullable = false)
+	public int getCategory_id() {
+		return category_id;
+	}
+
+	public void setCategory_id(int category_id) {
+		this.category_id = category_id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PRODUCTTYPE_ID", nullable = false)
+	public int getProducttype_id() {
+		return producttype_id;
+	}
+
+	public void setProducttype_id(int producttype_id) {
+		this.producttype_id = producttype_id;
+	}	
+	
 }

@@ -11,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -31,24 +29,25 @@ public class Merchant {
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img; // Logo du commerçant
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
 	private Set<Phone> phone = new HashSet<Phone>(0);
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
 	private Set<Email> email = new HashSet<Email>(0);
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
 	private Set<Address> address = new HashSet<Address>(0);
      
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
 	private Set<Product> product = new HashSet<Product>(0);
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
+	private Set<User> user = new HashSet<User>(0);
 
 	public Merchant() {
 
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MERCHANT_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -129,6 +128,14 @@ public class Merchant {
 
 	public void setEmail(Set<Email> email) {
 		this.email = email;
+	}
+
+	public Set<User> getUser() {
+		return user;
+	}
+
+	public void setUser(Set<User> user) {
+		this.user = user;
 	}
 	
 	

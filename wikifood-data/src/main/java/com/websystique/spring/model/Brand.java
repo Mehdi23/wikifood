@@ -1,13 +1,16 @@
 package com.websystique.spring.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,24 +24,18 @@ public class Brand {
 	private String label2; //Libelle de la marque en Arabe
 	private String desc1; //Description de la marque en Francais
 	private String desc2; //Description de la marque en Arabe
+	
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img; //Logo de la marque
- 
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "brand_id", cascade = CascadeType.ALL)
+	private Set<Product> product = new HashSet<Product>(0);
 
-	public byte[] getImg() {
-		return img;
-	}
-
-	public void setImg(byte[] img) {
-		this.img = img;
-	}
 
 	public Brand() {
 
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "BRAND_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -77,6 +74,22 @@ public class Brand {
 
 	public void setDesc2(String desc2) {
 		this.desc2 = desc2;
+	}
+	
+	public byte[] getImg() {
+		return img;
+	}
+
+	public void setImg(byte[] img) {
+		this.img = img;
+	}
+
+	public Set<Product> getProduct() {
+		return product;
+	}
+
+	public void setProduct(Set<Product> product) {
+		this.product = product;
 	}
 
 	

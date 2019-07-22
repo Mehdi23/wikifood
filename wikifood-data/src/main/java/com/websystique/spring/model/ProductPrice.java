@@ -22,6 +22,7 @@ public class ProductPrice {
 	private boolean available; //Disponibilité en stock
 	private boolean promotion; //Disponibilité en promotion
 	private float promorate;//Taux de promotion
+	private int product_id;
 
 	public ProductPrice() {
 
@@ -84,5 +85,16 @@ public class ProductPrice {
 	public void setPromorate(float promorate) {
 		this.promorate = promorate;
 	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PRODUCT_ID", nullable = false)
+	public int getProduct_id() {
+		return product_id;
+	}
+
+	public void setProduct_id(int product_id) {
+		this.product_id = product_id;
+	}
+	
 	
 }

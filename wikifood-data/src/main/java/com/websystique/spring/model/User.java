@@ -1,16 +1,13 @@
 package com.websystique.spring.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,12 +23,13 @@ public class User {
 	private String description; //Description de l'utilisateur
 	private String lastconnect; //Date heure de derniere connexion
 	private boolean active; //Utilisateur active/desactive
+	private String email;
+	private String phone;
+	private int merchant_id;
 	
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
   
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
-	private Set<Merchant> merchant = new HashSet<Merchant>(0);
 	
  	public byte[] getImg() {
 		return img;
@@ -100,6 +98,33 @@ public class User {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+	
+	
+	public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "MERCHANT_ID", nullable = false)
+	public int getMerchant_id() {
+		return merchant_id;
+	}
+
+	public void setMerchant_id(int merchant_id) {
+		this.merchant_id = merchant_id;
+	}
+	
 	
 }

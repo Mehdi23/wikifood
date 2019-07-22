@@ -18,13 +18,12 @@ public class Phone {
 	private int id; // Id 
 	private String type; //type du numero de telephone (mobile/domicile)
 	private String number; //numero de telephone
+	private int merchant_id; //foreign key
 
 	public Phone() {
 
 	}
     
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PHONE_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -49,5 +48,15 @@ public class Phone {
 		this.number = number;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "MERCHANT_ID", nullable = false)
+	public int getMerchant_id() {
+		return merchant_id;
+	}
+
+	
+	public void setMerchant_id(int merchant_id) {
+		this.merchant_id = merchant_id;
+	}	
 	
 }

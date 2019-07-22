@@ -18,13 +18,12 @@ public class Email {
 	private int id; // Id 
 	private String type; //type adresse email (professionnel/ personnel)
 	private String email; //adresse email
-
+	private int merchant_id; // Id
+	
 	public Email() {
 
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EMAIL_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -47,6 +46,16 @@ public class Email {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getMerchant_id() {
+		return merchant_id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "MERCHANT_ID", nullable = false)
+	public void setMerchant_id(int merchant_id) {
+		this.merchant_id = merchant_id;
 	}
 	
 		
