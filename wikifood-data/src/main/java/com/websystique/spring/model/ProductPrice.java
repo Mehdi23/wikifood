@@ -1,37 +1,34 @@
 package com.websystique.spring.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Product")
+@Table(name = "productprice")
 public class ProductPrice {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String cab; //code � barres
-	private String label1;
-	private String label2;
-	private String desc1;
-	private String desc2;
-
-	@Column(columnDefinition = "LONGBLOB")
-	private byte[] img;
-	
-	private int categoryId;
-	private int productTypeId;
+	private String unit; //Unite de vente (kg, litre, unite, ...)
+	private String currency; //Devise de vente
+	private float price; //Prix standard de vente
+	private boolean available; //Disponibilité en stock
+	private boolean promotion; //Disponibilité en promotion
+	private float promorate;//Taux de promotion
 
 	public ProductPrice() {
 
 	}
 	
-
-
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PRODUCTPRICE_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -40,85 +37,52 @@ public class ProductPrice {
 		this.id = id;
 	}
 
-
-
-	public String getCab() {
-		return cab;
+	public String getUnit() {
+		return unit;
 	}
 
-
-
-	public void setCab(String cab) {
-		this.cab = cab;
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
-
-
-	public String getLabel1() {
-		return label1;
+	public String getCurrency() {
+		return currency;
 	}
 
-
-
-	public void setLabel1(String label1) {
-		this.label1 = label1;
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
-
-
-	public String getLabel2() {
-		return label2;
+	public float getPrice() {
+		return price;
 	}
 
-
-
-	public void setLabel2(String label2) {
-		this.label2 = label2;
+	public void setPrice(float price) {
+		this.price = price;
 	}
 
-
-
-	public String getDesc1() {
-		return desc1;
+	public boolean isAvailable() {
+		return available;
 	}
 
-
-
-	public void setDesc1(String desc1) {
-		this.desc1 = desc1;
+	public void setAvailable(boolean available) {
+		this.available = available;
 	}
 
-	public String getDesc2() {
-		return desc2;
+	public boolean isPromotion() {
+		return promotion;
 	}
 
-	public void setDesc2(String desc2) {
-		this.desc2 = desc2;
+	public void setPromotion(boolean promotion) {
+		this.promotion = promotion;
 	}
 
-	public int getCategoryId() {
-		return categoryId;
+	public float getPromorate() {
+		return promorate;
 	}
 
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
+	public void setPromorate(float promorate) {
+		this.promorate = promorate;
 	}
-
-	public int getProductTypeId() {
-		return productTypeId;
-	}
-
-	public void setProductTypeId(int productTypeId) {
-		this.productTypeId = productTypeId;
-	}
-
-	public byte[] getImg() {
-		return img;
-	}
-
-	public void setImg(byte[] img) {
-		this.img = img;
-	}
-
-
+	
 }

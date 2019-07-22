@@ -2,6 +2,7 @@ package com.websystique.spring.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,22 +11,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ProductType")
+@Table(name = "producttype")
 public class ProductType {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private int id; // identifiant
 	private String label1;
 	private String label2;
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
-
-	@ManyToOne
-    @JoinColumn(name="cartegory_id", nullable=false)
-    private Category cartegoryId;
  
-
 	public byte[] getImg() {
 		return img;
 	}
@@ -38,6 +34,8 @@ public class ProductType {
 
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PRODUCTTYPE_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -61,14 +59,5 @@ public class ProductType {
 	public void setLabel2(String label2) {
 		this.label2 = label2;
 	}
-
-	public Category getCartegoryId() {
-		return cartegoryId;
-	}
-
-	public void setCartegoryId(Category cartegoryId) {
-		this.cartegoryId = cartegoryId;
-	}
-
 	
 }

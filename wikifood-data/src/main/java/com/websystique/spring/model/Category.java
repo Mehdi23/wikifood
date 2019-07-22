@@ -2,13 +2,16 @@ package com.websystique.spring.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Category")
+@Table(name = "category")
 public class Category {
 
 	@Id
@@ -31,7 +34,9 @@ public class Category {
 	public Category() {
 
 	}
-
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CATEGORY_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -55,6 +60,5 @@ public class Category {
 	public void setLabel2(String label2) {
 		this.label2 = label2;
 	}
-
 	
 }

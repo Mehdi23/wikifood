@@ -1,31 +1,39 @@
 package com.websystique.spring.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private String nom;
-	private String login;
-	private String password;
-	private String description;
-	private String lastconnect;
-	private String active;
-	private int merchantId;
+	private int id; //Identifiant
+	private String nom; // Nom de l'utilisateur
+	private String login; //Login de l'utilisateur
+	private String password; //Mot de passe de l'utilisateur
+	private String description; //Description de l'utilisateur
+	private String lastconnect; //Date heure de derniere connexion
+	private boolean active; //Utilisateur active/desactive
+	
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
-
-
-	public byte[] getImg() {
+  
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	private Set<Merchant> merchant = new HashSet<Merchant>(0);
+	
+ 	public byte[] getImg() {
 		return img;
 	}
 
@@ -85,22 +93,13 @@ public class User {
 		this.lastconnect = lastconnect;
 	}
 
-	public String getActive() {
+	public boolean isActive() {
 		return active;
 	}
 
-	public void setActive(String active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
-
-	public int getMerchantId() {
-		return merchantId;
-	}
-
-	public void setMerchantId(int merchantId) {
-		this.merchantId = merchantId;
-	}
-
 
 	
 }

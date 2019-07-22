@@ -8,13 +8,11 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.websystique.spring.model.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Repository("UserDao")
 public class UserDaoImpl extends AbstractDao implements UserDao {
 
-	private static final Logger logger = LogManager.getLogger("HelloWorld");
+	/*private static final Logger logger = LogManager.getLogger("HelloWorld");*/
 
 	public void saveUser(User User) {
 		persist(User);
@@ -28,16 +26,17 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 		return (List<User>) criteria.list();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<User> findAllUsers() {
-		Criteria criteria = getSession().createCriteria(User.class)
-				.add(Restrictions.like("nom", "%%"));
+		Criteria criteria = getSession().createCriteria(User.class);
+				//.add(Restrictions.like("nom", "%%"));
 				//.add(Restrictions.like("nom", "%" + User.getNom() + "%"));
 		return (List<User>) criteria.list();
 	}
 
-	public void deleteUserById(String cin) {
-		Query query = getSession().createSQLQuery("delete from User where cin = :cin");
-		query.setString("cin", cin);
+	public void deleteUserById(String id) {
+		Query query = getSession().createSQLQuery("delete from User where id = :id");
+		query.setString("id", id);
 		query.executeUpdate();
 	}
 

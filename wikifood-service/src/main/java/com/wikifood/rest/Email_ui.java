@@ -18,67 +18,60 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.support.AbstractApplicationContext;
 
 import com.websystique.spring.configuration.AppConfig;
-import com.websystique.spring.model.Article;
-import com.websystique.spring.model.TypeArticle;
-import com.websystique.spring.service.ArticleService;
+import com.websystique.spring.model.Email;
+import com.websystique.spring.service.EmailService;
 
-@Path("/article")
-public class Article_ui {
-	ArticleService service;
+@Path("/email")
+public class Email_ui {
+	EmailService service;
 
 	@PostConstruct
 	public void init() {
-		//ObjectifyService.register(Article.class);
+		//ObjectifyService.register(Email.class);
 	}
+
 	
-	/*@GET 
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<Article> find() {
-		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ArticleService) context.getBean("articleService");
-		return service.findAllArticles();
-    }*/
-	
-	@POST @Path("get")
+	@GET @Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public List<Article> findAll(Article article) {
+    public List<Email> findAll() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ArticleService) context.getBean("articleService");
-		return service.findAllArticles(article);
+        service = (EmailService) context.getBean("EmailService");
+        //context.close();
+        return service.findAllEmails();	
     }
 
 	@POST @Path("save")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public void create(Article p) {
+	public void create(Email p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ArticleService) context.getBean("articleService");
-		service.saveArticle(p);
+        service = (EmailService) context.getBean("EmailService");
+		service.saveEmail(p);
 	}
 	
 	@GET 
     @Produces({ MediaType.APPLICATION_JSON })
-    public List<Article> find(@QueryParam("id")int typearticle) {
-		System.out.println("type : " + typearticle);
+    public List<Email> find(@QueryParam("id")int id) {
+		System.out.println("id : " + id);
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ArticleService) context.getBean("articleService");
-		return service.findAllArticles(""+typearticle);
+        service = (EmailService) context.getBean("EmailService");
+		return service.findAllEmails(id);
     }
 	
 	@PUT
     @Consumes({ MediaType.APPLICATION_JSON})
-    public void update(Article p) {
+    public void update(Email p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ArticleService) context.getBean("articleService");
-		service.updateArticle(p);
+        service = (EmailService) context.getBean("EmailService");
+		service.updateEmail(p);
     }
  
     @DELETE 
     @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(Article article) {
+    public void remove(Email Email) {
     	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ArticleService) context.getBean("articleService");
-    	service.deleteArticle(article);
+        service = (EmailService) context.getBean("EmailService");
+    	service.deleteEmail(Email);
     	
     }
 

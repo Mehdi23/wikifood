@@ -1,14 +1,23 @@
 package com.websystique.spring.model;
 
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Merchant")
+@Table(name = "merchant")
 public class Merchant {
 
 	@Id
@@ -18,24 +27,28 @@ public class Merchant {
 	private String label2;         // Libelle du commercant en Arabe
 	private String desc1;          // Description du commercant en Francais
 	private String desc2;          // Description du commercant en Arabe
-	private String localization;   // Localisation du commercant
-	private String Ville;          // Ville du commercant
+	
 	@Column(columnDefinition = "LONGBLOB")
-	private byte[] img;
-
-
-	public byte[] getImg() {
-		return img;
-	}
-
-	public void setImg(byte[] img) {
-		this.img = img;
-	}
+	private byte[] img; // Logo du commerçant
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	private Set<Phone> phone = new HashSet<Phone>(0);
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	private Set<Email> email = new HashSet<Email>(0);
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	private Set<Address> address = new HashSet<Address>(0);
+     
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+	private Set<Product> product = new HashSet<Product>(0);
 
 	public Merchant() {
 
 	}
-
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "MERCHANT_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -77,22 +90,46 @@ public class Merchant {
 		this.desc2 = desc2;
 	}
 
-	public String getLocalization() {
-		return localization;
+
+	public Set<Phone> getPhone() {
+		return phone;
 	}
 
-	public void setLocalization(String localization) {
-		this.localization = localization;
+	public void setPhone(Set<Phone> phone) {
+		this.phone = phone;
 	}
 
-	public String getVille() {
-		return Ville;
+	public Set<Address> getAddress() {
+		return address;
 	}
 
-	public void setVille(String ville) {
-		Ville = ville;
+	public void setAddress(Set<Address> address) {
+		this.address = address;
 	}
 
+	public byte[] getImg() {
+		return img;
+	}
+
+	public void setImg(byte[] img) {
+		this.img = img;
+	}
+
+	public Set<Product> getProduct() {
+		return product;
+	}
+
+	public void setProduct(Set<Product> product) {
+		this.product = product;
+	}
+
+	public Set<Email> getEmail() {
+		return email;
+	}
+
+	public void setEmail(Set<Email> email) {
+		this.email = email;
+	}
 	
 	
 }

@@ -1,13 +1,16 @@
 package com.websystique.spring.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Brand")
+@Table(name = "address")
 public class Address {
 
 	@Id
@@ -18,11 +21,15 @@ public class Address {
 	private String line3; //Ligne 3 de l'adresse
 	private String city; //Ville
 	private String country; //Country
+	private String geoloc; //Localisation geographique
 
+	
 	public Address() {
 
 	}
-
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ADDRESS_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -71,5 +78,12 @@ public class Address {
 		this.country = country;
 	}
 
+	public String getGeoloc() {
+		return geoloc;
+	}
+
+	public void setGeoloc(String geoloc) {
+		this.geoloc = geoloc;
+	}
 	
 }
