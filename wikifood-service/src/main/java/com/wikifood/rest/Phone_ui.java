@@ -9,7 +9,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -27,52 +26,82 @@ public class Phone_ui {
 
 	@PostConstruct
 	public void init() {
-		//ObjectifyService.register(Phone.class);
+		// ObjectifyService.register(Phone.class);
 	}
 
-	
-	@GET @Path("get")
+	@GET
+	@Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<Phone> findAll() {
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Phone> findAll() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (PhoneService) context.getBean("PhoneService");
-        //context.close();
-        return service.findAllPhones();	
-    }
 
-	@POST @Path("save")
+		try {
+			service = (PhoneService) context.getBean("PhoneService");
+			return service.findAllPhones();
+
+		} finally {
+			context.close();
+		}
+	}
+
+	@POST
+	@Path("save")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(Phone p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (PhoneService) context.getBean("PhoneService");
-		service.savePhone(p);
+
+		try {
+			service = (PhoneService) context.getBean("PhoneService");
+			service.savePhone(p);
+
+		} finally {
+			context.close();
+		}
 	}
-	
-	@GET 
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<Phone> find(@QueryParam("id")int id) {
-		System.out.println("id : " + id);
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Phone> find(@QueryParam("id") int id) {
+
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (PhoneService) context.getBean("PhoneService");
-		return service.findAllPhones(id);
-    }
-	
+
+		try {
+			service = (PhoneService) context.getBean("PhoneService");
+			return service.findAllPhones(id);
+
+		} finally {
+			context.close();
+		}
+	}
+
 	@PUT
-    @Consumes({ MediaType.APPLICATION_JSON})
-    public void update(Phone p) {
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void update(Phone p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (PhoneService) context.getBean("PhoneService");
-		service.updatePhone(p);
-    }
- 
-    @DELETE 
-    @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(Phone Phone) {
-    	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (PhoneService) context.getBean("PhoneService");
-    	service.deletePhone(Phone);
-    	
-    }
+
+		try {
+			service = (PhoneService) context.getBean("PhoneService");
+			service.updatePhone(p);
+
+		} finally {
+			context.close();
+		}
+	}
+
+	@DELETE
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void remove(Phone Phone) {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+		try {
+			service = (PhoneService) context.getBean("PhoneService");
+			service.deletePhone(Phone);
+
+		} finally {
+			context.close();
+		}
+
+	}
 
 }

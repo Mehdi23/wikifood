@@ -8,11 +8,11 @@ public interface BrandService {
 
 	void saveBrand(Brand Brand);
 
-	List<Brand> findAllBrands(int id);
+	List<Brand> findBrand (int id);
 	
 	List<Brand> findAllBrands();
 
-	void deleteBrand(Brand Brand);
+	void deleteBrand(int id);
 
 	void updateBrand(Brand Brand);
 }

@@ -21,7 +21,7 @@ public class ProductPrice {
 	private float price; //Prix standard de vente
 	private boolean available; //Disponibilité en stock
 	private boolean promotion; //Disponibilité en promotion
-	private float promorate;//Taux de promotion
+	private float promo_price;//prix de promotion
 	private int product_id;
 
 	public ProductPrice() {
@@ -78,12 +78,14 @@ public class ProductPrice {
 		this.promotion = promotion;
 	}
 
-	public float getPromorate() {
-		return promorate;
+	
+
+	public float getPromo_price() {
+		return promo_price;
 	}
 
-	public void setPromorate(float promorate) {
-		this.promorate = promorate;
+	public void setPromo_price(float promo_price) {
+		this.promo_price = promo_price;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

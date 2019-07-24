@@ -9,7 +9,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -27,52 +26,77 @@ public class ProductPrice_ui {
 
 	@PostConstruct
 	public void init() {
-		//ObjectifyService.register(ProductPrice.class);
+		// ObjectifyService.register(ProductPrice.class);
 	}
 
-	
-	@GET @Path("get")
+	@GET
+	@Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<ProductPrice> findAll() {
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<ProductPrice> findAll() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ProductPriceService) context.getBean("ProductPriceService");
-        //context.close();
-        return service.findAllProductPrices();	
-    }
 
-	@POST @Path("save")
+		try {
+			service = (ProductPriceService) context.getBean("ProductPriceService");
+			return service.findAllProductPrices();
+		} finally {
+			context.close();
+		}
+	}
+
+	@POST
+	@Path("save")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(ProductPrice p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ProductPriceService) context.getBean("ProductPriceService");
-		service.saveProductPrice(p);
+
+		try {
+			service = (ProductPriceService) context.getBean("ProductPriceService");
+			service.saveProductPrice(p);
+		} finally {
+			context.close();
+		}
 	}
-	
-	@GET 
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<ProductPrice> find(@QueryParam("id")int id) {
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<ProductPrice> find(@QueryParam("id") int id) {
 		System.out.println("id : " + id);
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ProductPriceService) context.getBean("ProductPriceService");
-		return service.findAllProductPrices(id);
-    }
-	
+
+		try {
+			service = (ProductPriceService) context.getBean("ProductPriceService");
+			return service.findAllProductPrices(id);
+		} finally {
+			context.close();
+		}
+	}
+
 	@PUT
-    @Consumes({ MediaType.APPLICATION_JSON})
-    public void update(ProductPrice p) {
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void update(ProductPrice p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ProductPriceService) context.getBean("ProductPriceService");
-		service.updateProductPrice(p);
-    }
- 
-    @DELETE 
-    @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(ProductPrice ProductPrice) {
-    	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (ProductPriceService) context.getBean("ProductPriceService");
-    	service.deleteProductPrice(ProductPrice);
-    	
-    }
+
+		try {
+			service = (ProductPriceService) context.getBean("ProductPriceService");
+			service.updateProductPrice(p);
+		} finally {
+			context.close();
+		}
+	}
+
+	@DELETE
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void remove(ProductPrice ProductPrice) {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+		try {
+			service = (ProductPriceService) context.getBean("ProductPriceService");
+			service.deleteProductPrice(ProductPrice);
+		} finally {
+			context.close();
+		}
+
+	}
 
 }

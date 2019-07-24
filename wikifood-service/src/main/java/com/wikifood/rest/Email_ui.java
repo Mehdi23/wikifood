@@ -9,7 +9,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -27,52 +26,82 @@ public class Email_ui {
 
 	@PostConstruct
 	public void init() {
-		//ObjectifyService.register(Email.class);
+		// ObjectifyService.register(Email.class);
 	}
 
-	
-	@GET @Path("get")
+	@GET
+	@Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<Email> findAll() {
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Email> findAll() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (EmailService) context.getBean("EmailService");
-        //context.close();
-        return service.findAllEmails();	
-    }
 
-	@POST @Path("save")
+		try {
+			service = (EmailService) context.getBean("EmailService");
+			return service.findAllEmails();
+
+		} finally {
+			context.close();
+		}
+	}
+
+	@POST
+	@Path("save")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(Email p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (EmailService) context.getBean("EmailService");
-		service.saveEmail(p);
+
+		try {
+			service = (EmailService) context.getBean("EmailService");
+			service.saveEmail(p);
+
+		} finally {
+			context.close();
+		}
 	}
-	
-	@GET 
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<Email> find(@QueryParam("id")int id) {
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Email> find(@QueryParam("id") int id) {
 		System.out.println("id : " + id);
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (EmailService) context.getBean("EmailService");
-		return service.findAllEmails(id);
-    }
-	
+
+		try {
+			service = (EmailService) context.getBean("EmailService");
+			return service.findAllEmails(id);
+
+		} finally {
+			context.close();
+		}
+	}
+
 	@PUT
-    @Consumes({ MediaType.APPLICATION_JSON})
-    public void update(Email p) {
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void update(Email p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (EmailService) context.getBean("EmailService");
-		service.updateEmail(p);
-    }
- 
-    @DELETE 
-    @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(Email Email) {
-    	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (EmailService) context.getBean("EmailService");
-    	service.deleteEmail(Email);
-    	
-    }
+
+		try {
+			service = (EmailService) context.getBean("EmailService");
+			service.updateEmail(p);
+
+		} finally {
+			context.close();
+		}
+	}
+
+	@DELETE
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void remove(Email Email) {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+		try {
+			service = (EmailService) context.getBean("EmailService");
+			service.deleteEmail(Email);
+
+		} finally {
+			context.close();
+		}
+
+	}
 
 }

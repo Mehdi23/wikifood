@@ -19,7 +19,7 @@ public class BrandDaoImpl extends AbstractDao implements BrandDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Brand> findAllBrands(int id) {
+	public List<Brand> findBrand(int id) {
 		Criteria criteria = getSession().createCriteria(Brand.class)
 				.add(Restrictions.eq("id",id));
 		return (List<Brand>) criteria.list();
@@ -31,14 +31,11 @@ public class BrandDaoImpl extends AbstractDao implements BrandDao {
 		return (List<Brand>) criteria.list();
 	}
 
-	public void deleteBrandById(String id) {
-		Query query = getSession().createSQLQuery("delete from Brand where id = :id");
-		query.setString("id", id);
-		query.executeUpdate();
-	}
 
-	public void deleteBrand(Brand Brand) {
-		getSession().delete(Brand);
+	public void deleteBrand(int id) {
+		Query query = getSession().createSQLQuery("delete from Brand where id = :id");
+		query.setLong("id", id);
+		query.executeUpdate();
 	}
 	
 	public void updateBrand(Brand Brand) {

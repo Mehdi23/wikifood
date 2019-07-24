@@ -25,51 +25,78 @@ public class User_ui {
 
 	@PostConstruct
 	public void init() {
-		//ObjectifyService.register(User.class);
+		// ObjectifyService.register(User.class);
 	}
-	
-	@GET 
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<User> find() {
-		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (UserService) context.getBean("UserService");
-		return service.findAllUsers();
-    }
-	
-	@GET @Path("get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<User> findAll(User User) {
-		System.out.println("User.nom"+User.getNom());
-		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (UserService) context.getBean("UserService");
-		return service.findAllUsers(User);
-    }
 
-	@POST @Path("save")
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> find() {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+		try {
+			service = (UserService) context.getBean("UserService");
+			return service.findAllUsers();
+		} finally {
+			context.close();
+		}
+	}
+
+	@GET
+	@Path("get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> findAll(User User) {
+		System.out.println("User.nom" + User.getNom());
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+		try {
+			service = (UserService) context.getBean("UserService");
+			return service.findAllUsers(User);
+		} finally {
+			context.close();
+		}
+	}
+
+	@POST
+	@Path("save")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(User p) {
-		System.out.println("p.nom"+p.getNom());
+		System.out.println("p.nom" + p.getNom());
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (UserService) context.getBean("UserService");
-		service.saveUser(p);
+
+		try {
+			service = (UserService) context.getBean("UserService");
+			service.saveUser(p);
+		} finally {
+			context.close();
+		}
 	}
-	
+
 	@PUT
-    @Consumes({ MediaType.APPLICATION_JSON})
-    public void update(User p) {
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void update(User p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (UserService) context.getBean("UserService");
-		service.updateUser(p);
-    }
-	
+
+		try {
+			service = (UserService) context.getBean("UserService");
+			service.updateUser(p);
+		} finally {
+			context.close();
+		}
+	}
+
 	@DELETE
-    @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(User User) {
-    	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (UserService) context.getBean("UserService");
-    	service.deleteUser(User);
-    	
-    }
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void remove(User User) {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+		try {
+			service = (UserService) context.getBean("UserService");
+			service.deleteUser(User);
+		} finally {
+			context.close();
+		}
+
+	}
 
 }

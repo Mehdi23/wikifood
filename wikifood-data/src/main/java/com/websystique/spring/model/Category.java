@@ -78,6 +78,4 @@ public class Category {
 		this.product = product;
 	}
 	
-	
-	
 }

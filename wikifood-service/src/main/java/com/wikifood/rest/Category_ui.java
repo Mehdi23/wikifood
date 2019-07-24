@@ -9,7 +9,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -27,52 +26,76 @@ public class Category_ui {
 
 	@PostConstruct
 	public void init() {
-		//ObjectifyService.register(Category.class);
+		// ObjectifyService.register(Category.class);
 	}
 
-	
-	@GET @Path("get")
+	@GET
+	@Path("get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<Category> findAll() {
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Category> findAll() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (CategoryService) context.getBean("CategoryService");
-        //context.close();
-        return service.findAllCategorys();	
-    }
 
-	@POST @Path("save")
+		try {
+			service = (CategoryService) context.getBean("CategoryService");
+			return service.findAllCategorys();
+		} finally {
+			context.close();
+		}
+	}
+
+	@POST
+	@Path("save")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(Category p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (CategoryService) context.getBean("CategoryService");
-		service.saveCategory(p);
+
+		try {
+			service = (CategoryService) context.getBean("CategoryService");
+			service.saveCategory(p);
+		} finally {
+			context.close();
+		}
 	}
-	
-	@GET 
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<Category> find(@QueryParam("id")int id) {
-		System.out.println("id : " + id);
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Category> find(@QueryParam("id") int id) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (CategoryService) context.getBean("CategoryService");
-		return service.findAllCategorys(id);
-    }
-	
+
+		try {
+			service = (CategoryService) context.getBean("CategoryService");
+			return service.findAllCategorys(id);
+		} finally {
+			context.close();
+		}
+	}
+
 	@PUT
-    @Consumes({ MediaType.APPLICATION_JSON})
-    public void update(Category p) {
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void update(Category p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (CategoryService) context.getBean("CategoryService");
-		service.updateCategory(p);
-    }
- 
-    @DELETE 
-    @Consumes({ MediaType.APPLICATION_JSON })
-    public void remove(Category Category) {
-    	AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        service = (CategoryService) context.getBean("CategoryService");
-    	service.deleteCategory(Category);
-    	
-    }
+
+		try {
+			service = (CategoryService) context.getBean("CategoryService");
+			service.updateCategory(p);
+		} finally {
+			context.close();
+		}
+	}
+
+	@DELETE
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public void remove(Category Category) {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+		try {
+			service = (CategoryService) context.getBean("CategoryService");
+			service.deleteCategory(Category);
+		} finally {
+			context.close();
+		}
+
+	}
 
 }

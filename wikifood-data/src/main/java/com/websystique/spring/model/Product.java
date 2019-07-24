@@ -27,6 +27,9 @@ public class Product {
 	private String label2; //Libelle du produit en Français
 	private String desc1; //Description du produit en Francais
 	private String desc2; //Description du produit en Francais
+	private String publication_date; //Date de publication sur le site
+	private String modification_date; //Date de modification
+	private String Expiry_date; //Date d'expiration
 	private int merchant_id;
 	private int brand_id;
 	private int category_id;
@@ -90,7 +93,30 @@ public class Product {
 	public void setDesc2(String desc2) {
 		this.desc2 = desc2;
 	}
+	
+	public String getPublication_date() {
+		return publication_date;
+	}
 
+	public void setPublication_date(String publication_date) {
+		this.publication_date = publication_date;
+	}
+
+	public String getModification_date() {
+		return modification_date;
+	}
+
+	public void setModification_date(String modification_date) {
+		this.modification_date = modification_date;
+	}
+
+	public String getExpiry_date() {
+		return Expiry_date;
+	}
+
+	public void setExpiry_date(String expiry_date) {
+		Expiry_date = expiry_date;
+	}
 
 	public byte[] getImg() {
 		return img;

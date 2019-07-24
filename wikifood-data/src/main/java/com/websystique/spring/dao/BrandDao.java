@@ -10,11 +10,9 @@ public interface BrandDao {
 	
 	List<Brand> findAllBrands();
 	
-	List<Brand> findAllBrands(int id);
+	List<Brand> findBrand(int id);
 	
-	void deleteBrandById(String id);
-	
-	void deleteBrand(Brand Brand);
+	void deleteBrand(int Brand);
 	
 	void updateBrand(Brand Brand);
 }
