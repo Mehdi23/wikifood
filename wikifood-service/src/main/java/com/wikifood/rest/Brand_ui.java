@@ -87,11 +87,11 @@ public class Brand_ui {
 
 	@DELETE
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public void remove(@QueryParam("id") int id) {
+	public void remove(Brand brand) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 		try {
 			service = (BrandService) context.getBean("BrandService");
-			service.deleteBrand(id);
+			service.deleteBrand(brand);
 		} finally {
 			context.close();
 		}

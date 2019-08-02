@@ -12,7 +12,7 @@ public interface BrandDao {
 	
 	List<Brand> findBrand(int id);
 	
-	void deleteBrand(int Brand);
+	void deleteBrand(Brand Brand);
 	
 	void updateBrand(Brand Brand);
 }

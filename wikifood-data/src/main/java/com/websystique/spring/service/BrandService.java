@@ -12,7 +12,7 @@ public interface BrandService {
 	
 	List<Brand> findAllBrands();
 
-	void deleteBrand(int id);
+	void deleteBrand(Brand Brand);
 
 	void updateBrand(Brand Brand);
 }

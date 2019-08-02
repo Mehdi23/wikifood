@@ -58,6 +58,7 @@ public class BrandMgmView extends JDialog {
 	private JTextField imgPath;
 	public String typeOperation;
 	public static List<Brand> brandlist;
+	public static Brand brand;
 
 	/**
 	 * Launch the application.
@@ -103,18 +104,20 @@ public class BrandMgmView extends JDialog {
 	}
 
 	private static void displayImage(JLabel label, byte[] imageInByte) {
-		InputStream in = new ByteArrayInputStream(imageInByte);
-		BufferedImage bImage;
-		try {
-			bImage = ImageIO.read(in);
-			int type = bImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bImage.getType();
-			BufferedImage resizedImage = resizeImage(bImage, type);
+		if (imageInByte != null) {
+			InputStream in = new ByteArrayInputStream(imageInByte);
+			BufferedImage bImage;
+			try {
+				bImage = ImageIO.read(in);
+				int type = bImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bImage.getType();
+				BufferedImage resizedImage = resizeImage(bImage, type);
 
-			ImageIcon img = new ImageIcon(resizedImage);
-			label.setIcon(img);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				ImageIcon img = new ImageIcon(resizedImage);
+				label.setIcon(img);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -137,6 +140,56 @@ public class BrandMgmView extends JDialog {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
 			JOptionPane.showMessageDialog(contentPanel, "Donnée enregistrée");
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(contentPanel, "Connexion impossible");
+		}
+
+	}
+
+	private static void putForm(Brand o, String webservice, JPanel contentPanel) {
+		String jsonString = null;
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			jsonString = mapper.writeValueAsString(o);
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		Client client = Client.create();
+		WebResource webResource = client.resource(webservice);
+		try {
+			ClientResponse response = webResource.type("application/json").put(ClientResponse.class, jsonString);
+			if (response.getStatus() != 204) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
+			JOptionPane.showMessageDialog(contentPanel, "Donnée modifiée");
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(contentPanel, "Connexion impossible");
+		}
+
+	}
+
+	private static void deleteForm(Brand o, String webservice, JPanel contentPanel) {
+		String jsonString = null;
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			jsonString = mapper.writeValueAsString(o);
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		Client client = Client.create();
+		WebResource webResource = client.resource(webservice);
+		try {
+			ClientResponse response = webResource.type("application/json").delete(ClientResponse.class, jsonString);
+			if (response.getStatus() != 204) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
+			JOptionPane.showMessageDialog(contentPanel, "Donnée supprimée");
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(contentPanel, "Connexion impossible");
@@ -197,10 +250,10 @@ public class BrandMgmView extends JDialog {
 			}
 		}
 	}
-	
+
 	public void clearImage(JLabel label) {
 		label.setIcon(null);
-		
+
 	}
 
 	public Brand findBrandById(int id, List<Brand> brands) {
@@ -404,25 +457,25 @@ public class BrandMgmView extends JDialog {
 		gbc_btnSortir.gridy = 0;
 		panel_control.add(btnSortir, gbc_btnSortir);
 
-		JButton btnModif = new JButton("Update");
-		btnModif.setIcon(
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.setIcon(
 				new ImageIcon(BrandMgmView.class.getResource("/javax/swing/plaf/metal/icons/ocean/floppy.gif")));
-		btnModif.setEnabled(false);
-		GridBagConstraints gbc_btnModif = new GridBagConstraints();
-		gbc_btnModif.insets = new Insets(0, 0, 0, 5);
-		gbc_btnModif.gridx = 2;
-		gbc_btnModif.gridy = 0;
-		panel_control.add(btnModif, gbc_btnModif);
+		btnUpdate.setEnabled(false);
+		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
+		gbc_btnUpdate.insets = new Insets(0, 0, 0, 5);
+		gbc_btnUpdate.gridx = 2;
+		gbc_btnUpdate.gridy = 0;
+		panel_control.add(btnUpdate, gbc_btnUpdate);
 
-		JButton btnSupprim = new JButton("Delete");
-		btnSupprim.setIcon(
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setIcon(
 				new ImageIcon(BrandMgmView.class.getResource("/org/eclipse/jface/dialogs/images/message_error.png")));
-		btnSupprim.setEnabled(false);
-		GridBagConstraints gbc_btnSupprim = new GridBagConstraints();
-		gbc_btnSupprim.insets = new Insets(0, 0, 0, 5);
-		gbc_btnSupprim.gridx = 3;
-		gbc_btnSupprim.gridy = 0;
-		panel_control.add(btnSupprim, gbc_btnSupprim);
+		btnDelete.setEnabled(false);
+		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.insets = new Insets(0, 0, 0, 5);
+		gbc_btnDelete.gridx = 3;
+		gbc_btnDelete.gridy = 0;
+		panel_control.add(btnDelete, gbc_btnDelete);
 		enableComponents(panel_formulaire, false);
 
 		JLabel libelle5 = new JLabel("Logo de la marque");
@@ -469,8 +522,8 @@ public class BrandMgmView extends JDialog {
 		panel.add(scrollPane);
 
 		loadImage.setVisible(false);
-		
-		//Lorsqu'on click sur le FileChooser pour selectionner une photo
+
+		// Lorsqu'on click sur le FileChooser pour selectionner une photo
 		loadImage.addMouseListener(new MouseAdapter() {
 
 			@Override
@@ -497,21 +550,21 @@ public class BrandMgmView extends JDialog {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
 
 				}
 			}
 		});
 
-		//Lorsqu'on click sur le bouton "Valider"
+		// Lorsqu'on click sur le bouton "Valider"
 		btnValider.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Brand brand = new Brand();
-				String webservice = "http://localhost:8080/wikifood/rest/brand/save";
+
+				String webservice;
 
 				switch (typeOperation) {
 				case "Create":
+					webservice = "http://localhost:8080/wikifood/rest/brand/save";
 					brand.setLabel1(textField1.getText());
 					brand.setLabel2(textField2.getText());
 					brand.setDesc1(textField3.getText());
@@ -524,7 +577,7 @@ public class BrandMgmView extends JDialog {
 					enableComponents(panel_formulaire, false);
 					loadImage.setEnabled(false);
 					loadImage.setVisible(false);
-					panel_imgdisplay.setVisible(false);
+					panel_imgdisplay.setVisible(true);
 					imgLabel.setIcon(null);
 					clearTextComponents(panel_formulaire);
 					panel_operations.setVisible(true);
@@ -533,10 +586,28 @@ public class BrandMgmView extends JDialog {
 					// code block
 					break;
 				case "Update":
-					// code block
+					webservice = "http://localhost:8080/wikifood/rest/brand";
+					brand.setLabel1(textField1.getText());
+					brand.setLabel2(textField2.getText());
+					brand.setDesc1(textField3.getText());
+					brand.setDesc2(textField4.getText());
+					if (imgPath.getText() != null) {
+						brand.setImg(readImageFromPath(imgPath.getText()));
+					}
+					putForm(brand, webservice, contentPanel);
+					table.setModel(getBrandTable(contentPanel));
+					btnValider.setEnabled(false);
+					btnSortir.setEnabled(false);
+					enableComponents(panel_formulaire, false);
+					loadImage.setEnabled(false);
+					loadImage.setVisible(false);
+					panel_imgdisplay.setVisible(true);
+					imgLabel.setIcon(null);
+					clearTextComponents(panel_formulaire);
+					panel_operations.setVisible(true);
 					break;
 				case "Delete":
-					// code block
+
 					break;
 				default:
 					// code block
@@ -544,7 +615,7 @@ public class BrandMgmView extends JDialog {
 			}
 		});
 
-		//Lorsqu'on click sur le bouton "Ajouter"
+		// Lorsqu'on click sur le bouton "Ajouter"
 		btnAjouter.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -557,13 +628,42 @@ public class BrandMgmView extends JDialog {
 				panel_operations.setVisible(false);
 				clearTextComponents(panel_formulaire);
 				clearImage(imgLabel);
-
+				btnUpdate.setEnabled(false);
+				btnDelete.setEnabled(false);
 				typeOperation = "Create";
 
 			}
 		});
 
-		//Lorsqu'on click sur le bouton "sortir"
+		// Lorsqu'on click sur le bouton "Update"
+		btnUpdate.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnValider.setEnabled(true);
+				btnSortir.setEnabled(true);
+				enableComponents(panel_formulaire, true);
+				loadImage.setEnabled(true);
+				loadImage.setVisible(true);
+				panel_imgdisplay.setVisible(true);
+				panel_operations.setVisible(false);
+				btnUpdate.setEnabled(false);
+				btnDelete.setEnabled(false);
+				typeOperation = "Update";
+
+			}
+		});
+
+		// Lorsqu'on click sur le bouton "delete"
+		btnDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String webservice = "http://localhost:8080/wikifood/rest/brand";
+				deleteForm(brand, webservice, contentPanel);
+				table.setModel(getBrandTable(contentPanel));
+			}
+		});
+
+		// Lorsqu'on click sur le bouton "sortir"
 		btnSortir.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -577,23 +677,26 @@ public class BrandMgmView extends JDialog {
 				clearTextComponents(panel_formulaire);
 				clearImage(imgLabel);
 				panel_operations.setVisible(true);
-			
+				btnUpdate.setEnabled(false);
+				btnDelete.setEnabled(false);
+
 			}
 		});
 
-		//Lorsqu'on click sur un enregitrement du tableau
+		// Lorsqu'on click sur un enregitrement du tableau
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				int row = table.rowAtPoint(arg0.getPoint());
 				int s = Integer.parseInt(table.getModel().getValueAt(row, 0) + "");
-				Brand brand = new Brand();
 				brand = findBrandById(s, brandlist);
 				textField1.setText(brand.getLabel1());
 				textField2.setText(brand.getLabel1());
 				textField3.setText(brand.getDesc1());
 				textField4.setText(brand.getDesc2());
-				displayImage(imgLabel, brand.getImg()) ;
+				displayImage(imgLabel, brand.getImg());
+				btnUpdate.setEnabled(true);
+				btnDelete.setEnabled(true);
 			}
 		});
 

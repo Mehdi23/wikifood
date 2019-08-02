@@ -32,10 +32,8 @@ public class BrandDaoImpl extends AbstractDao implements BrandDao {
 	}
 
 
-	public void deleteBrand(int id) {
-		Query query = getSession().createSQLQuery("delete from Brand where id = :id");
-		query.setLong("id", id);
-		query.executeUpdate();
+	public void deleteBrand(Brand brand) {
+		getSession().delete(brand);
 	}
 	
 	public void updateBrand(Brand Brand) {

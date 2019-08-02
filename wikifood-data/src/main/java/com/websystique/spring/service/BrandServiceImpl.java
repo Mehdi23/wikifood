@@ -29,8 +29,8 @@ public class BrandServiceImpl implements BrandService{
 		return dao.findAllBrands();
 	}
 	
-	public void deleteBrand(int id){
-		dao.deleteBrand(id);
+	public void deleteBrand(Brand brand){
+		dao.deleteBrand(brand);
 	}
 
 	public void updateBrand(Brand Brand){
