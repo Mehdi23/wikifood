@@ -75,6 +75,13 @@
 			<artifactId>wikifood-dao</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.webjars/open-icon-library -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>open-icon-library</artifactId>
+			<version>0.11</version>
+		</dependency>
+	
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
