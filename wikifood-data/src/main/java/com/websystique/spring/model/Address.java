@@ -9,27 +9,33 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "address")
 public class Address {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id; // Id 
-	private String line1; //Ligne 1 de l'adresse
-	private String line2; //Ligne 2 de l'adresse
-	private String line3; //Ligne 3 de l'adresse
-	private String city; //Ville
-	private String country; //Country
-	private String geoloc; //Localisation geographique
-	private int merchant_id; // Id
+	private int id; // Id
+	private String line1; // Ligne 1 de l'adresse
+	private String line2; // Ligne 2 de l'adresse
+	private String line3; // Ligne 3 de l'adresse
+	private String zipcode;
+	private String city; // Ville
+	private String country; // Country
+	private String geoloc; // Localisation geographique
+	private int rank;
 
-	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
+	@JsonBackReference
+	private Merchant merchant; // Id
+
 	public Address() {
 
 	}
-	
-	
+
 	public int getId() {
 		return id;
 	}
@@ -86,15 +92,28 @@ public class Address {
 		this.geoloc = geoloc;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MERCHANT_ID", nullable = false)
-	public int getMerchant_id() {
-		return merchant_id;
+	public String getZipcode() {
+		return zipcode;
 	}
 
-	public void setMerchant_id(int merchant_id) {
-		this.merchant_id = merchant_id;
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
 	}
-	
-	
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
+	/*
+	 * public Merchant getMerchant() { return merchant; }
+	 */
+
+	public void setMerchant(Merchant merchant) {
+		this.merchant = merchant;
+	}
+
 }

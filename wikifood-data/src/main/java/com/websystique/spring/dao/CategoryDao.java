@@ -10,9 +10,7 @@ public interface CategoryDao {
 	
 	List<Category> findAllCategorys();
 	
-	List<Category> findAllCategorys(int id);
-	
-	void deleteCategoryById(String id);
+	List<Category> findCategory(int id);
 	
 	void deleteCategory(Category Category);
 	

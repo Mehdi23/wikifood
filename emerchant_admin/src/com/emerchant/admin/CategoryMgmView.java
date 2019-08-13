@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.websystique.spring.model.Brand;
+import com.websystique.spring.model.Category;
 
 import java.awt.GridBagLayout;
 
@@ -48,26 +48,25 @@ import javax.swing.JTextArea;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.awt.GridLayout;
-import javax.swing.DropMode;
 import java.awt.Color;
 
 @SuppressWarnings("serial")
-public class BrandMgmView extends JDialog {
+public class CategoryMgmView extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField1;
 	private JTextField textField2;
 	private JTextField imgPath;
 	public String typeOperation;
-	public static List<Brand> brandlist;
-	public static Brand brand;
+	public static List<Category> categorylist;
+	public static Category category;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			BrandMgmView dialog = new BrandMgmView();
+			CategoryMgmView dialog = new CategoryMgmView();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 
@@ -149,7 +148,7 @@ public class BrandMgmView extends JDialog {
 
 	}
 
-	private static void putForm(Brand o, String webservice, JPanel contentPanel) {
+	private static void putForm(Category o, String webservice, JPanel contentPanel) {
 		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -174,7 +173,7 @@ public class BrandMgmView extends JDialog {
 
 	}
 
-	private static void deleteForm(Brand o, String webservice, JPanel contentPanel) {
+	private static void deleteForm(Category o, String webservice, JPanel contentPanel) {
 		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -199,27 +198,25 @@ public class BrandMgmView extends JDialog {
 
 	}
 
-	private static DefaultTableModel getBrandTable(JPanel contentPanel) {
+	private static DefaultTableModel getCategoryTable(JPanel contentPanel) {
 		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
 		ClientResponse response = null;
 
 		Client client = Client.create();
-		WebResource webResource = client.resource("http://localhost:8080/wikifood/rest/brand/getall");
+		WebResource webResource = client.resource("http://localhost:8080/wikifood/rest/category/getall");
 		try {
 			response = webResource.type("application/json").get(ClientResponse.class);
 			jsonString = response.getEntity(String.class);
-			brandlist = Arrays.asList(mapper.readValue(jsonString, Brand[].class));
-			String[] columnNames = { "Id", "Label 1", "Label 1", "Description 1", "Description 2" };
+			categorylist = Arrays.asList(mapper.readValue(jsonString, Category[].class));
+			String[] columnNames = { "Id", "Label 1", "Label 2"};
 			DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-			for (Brand brand : brandlist) {
+			for (Category category : categorylist) {
 				Vector<String> row = new Vector<String>();
-				row.add("" + brand.getId());
-				row.add(brand.getLabel1());
-				row.add(brand.getLabel2());
-				row.add(brand.getDesc1());
-				row.add(brand.getDesc2());
+				row.add("" + category.getId());
+				row.add(category.getLabel1());
+				row.add(category.getLabel2());
 				model.addRow(row);
 			}
 			return model;
@@ -258,11 +255,11 @@ public class BrandMgmView extends JDialog {
 
 	}
 
-	public Brand findBrandById(int id, List<Brand> brands) {
+	public Category findCategoryById(int id, List<Category> catogories) {
 
-		for (Brand brand : brands) {
-			if (brand.getId() == id) {
-				return brand;
+		for (Category category : catogories) {
+			if (category.getId() == id) {
+				return category;
 			}
 		}
 		return null;
@@ -271,7 +268,7 @@ public class BrandMgmView extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public BrandMgmView() {
+	public CategoryMgmView() {
 		setBounds(100, 100, 863, 574);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -293,8 +290,8 @@ public class BrandMgmView extends JDialog {
 		gbl_panel_operations.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panel_operations.setLayout(gbl_panel_operations);
 
-		JButton btnAjouter = new JButton("Ajouter une marque");
-		btnAjouter.setIcon(new ImageIcon(BrandMgmView.class
+		JButton btnAjouter = new JButton("Ajouter une categorie de produits");
+		btnAjouter.setIcon(new ImageIcon(CategoryMgmView.class
 				.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/edit-add.png")));
 		GridBagConstraints gbc_btnAjouter = new GridBagConstraints();
 		gbc_btnAjouter.insets = new Insets(0, 0, 0, 5);
@@ -335,7 +332,7 @@ public class BrandMgmView extends JDialog {
 		JButton btnValider = new JButton("valider");
 
 		btnValider.setEnabled(false);
-		btnValider.setIcon(new ImageIcon(BrandMgmView.class
+		btnValider.setIcon(new ImageIcon(CategoryMgmView.class
 				.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/status/dialog-clean.png")));
 		GridBagConstraints gbc_btnValider = new GridBagConstraints();
 		gbc_btnValider.insets = new Insets(0, 0, 0, 5);
@@ -346,7 +343,7 @@ public class BrandMgmView extends JDialog {
 		JButton btnSortir = new JButton("Sortir");
 
 		btnSortir.setEnabled(false);
-		btnSortir.setIcon(new ImageIcon(BrandMgmView.class.getResource(
+		btnSortir.setIcon(new ImageIcon(CategoryMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/application-exit-3.png")));
 		GridBagConstraints gbc_btnSortir = new GridBagConstraints();
 		gbc_btnSortir.fill = GridBagConstraints.VERTICAL;
@@ -356,7 +353,7 @@ public class BrandMgmView extends JDialog {
 		panel_control.add(btnSortir, gbc_btnSortir);
 
 		JButton btnUpdate = new JButton("Update");
-		btnUpdate.setIcon(new ImageIcon(BrandMgmView.class.getResource(
+		btnUpdate.setIcon(new ImageIcon(CategoryMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/apps/accessories-text-editor-5.png")));
 		btnUpdate.setEnabled(false);
 		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
@@ -366,7 +363,7 @@ public class BrandMgmView extends JDialog {
 		panel_control.add(btnUpdate, gbc_btnUpdate);
 
 		JButton btnDelete = new JButton("Delete");
-		btnDelete.setIcon(new ImageIcon(BrandMgmView.class.getResource(
+		btnDelete.setIcon(new ImageIcon(CategoryMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/dialog-cancel-7.png")));
 		btnDelete.setEnabled(false);
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
@@ -395,7 +392,7 @@ public class BrandMgmView extends JDialog {
 		gbl_panel_formulaire.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_formulaire.setLayout(gbl_panel_formulaire);
 
-		JLabel libelle1 = new JLabel("Libelle de la marque (FR)");
+		JLabel libelle1 = new JLabel("Libelle de la categorie (FR)");
 		libelle1.setEnabled(false);
 		GridBagConstraints gbc_libelle1 = new GridBagConstraints();
 		gbc_libelle1.anchor = GridBagConstraints.WEST;
@@ -414,7 +411,7 @@ public class BrandMgmView extends JDialog {
 		panel_formulaire.add(textField1, gbc_textField1);
 		textField1.setColumns(10);
 
-		JLabel libelle2 = new JLabel("Libelle de la marque (EN)");
+		JLabel libelle2 = new JLabel("Libelle de la categorie (EN)");
 		libelle2.setEnabled(false);
 		GridBagConstraints gbc_libelle2 = new GridBagConstraints();
 		gbc_libelle2.anchor = GridBagConstraints.WEST;
@@ -434,51 +431,9 @@ public class BrandMgmView extends JDialog {
 		panel_formulaire.add(textField2, gbc_textField2);
 		textField2.setColumns(10);
 
-		JLabel libelle3 = new JLabel("Description de la marque (FR)  ");
-		libelle3.setEnabled(false);
-		GridBagConstraints gbc_libelle3 = new GridBagConstraints();
-		gbc_libelle3.insets = new Insets(0, 0, 5, 5);
-		gbc_libelle3.gridx = 1;
-		gbc_libelle3.gridy = 2;
-		panel_formulaire.add(libelle3, gbc_libelle3);
-
-		JTextArea textField3 = new JTextArea();
-		libelle3.setLabelFor(textField3);
-		textField3.setDropMode(DropMode.INSERT);
-		textField3.setLineWrap(true);
-		textField3.setWrapStyleWord(true);
-		GridBagConstraints gbc_textField3 = new GridBagConstraints();
-		gbc_textField3.fill = GridBagConstraints.BOTH;
-		gbc_textField3.insets = new Insets(0, 0, 5, 0);
-		gbc_textField3.gridx = 3;
-		gbc_textField3.gridy = 2;
-		panel_formulaire.add(textField3, gbc_textField3);
-
-		JLabel libelle4 = new JLabel("Description de la marque (EN)");
-		libelle4.setEnabled(false);
-		GridBagConstraints gbc_libelle4 = new GridBagConstraints();
-		gbc_libelle4.anchor = GridBagConstraints.WEST;
-		gbc_libelle4.insets = new Insets(0, 0, 5, 5);
-		gbc_libelle4.gridx = 1;
-		gbc_libelle4.gridy = 3;
-		panel_formulaire.add(libelle4, gbc_libelle4);
-
-		JTextArea textField4 = new JTextArea();
-		libelle4.setLabelFor(textField4);
-		textField4.setWrapStyleWord(true);
-		textField4.setLineWrap(true);
-		textField4.setBackground(Color.WHITE);
-		textField4.setDropMode(DropMode.INSERT);
-		GridBagConstraints gbc_textField4 = new GridBagConstraints();
-		gbc_textField4.fill = GridBagConstraints.BOTH;
-		gbc_textField4.insets = new Insets(0, 0, 5, 0);
-		gbc_textField4.gridx = 3;
-		gbc_textField4.gridy = 3;
-		panel_formulaire.add(textField4, gbc_textField4);
-
 		enableComponents(panel_formulaire, false);
 
-		JLabel libelle5 = new JLabel("Logo de la marque");
+		JLabel libelle5 = new JLabel("Logo de la categorie");
 		libelle5.setEnabled(false);
 		GridBagConstraints gbc_libelle5 = new GridBagConstraints();
 		gbc_libelle5.anchor = GridBagConstraints.WEST;
@@ -488,7 +443,7 @@ public class BrandMgmView extends JDialog {
 		panel_formulaire.add(libelle5, gbc_libelle5);
 
 		JButton loadImage = new JButton("Load");
-		loadImage.setIcon(new ImageIcon(BrandMgmView.class.getResource(
+		loadImage.setIcon(new ImageIcon(CategoryMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/16x16/places/oxygen-style/folder.png")));
 		GridBagConstraints gbc_loadImage = new GridBagConstraints();
 		gbc_loadImage.insets = new Insets(0, 0, 0, 5);
@@ -508,13 +463,12 @@ public class BrandMgmView extends JDialog {
 
 		JTable table = new JTable();
 
-		table.setModel(getBrandTable(contentPanel));
+		table.setModel(getCategoryTable(contentPanel));
 
 		table.getColumnModel().getColumn(0).setPreferredWidth(102);
 		table.getColumnModel().getColumn(1).setPreferredWidth(140);
 		table.getColumnModel().getColumn(2).setPreferredWidth(146);
-		table.getColumnModel().getColumn(3).setPreferredWidth(167);
-		table.getColumnModel().getColumn(4).setPreferredWidth(168);
+
 		panel.add(table);
 		JScrollPane scrollPane = new JScrollPane(table);
 		panel.add(scrollPane);
@@ -525,12 +479,10 @@ public class BrandMgmView extends JDialog {
 			public void mouseClicked(MouseEvent arg0) {
 				int row = table.rowAtPoint(arg0.getPoint());
 				int s = Integer.parseInt(table.getModel().getValueAt(row, 0) + "");
-				brand = findBrandById(s, brandlist);
-				textField1.setText(brand.getLabel1());
-				textField2.setText(brand.getLabel2());
-				textField3.setText(brand.getDesc1());
-				textField4.setText(brand.getDesc2());
-				displayImage(imgLabel, brand.getImg());
+				category = findCategoryById(s, categorylist);
+				textField1.setText(category.getLabel1());
+				textField2.setText(category.getLabel2());
+				displayImage(imgLabel, category.getImg());
 				btnUpdate.setEnabled(true);
 				btnDelete.setEnabled(true);
 				panel_imgdisplay.setVisible(true);
@@ -580,17 +532,16 @@ public class BrandMgmView extends JDialog {
 
 				switch (typeOperation) {
 				case "Create":
-					webservice = "http://localhost:8080/wikifood/rest/brand/save";
-					brand = new Brand();
-					brand.setLabel1(textField1.getText());
-					brand.setLabel2(textField2.getText());
-					brand.setDesc1(textField3.getText());
-					brand.setDesc2(textField4.getText());
+					webservice = "http://localhost:8080/wikifood/rest/category/save";
+					category = new Category();
+					category.setLabel1(textField1.getText());
+					category.setLabel2(textField2.getText());
+		
 					if (imgPath.getText().length() != 0) {
-						brand.setImg(readImageFromPath(imgPath.getText()));
+						category.setImg(readImageFromPath(imgPath.getText()));
 					}
-					postForm(brand, webservice, contentPanel);
-					table.setModel(getBrandTable(contentPanel));
+					postForm(category, webservice, contentPanel);
+					table.setModel(getCategoryTable(contentPanel));
 					btnValider.setEnabled(false);
 					btnSortir.setEnabled(false);
 					enableComponents(panel_formulaire, false);
@@ -606,16 +557,15 @@ public class BrandMgmView extends JDialog {
 					// code block
 					break;
 				case "Update":
-					webservice = "http://localhost:8080/wikifood/rest/brand";
-					brand.setLabel1(textField1.getText());
-					brand.setLabel2(textField2.getText());
-					brand.setDesc1(textField3.getText());
-					brand.setDesc2(textField4.getText());
+					webservice = "http://localhost:8080/wikifood/rest/category";
+					category.setLabel1(textField1.getText());
+					category.setLabel2(textField2.getText());
+					
 					if (imgPath.getText().length() != 0) {
-						brand.setImg(readImageFromPath(imgPath.getText()));
+						category.setImg(readImageFromPath(imgPath.getText()));
 					}
-					putForm(brand, webservice, contentPanel);
-					table.setModel(getBrandTable(contentPanel));
+					putForm(category, webservice, contentPanel);
+					table.setModel(getCategoryTable(contentPanel));
 					btnValider.setEnabled(false);
 					btnSortir.setEnabled(false);
 					enableComponents(panel_formulaire, false);
@@ -701,9 +651,9 @@ public class BrandMgmView extends JDialog {
 		btnDelete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				String webservice = "http://localhost:8080/wikifood/rest/brand";
-				deleteForm(brand, webservice, contentPanel);
-				table.setModel(getBrandTable(contentPanel));
+				String webservice = "http://localhost:8080/wikifood/rest/category";
+				deleteForm(category, webservice, contentPanel);
+				table.setModel(getCategoryTable(contentPanel));
 				imgLabel.setIcon(null);
 				clearTextComponents(panel_formulaire);
 				btnUpdate.setEnabled(false);

@@ -18,11 +18,15 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.websystique.spring.model.Brand;
+import com.websystique.spring.model.Address;
+import com.websystique.spring.model.Email;
+import com.websystique.spring.model.Merchant;
+import com.websystique.spring.model.Phone;
 
 import java.awt.GridBagLayout;
 
@@ -39,7 +43,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -50,24 +53,35 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.GridLayout;
 import javax.swing.DropMode;
 import java.awt.Color;
+import javax.swing.JTabbedPane;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("serial")
-public class BrandMgmView extends JDialog {
+public class MerchantMgmView extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField1;
 	private JTextField textField2;
 	private JTextField imgPath;
 	public String typeOperation;
-	public static List<Brand> brandlist;
-	public static Brand brand;
+	public static List<Merchant> merchantlist;
+	public static Merchant merchant;
+	private JTextField address_line1;
+	private JTextField address_line2;
+	private JTextField address_line3;
+	private JTextField address_city;
+	private JTextField address_country;
+	private JTextField phone_num;
+	private JTextField email_email;
+	private JTextField address_zipcode;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			BrandMgmView dialog = new BrandMgmView();
+			MerchantMgmView dialog = new MerchantMgmView();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 
@@ -125,13 +139,13 @@ public class BrandMgmView extends JDialog {
 	}
 
 	private static void postForm(Object o, String webservice, JPanel contentPanel) {
-		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
+		String jsonString = null;
 		try {
 			jsonString = mapper.writeValueAsString(o);
-		} catch (JsonProcessingException e1) {
+		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
 
 		Client client = Client.create();
@@ -141,15 +155,13 @@ public class BrandMgmView extends JDialog {
 			if (response.getStatus() != 204) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
-			JOptionPane.showMessageDialog(contentPanel, "Donnée enregistrée");
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
+		} catch (Exception e2) { // TODAuto-generated catch block
 			JOptionPane.showMessageDialog(contentPanel, "Connexion impossible");
 		}
 
 	}
 
-	private static void putForm(Brand o, String webservice, JPanel contentPanel) {
+	private static void putForm(Merchant o, String webservice, JPanel contentPanel) {
 		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -174,7 +186,7 @@ public class BrandMgmView extends JDialog {
 
 	}
 
-	private static void deleteForm(Brand o, String webservice, JPanel contentPanel) {
+	private static void deleteForm(Object o, String webservice, JPanel contentPanel) {
 		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -199,27 +211,29 @@ public class BrandMgmView extends JDialog {
 
 	}
 
-	private static DefaultTableModel getBrandTable(JPanel contentPanel) {
+	private static DefaultTableModel getMerchantTable(JPanel contentPanel) {
 		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
 		ClientResponse response = null;
 
 		Client client = Client.create();
-		WebResource webResource = client.resource("http://localhost:8080/wikifood/rest/brand/getall");
+		WebResource webResource = client.resource("http://localhost:8080/wikifood/rest/merchant/getall");
+
 		try {
 			response = webResource.type("application/json").get(ClientResponse.class);
 			jsonString = response.getEntity(String.class);
-			brandlist = Arrays.asList(mapper.readValue(jsonString, Brand[].class));
+			merchantlist = mapper.readValue(jsonString, new TypeReference<List<Merchant>>() {
+			});
 			String[] columnNames = { "Id", "Label 1", "Label 1", "Description 1", "Description 2" };
 			DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-			for (Brand brand : brandlist) {
+			for (Merchant merchant : merchantlist) {
 				Vector<String> row = new Vector<String>();
-				row.add("" + brand.getId());
-				row.add(brand.getLabel1());
-				row.add(brand.getLabel2());
-				row.add(brand.getDesc1());
-				row.add(brand.getDesc2());
+				row.add("" + merchant.getId());
+				row.add(merchant.getLabel1());
+				row.add(merchant.getLabel2());
+				row.add(merchant.getDesc1());
+				row.add(merchant.getDesc2());
 				model.addRow(row);
 			}
 			return model;
@@ -258,11 +272,41 @@ public class BrandMgmView extends JDialog {
 
 	}
 
-	public Brand findBrandById(int id, List<Brand> brands) {
+	public Merchant findMerchantById(int id, List<Merchant> merchants) {
 
-		for (Brand brand : brands) {
-			if (brand.getId() == id) {
-				return brand;
+		for (Merchant merchant : merchants) {
+			if (merchant.getId() == id) {
+				return merchant;
+			}
+		}
+		return null;
+	}
+
+	public Address findAddressByRank(int rank, List<Address> addresses) {
+
+		for (Address address : addresses) {
+			if (address.getRank() == rank) {
+				return address;
+			}
+		}
+		return null;
+	}
+
+	public Phone findPhoneByRank(int rank, List<Phone> phones) {
+
+		for (Phone phone : phones) {
+			if (phone.getRank() == rank) {
+				return phone;
+			}
+		}
+		return null;
+	}
+
+	public Email findEmailByRank(int rank, List<Email> emails) {
+
+		for (Email email : emails) {
+			if (email.getRank() == rank) {
+				return email;
 			}
 		}
 		return null;
@@ -271,20 +315,20 @@ public class BrandMgmView extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public BrandMgmView() {
-		setBounds(100, 100, 863, 574);
+	public MerchantMgmView() {
+		setBounds(100, 100, 993, 632);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			JPanel MerchantInfo = new JPanel();
+			MerchantInfo.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(MerchantInfo, BorderLayout.SOUTH);
 		}
 
 		JPanel panel_operations = new JPanel();
-		panel_operations.setBounds(33, 267, 462, 40);
+		panel_operations.setBounds(33, 318, 462, 40);
 		contentPanel.add(panel_operations);
 		GridBagLayout gbl_panel_operations = new GridBagLayout();
 		gbl_panel_operations.columnWidths = new int[] { 129, 79, 71, 81, 0 };
@@ -293,8 +337,8 @@ public class BrandMgmView extends JDialog {
 		gbl_panel_operations.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panel_operations.setLayout(gbl_panel_operations);
 
-		JButton btnAjouter = new JButton("Ajouter une marque");
-		btnAjouter.setIcon(new ImageIcon(BrandMgmView.class
+		JButton btnAjouter = new JButton("Ajouter un commerçant");
+		btnAjouter.setIcon(new ImageIcon(MerchantMgmView.class
 				.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/edit-add.png")));
 		GridBagConstraints gbc_btnAjouter = new GridBagConstraints();
 		gbc_btnAjouter.insets = new Insets(0, 0, 0, 5);
@@ -303,7 +347,7 @@ public class BrandMgmView extends JDialog {
 		panel_operations.add(btnAjouter, gbc_btnAjouter);
 
 		JPanel panel_imgdisplay = new JPanel();
-		panel_imgdisplay.setBounds(661, 76, 163, 162);
+		panel_imgdisplay.setBounds(804, 76, 163, 162);
 		contentPanel.add(panel_imgdisplay);
 		GridBagLayout gbl_panel_imgdisplay = new GridBagLayout();
 		gbl_panel_imgdisplay.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -335,7 +379,7 @@ public class BrandMgmView extends JDialog {
 		JButton btnValider = new JButton("valider");
 
 		btnValider.setEnabled(false);
-		btnValider.setIcon(new ImageIcon(BrandMgmView.class
+		btnValider.setIcon(new ImageIcon(MerchantMgmView.class
 				.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/status/dialog-clean.png")));
 		GridBagConstraints gbc_btnValider = new GridBagConstraints();
 		gbc_btnValider.insets = new Insets(0, 0, 0, 5);
@@ -346,7 +390,7 @@ public class BrandMgmView extends JDialog {
 		JButton btnSortir = new JButton("Sortir");
 
 		btnSortir.setEnabled(false);
-		btnSortir.setIcon(new ImageIcon(BrandMgmView.class.getResource(
+		btnSortir.setIcon(new ImageIcon(MerchantMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/application-exit-3.png")));
 		GridBagConstraints gbc_btnSortir = new GridBagConstraints();
 		gbc_btnSortir.fill = GridBagConstraints.VERTICAL;
@@ -356,7 +400,7 @@ public class BrandMgmView extends JDialog {
 		panel_control.add(btnSortir, gbc_btnSortir);
 
 		JButton btnUpdate = new JButton("Update");
-		btnUpdate.setIcon(new ImageIcon(BrandMgmView.class.getResource(
+		btnUpdate.setIcon(new ImageIcon(MerchantMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/apps/accessories-text-editor-5.png")));
 		btnUpdate.setEnabled(false);
 		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
@@ -366,7 +410,7 @@ public class BrandMgmView extends JDialog {
 		panel_control.add(btnUpdate, gbc_btnUpdate);
 
 		JButton btnDelete = new JButton("Delete");
-		btnDelete.setIcon(new ImageIcon(BrandMgmView.class.getResource(
+		btnDelete.setIcon(new ImageIcon(MerchantMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/dialog-cancel-7.png")));
 		btnDelete.setEnabled(false);
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
@@ -378,31 +422,47 @@ public class BrandMgmView extends JDialog {
 		panel_control.add(btnDelete, gbc_btnDelete);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(33, 310, 619, 193);
+		panel.setBounds(33, 369, 619, 193);
 		contentPanel.add(panel);
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
 
+		JTable table = new JTable();
+
+		table.setModel(getMerchantTable(contentPanel));
+
+		table.getColumnModel().getColumn(0).setPreferredWidth(102);
+		table.getColumnModel().getColumn(1).setPreferredWidth(140);
+		table.getColumnModel().getColumn(2).setPreferredWidth(146);
+		table.getColumnModel().getColumn(3).setPreferredWidth(167);
+		table.getColumnModel().getColumn(4).setPreferredWidth(168);
+		panel.add(table);
+		JScrollPane scrollPane = new JScrollPane(table);
+		panel.add(scrollPane);
+
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(33, 76, 745, 231);
+		contentPanel.add(tabbedPane);
+
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(33, 62, 579, 200);
-		contentPanel.add(scrollPane_1);
+		tabbedPane.addTab("Informations", null, scrollPane_1, null);
 
-		JPanel panel_formulaire = new JPanel();
-		scrollPane_1.setViewportView(panel_formulaire);
-		GridBagLayout gbl_panel_formulaire = new GridBagLayout();
-		gbl_panel_formulaire.columnWidths = new int[] { 30, 130, 49, 156, 0 };
-		gbl_panel_formulaire.rowHeights = new int[] { 20, 20, 36, 36, 0, 0 };
-		gbl_panel_formulaire.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
-		gbl_panel_formulaire.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		panel_formulaire.setLayout(gbl_panel_formulaire);
+		JPanel panel_info = new JPanel();
+		scrollPane_1.setRowHeaderView(panel_info);
+		GridBagLayout gbl_panel_info = new GridBagLayout();
+		gbl_panel_info.columnWidths = new int[] { 30, 130, 49, 156, 0 };
+		gbl_panel_info.rowHeights = new int[] { 20, 20, 36, 36, 0, 0 };
+		gbl_panel_info.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_panel_info.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		panel_info.setLayout(gbl_panel_info);
 
-		JLabel libelle1 = new JLabel("Libelle de la marque (FR)");
+		JLabel libelle1 = new JLabel("Libelle du commerçant (FR)");
 		libelle1.setEnabled(false);
 		GridBagConstraints gbc_libelle1 = new GridBagConstraints();
 		gbc_libelle1.anchor = GridBagConstraints.WEST;
 		gbc_libelle1.insets = new Insets(0, 0, 5, 5);
 		gbc_libelle1.gridx = 1;
 		gbc_libelle1.gridy = 0;
-		panel_formulaire.add(libelle1, gbc_libelle1);
+		panel_info.add(libelle1, gbc_libelle1);
 
 		textField1 = new JTextField();
 		libelle1.setLabelFor(textField1);
@@ -411,17 +471,17 @@ public class BrandMgmView extends JDialog {
 		gbc_textField1.insets = new Insets(0, 0, 5, 0);
 		gbc_textField1.gridx = 3;
 		gbc_textField1.gridy = 0;
-		panel_formulaire.add(textField1, gbc_textField1);
+		panel_info.add(textField1, gbc_textField1);
 		textField1.setColumns(10);
 
-		JLabel libelle2 = new JLabel("Libelle de la marque (EN)");
+		JLabel libelle2 = new JLabel("Libelle du commerçant (EN)");
 		libelle2.setEnabled(false);
 		GridBagConstraints gbc_libelle2 = new GridBagConstraints();
 		gbc_libelle2.anchor = GridBagConstraints.WEST;
 		gbc_libelle2.insets = new Insets(0, 0, 5, 5);
 		gbc_libelle2.gridx = 1;
 		gbc_libelle2.gridy = 1;
-		panel_formulaire.add(libelle2, gbc_libelle2);
+		panel_info.add(libelle2, gbc_libelle2);
 
 		textField2 = new JTextField();
 		libelle2.setLabelFor(textField2);
@@ -431,16 +491,16 @@ public class BrandMgmView extends JDialog {
 		gbc_textField2.insets = new Insets(0, 0, 5, 0);
 		gbc_textField2.gridx = 3;
 		gbc_textField2.gridy = 1;
-		panel_formulaire.add(textField2, gbc_textField2);
+		panel_info.add(textField2, gbc_textField2);
 		textField2.setColumns(10);
 
-		JLabel libelle3 = new JLabel("Description de la marque (FR)  ");
+		JLabel libelle3 = new JLabel("Description du commerçant (FR)  ");
 		libelle3.setEnabled(false);
 		GridBagConstraints gbc_libelle3 = new GridBagConstraints();
 		gbc_libelle3.insets = new Insets(0, 0, 5, 5);
 		gbc_libelle3.gridx = 1;
 		gbc_libelle3.gridy = 2;
-		panel_formulaire.add(libelle3, gbc_libelle3);
+		panel_info.add(libelle3, gbc_libelle3);
 
 		JTextArea textField3 = new JTextArea();
 		libelle3.setLabelFor(textField3);
@@ -452,16 +512,16 @@ public class BrandMgmView extends JDialog {
 		gbc_textField3.insets = new Insets(0, 0, 5, 0);
 		gbc_textField3.gridx = 3;
 		gbc_textField3.gridy = 2;
-		panel_formulaire.add(textField3, gbc_textField3);
+		panel_info.add(textField3, gbc_textField3);
 
-		JLabel libelle4 = new JLabel("Description de la marque (EN)");
+		JLabel libelle4 = new JLabel("Description du commerçant (EN)");
 		libelle4.setEnabled(false);
 		GridBagConstraints gbc_libelle4 = new GridBagConstraints();
 		gbc_libelle4.anchor = GridBagConstraints.WEST;
 		gbc_libelle4.insets = new Insets(0, 0, 5, 5);
 		gbc_libelle4.gridx = 1;
 		gbc_libelle4.gridy = 3;
-		panel_formulaire.add(libelle4, gbc_libelle4);
+		panel_info.add(libelle4, gbc_libelle4);
 
 		JTextArea textField4 = new JTextArea();
 		libelle4.setLabelFor(textField4);
@@ -474,27 +534,27 @@ public class BrandMgmView extends JDialog {
 		gbc_textField4.insets = new Insets(0, 0, 5, 0);
 		gbc_textField4.gridx = 3;
 		gbc_textField4.gridy = 3;
-		panel_formulaire.add(textField4, gbc_textField4);
+		panel_info.add(textField4, gbc_textField4);
 
-		enableComponents(panel_formulaire, false);
+		enableComponents(panel_info, false);
 
-		JLabel libelle5 = new JLabel("Logo de la marque");
+		JLabel libelle5 = new JLabel("Logo du commerçant");
 		libelle5.setEnabled(false);
 		GridBagConstraints gbc_libelle5 = new GridBagConstraints();
 		gbc_libelle5.anchor = GridBagConstraints.WEST;
 		gbc_libelle5.insets = new Insets(0, 0, 0, 5);
 		gbc_libelle5.gridx = 1;
 		gbc_libelle5.gridy = 4;
-		panel_formulaire.add(libelle5, gbc_libelle5);
+		panel_info.add(libelle5, gbc_libelle5);
 
 		JButton loadImage = new JButton("Load");
-		loadImage.setIcon(new ImageIcon(BrandMgmView.class.getResource(
+		loadImage.setIcon(new ImageIcon(MerchantMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/16x16/places/oxygen-style/folder.png")));
 		GridBagConstraints gbc_loadImage = new GridBagConstraints();
 		gbc_loadImage.insets = new Insets(0, 0, 0, 5);
 		gbc_loadImage.gridx = 2;
 		gbc_loadImage.gridy = 4;
-		panel_formulaire.add(loadImage, gbc_loadImage);
+		panel_info.add(loadImage, gbc_loadImage);
 
 		imgPath = new JTextField();
 		libelle5.setLabelFor(imgPath);
@@ -504,39 +564,196 @@ public class BrandMgmView extends JDialog {
 		gbc_imgPath.fill = GridBagConstraints.HORIZONTAL;
 		gbc_imgPath.gridx = 3;
 		gbc_imgPath.gridy = 4;
-		panel_formulaire.add(imgPath, gbc_imgPath);
+		panel_info.add(imgPath, gbc_imgPath);
 
-		JTable table = new JTable();
+		JScrollPane scrollPane_2 = new JScrollPane();
+		tabbedPane.addTab("Contact", null, scrollPane_2, null);
 
-		table.setModel(getBrandTable(contentPanel));
+		JPanel panel_contact = new JPanel();
+		scrollPane_2.setViewportView(panel_contact);
+		GridBagLayout gbl_panel_contact = new GridBagLayout();
+		gbl_panel_contact.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panel_contact.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panel_contact.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_panel_contact.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		panel_contact.setLayout(gbl_panel_contact);
 
-		table.getColumnModel().getColumn(0).setPreferredWidth(102);
-		table.getColumnModel().getColumn(1).setPreferredWidth(140);
-		table.getColumnModel().getColumn(2).setPreferredWidth(146);
-		table.getColumnModel().getColumn(3).setPreferredWidth(167);
-		table.getColumnModel().getColumn(4).setPreferredWidth(168);
-		panel.add(table);
-		JScrollPane scrollPane = new JScrollPane(table);
-		panel.add(scrollPane);
+		JLabel lblAdresse = new JLabel("Adresse");
+		GridBagConstraints gbc_lblAdresse = new GridBagConstraints();
+		gbc_lblAdresse.anchor = GridBagConstraints.WEST;
+		gbc_lblAdresse.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAdresse.gridx = 1;
+		gbc_lblAdresse.gridy = 0;
+		panel_contact.add(lblAdresse, gbc_lblAdresse);
 
-		// Lorsqu'on click sur un enregitrement du tableau
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				int row = table.rowAtPoint(arg0.getPoint());
-				int s = Integer.parseInt(table.getModel().getValueAt(row, 0) + "");
-				brand = findBrandById(s, brandlist);
-				textField1.setText(brand.getLabel1());
-				textField2.setText(brand.getLabel2());
-				textField3.setText(brand.getDesc1());
-				textField4.setText(brand.getDesc2());
-				displayImage(imgLabel, brand.getImg());
-				btnUpdate.setEnabled(true);
-				btnDelete.setEnabled(true);
-				panel_imgdisplay.setVisible(true);
-			}
-		});
+		JLabel lblLigne = new JLabel("Ligne 1");
+		GridBagConstraints gbc_lblLigne = new GridBagConstraints();
+		gbc_lblLigne.anchor = GridBagConstraints.WEST;
+		gbc_lblLigne.insets = new Insets(0, 0, 5, 5);
+		gbc_lblLigne.gridx = 1;
+		gbc_lblLigne.gridy = 1;
+		panel_contact.add(lblLigne, gbc_lblLigne);
 
+		address_line1 = new JTextField();
+		GridBagConstraints gbc_address_line1 = new GridBagConstraints();
+		gbc_address_line1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_address_line1.insets = new Insets(0, 0, 5, 5);
+		gbc_address_line1.gridx = 3;
+		gbc_address_line1.gridy = 1;
+		panel_contact.add(address_line1, gbc_address_line1);
+		address_line1.setColumns(22);
+
+		JLabel lblCodePostal = new JLabel("Code postal");
+		GridBagConstraints gbc_lblCodePostal = new GridBagConstraints();
+		gbc_lblCodePostal.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCodePostal.gridx = 5;
+		gbc_lblCodePostal.gridy = 1;
+		panel_contact.add(lblCodePostal, gbc_lblCodePostal);
+
+		address_zipcode = new JTextField();
+		address_zipcode.setColumns(22);
+		GridBagConstraints gbc_address_zipcode = new GridBagConstraints();
+		gbc_address_zipcode.insets = new Insets(0, 0, 5, 0);
+		gbc_address_zipcode.fill = GridBagConstraints.HORIZONTAL;
+		gbc_address_zipcode.gridx = 7;
+		gbc_address_zipcode.gridy = 1;
+		panel_contact.add(address_zipcode, gbc_address_zipcode);
+
+		JLabel lblLigne_1 = new JLabel("Ligne 2");
+		GridBagConstraints gbc_lblLigne_1 = new GridBagConstraints();
+		gbc_lblLigne_1.anchor = GridBagConstraints.WEST;
+		gbc_lblLigne_1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblLigne_1.gridx = 1;
+		gbc_lblLigne_1.gridy = 2;
+		panel_contact.add(lblLigne_1, gbc_lblLigne_1);
+
+		address_line2 = new JTextField();
+		address_line2.setColumns(22);
+		GridBagConstraints gbc_address_line2 = new GridBagConstraints();
+		gbc_address_line2.insets = new Insets(0, 0, 5, 5);
+		gbc_address_line2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_address_line2.gridx = 3;
+		gbc_address_line2.gridy = 2;
+		panel_contact.add(address_line2, gbc_address_line2);
+
+		JLabel lblVille = new JLabel("Ville");
+		GridBagConstraints gbc_lblVille = new GridBagConstraints();
+		gbc_lblVille.anchor = GridBagConstraints.WEST;
+		gbc_lblVille.insets = new Insets(0, 0, 5, 5);
+		gbc_lblVille.gridx = 5;
+		gbc_lblVille.gridy = 2;
+		panel_contact.add(lblVille, gbc_lblVille);
+
+		address_city = new JTextField();
+		address_city.setColumns(22);
+		GridBagConstraints gbc_address_city = new GridBagConstraints();
+		gbc_address_city.insets = new Insets(0, 0, 5, 0);
+		gbc_address_city.fill = GridBagConstraints.HORIZONTAL;
+		gbc_address_city.gridx = 7;
+		gbc_address_city.gridy = 2;
+		panel_contact.add(address_city, gbc_address_city);
+
+		JLabel lblLigne_2 = new JLabel("Ligne 3");
+		GridBagConstraints gbc_lblLigne_2 = new GridBagConstraints();
+		gbc_lblLigne_2.anchor = GridBagConstraints.WEST;
+		gbc_lblLigne_2.insets = new Insets(0, 0, 5, 5);
+		gbc_lblLigne_2.gridx = 1;
+		gbc_lblLigne_2.gridy = 3;
+		panel_contact.add(lblLigne_2, gbc_lblLigne_2);
+
+		address_line3 = new JTextField();
+		address_line3.setColumns(22);
+		GridBagConstraints gbc_address_line3 = new GridBagConstraints();
+		gbc_address_line3.insets = new Insets(0, 0, 5, 5);
+		gbc_address_line3.fill = GridBagConstraints.HORIZONTAL;
+		gbc_address_line3.gridx = 3;
+		gbc_address_line3.gridy = 3;
+		panel_contact.add(address_line3, gbc_address_line3);
+
+		JLabel lblPays = new JLabel("Pays");
+		GridBagConstraints gbc_lblPays = new GridBagConstraints();
+		gbc_lblPays.anchor = GridBagConstraints.WEST;
+		gbc_lblPays.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPays.gridx = 5;
+		gbc_lblPays.gridy = 3;
+		panel_contact.add(lblPays, gbc_lblPays);
+
+		address_country = new JTextField();
+		address_country.setColumns(17);
+		GridBagConstraints gbc_address_country = new GridBagConstraints();
+		gbc_address_country.fill = GridBagConstraints.HORIZONTAL;
+		gbc_address_country.insets = new Insets(0, 0, 5, 0);
+		gbc_address_country.gridx = 7;
+		gbc_address_country.gridy = 3;
+		panel_contact.add(address_country, gbc_address_country);
+
+		JLabel lblTelephone = new JLabel("Telephone");
+		GridBagConstraints gbc_lblTelephone = new GridBagConstraints();
+		gbc_lblTelephone.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTelephone.gridx = 1;
+		gbc_lblTelephone.gridy = 5;
+		panel_contact.add(lblTelephone, gbc_lblTelephone);
+
+		phone_num = new JTextField();
+		phone_num.setColumns(22);
+		GridBagConstraints gbc_phone_num = new GridBagConstraints();
+		gbc_phone_num.insets = new Insets(0, 0, 5, 5);
+		gbc_phone_num.fill = GridBagConstraints.HORIZONTAL;
+		gbc_phone_num.gridx = 3;
+		gbc_phone_num.gridy = 5;
+		panel_contact.add(phone_num, gbc_phone_num);
+
+		JLabel lblType = new JLabel("Type");
+		GridBagConstraints gbc_lblType = new GridBagConstraints();
+		gbc_lblType.anchor = GridBagConstraints.WEST;
+		gbc_lblType.insets = new Insets(0, 0, 5, 5);
+		gbc_lblType.gridx = 5;
+		gbc_lblType.gridy = 5;
+		panel_contact.add(lblType, gbc_lblType);
+
+		JComboBox<String> phone_type = new JComboBox<String>();
+		phone_type.setModel(new DefaultComboBoxModel<String>(new String[] { "Mobile", "Home" }));
+		GridBagConstraints gbc_phone_type = new GridBagConstraints();
+		gbc_phone_type.insets = new Insets(0, 0, 5, 0);
+		gbc_phone_type.fill = GridBagConstraints.HORIZONTAL;
+		gbc_phone_type.gridx = 7;
+		gbc_phone_type.gridy = 5;
+		panel_contact.add(phone_type, gbc_phone_type);
+
+		JLabel lblEmail = new JLabel("E-mail");
+		GridBagConstraints gbc_lblEmail = new GridBagConstraints();
+		gbc_lblEmail.anchor = GridBagConstraints.WEST;
+		gbc_lblEmail.insets = new Insets(0, 0, 0, 5);
+		gbc_lblEmail.gridx = 1;
+		gbc_lblEmail.gridy = 6;
+		panel_contact.add(lblEmail, gbc_lblEmail);
+
+		email_email = new JTextField();
+		email_email.setColumns(22);
+		GridBagConstraints gbc_email_email = new GridBagConstraints();
+		gbc_email_email.insets = new Insets(0, 0, 0, 5);
+		gbc_email_email.fill = GridBagConstraints.HORIZONTAL;
+		gbc_email_email.gridx = 3;
+		gbc_email_email.gridy = 6;
+		panel_contact.add(email_email, gbc_email_email);
+
+		JLabel label = new JLabel("Type");
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.anchor = GridBagConstraints.WEST;
+		gbc_label.insets = new Insets(0, 0, 0, 5);
+		gbc_label.gridx = 5;
+		gbc_label.gridy = 6;
+		panel_contact.add(label, gbc_label);
+
+		JComboBox<String> email_type = new JComboBox<String>();
+		email_type.setModel(new DefaultComboBoxModel<String>(new String[] { "personnel", "professionel" }));
+		GridBagConstraints gbc_email_type = new GridBagConstraints();
+		gbc_email_type.fill = GridBagConstraints.HORIZONTAL;
+		gbc_email_type.gridx = 7;
+		gbc_email_type.gridy = 6;
+		panel_contact.add(email_type, gbc_email_type);
+
+		enableComponents(panel_contact, false);
 		loadImage.setVisible(false);
 
 		// Lorsqu'on click sur le FileChooser pour selectionner une photo
@@ -571,6 +788,38 @@ public class BrandMgmView extends JDialog {
 			}
 		});
 
+		// Lorsqu'on click sur un enregitrement du tableau
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				int row = table.rowAtPoint(arg0.getPoint());
+				int s = Integer.parseInt(table.getModel().getValueAt(row, 0) + "");
+				merchant = findMerchantById(s, merchantlist);
+				textField1.setText(merchant.getLabel1());
+				textField2.setText(merchant.getLabel2());
+				textField3.setText(merchant.getDesc1());
+				textField4.setText(merchant.getDesc2());
+				
+				address_line1.setText(findAddressByRank(1, merchant.getAddresslist()).getLine1());
+				address_line2.setText(findAddressByRank(1, merchant.getAddresslist()).getLine2());
+				address_line3.setText(findAddressByRank(1, merchant.getAddresslist()).getLine3());
+				address_zipcode.setText(findAddressByRank(1, merchant.getAddresslist()).getZipcode());
+				address_city.setText(findAddressByRank(1, merchant.getAddresslist()).getCity());
+				address_country.setText(findAddressByRank(1, merchant.getAddresslist()).getCountry());
+				
+				phone_type.setSelectedItem(findPhoneByRank(1, merchant.getPhonelist()).getType());
+				phone_num.setText(findPhoneByRank(1, merchant.getPhonelist()).getNumber());
+				
+				email_type.setSelectedItem(findEmailByRank(1, merchant.getEmaillist()).getType());
+				email_email.setText(findEmailByRank(1, merchant.getEmaillist()).getEmail());
+				
+				displayImage(imgLabel, merchant.getImg());
+				btnUpdate.setEnabled(true);
+				btnDelete.setEnabled(true);
+				panel_imgdisplay.setVisible(true);
+			}
+		});
+
 		// Lorsqu'on click sur le bouton "Valider"
 		btnValider.addMouseListener(new MouseAdapter() {
 			@Override
@@ -580,25 +829,54 @@ public class BrandMgmView extends JDialog {
 
 				switch (typeOperation) {
 				case "Create":
-					webservice = "http://localhost:8080/wikifood/rest/brand/save";
-					brand = new Brand();
-					brand.setLabel1(textField1.getText());
-					brand.setLabel2(textField2.getText());
-					brand.setDesc1(textField3.getText());
-					brand.setDesc2(textField4.getText());
+					merchant = new Merchant();
+					merchant.setLabel1(textField1.getText());
+					merchant.setLabel2(textField2.getText());
+					merchant.setDesc1(textField3.getText());
+					merchant.setDesc2(textField4.getText());
 					if (imgPath.getText().length() != 0) {
-						brand.setImg(readImageFromPath(imgPath.getText()));
+						merchant.setImg(readImageFromPath(imgPath.getText()));
 					}
-					postForm(brand, webservice, contentPanel);
-					table.setModel(getBrandTable(contentPanel));
+
+					Address address = new Address();
+					address.setLine1(address_line1.getText());
+					address.setLine2(address_line2.getText());
+					address.setLine3(address_line3.getText());
+					address.setZipcode(address_zipcode.getText());
+					address.setCity(address_city.getText());
+					address.setCountry(address_country.getText());
+					address.setRank(1);
+
+					merchant.add(address);
+
+					Phone phone = new Phone();
+					phone.setType(String.valueOf(phone_type.getSelectedItem()));
+					phone.setNumber(phone_num.getText());
+					phone.setRank(1);
+
+					merchant.add(phone);
+
+					Email email = new Email();
+					email.setType(String.valueOf(email_type.getSelectedItem()));
+					email.setEmail(email_email.getText());
+					email.setRank(1);
+
+					merchant.add(email);
+
+					webservice = "http://localhost:8080/wikifood/rest/merchant/save";
+					postForm(merchant, webservice, contentPanel);
+
+					table.setModel(getMerchantTable(contentPanel));
 					btnValider.setEnabled(false);
 					btnSortir.setEnabled(false);
-					enableComponents(panel_formulaire, false);
+					enableComponents(panel_info, false);
+					enableComponents(panel_contact, false);
 					loadImage.setEnabled(false);
 					loadImage.setVisible(false);
 					panel_imgdisplay.setVisible(true);
 					imgLabel.setIcon(null);
-					clearTextComponents(panel_formulaire);
+					clearTextComponents(panel_info);
+					clearTextComponents(panel_contact);
 					panel_operations.setVisible(true);
 					table.setVisible(true);
 					break;
@@ -606,24 +884,40 @@ public class BrandMgmView extends JDialog {
 					// code block
 					break;
 				case "Update":
-					webservice = "http://localhost:8080/wikifood/rest/brand";
-					brand.setLabel1(textField1.getText());
-					brand.setLabel2(textField2.getText());
-					brand.setDesc1(textField3.getText());
-					brand.setDesc2(textField4.getText());
+					webservice = "http://localhost:8080/wikifood/rest/merchant";
+					merchant.setLabel1(textField1.getText());
+					merchant.setLabel2(textField2.getText());
+					merchant.setDesc1(textField3.getText());
+					merchant.setDesc2(textField4.getText());
 					if (imgPath.getText().length() != 0) {
-						brand.setImg(readImageFromPath(imgPath.getText()));
+						merchant.setImg(readImageFromPath(imgPath.getText()));
 					}
-					putForm(brand, webservice, contentPanel);
-					table.setModel(getBrandTable(contentPanel));
+					
+					findAddressByRank(1, merchant.getAddresslist()).setLine1(address_line1.getText());
+					findAddressByRank(1, merchant.getAddresslist()).setLine2(address_line2.getText());
+					findAddressByRank(1, merchant.getAddresslist()).setLine3(address_line3.getText());
+					findAddressByRank(1, merchant.getAddresslist()).setZipcode(address_zipcode.getText());
+					findAddressByRank(1, merchant.getAddresslist()).setCity(address_city.getText());
+					findAddressByRank(1, merchant.getAddresslist()).setCountry(address_country.getText());
+					
+					findPhoneByRank(1, merchant.getPhonelist()).setType(String.valueOf(phone_type.getSelectedItem()));
+					findPhoneByRank(1, merchant.getPhonelist()).setNumber(phone_num.getText());
+					
+					findEmailByRank(1, merchant.getEmaillist()).setType(String.valueOf(email_type.getSelectedItem()));
+					findEmailByRank(1, merchant.getEmaillist()).setEmail(email_email.getText());
+					
+					putForm(merchant, webservice, contentPanel);
+					table.setModel(getMerchantTable(contentPanel));
 					btnValider.setEnabled(false);
 					btnSortir.setEnabled(false);
-					enableComponents(panel_formulaire, false);
+					enableComponents(panel_info, false);
+					enableComponents(panel_contact, false);
 					loadImage.setEnabled(false);
 					loadImage.setVisible(false);
 					panel_imgdisplay.setVisible(true);
 					imgLabel.setIcon(null);
-					clearTextComponents(panel_formulaire);
+					clearTextComponents(panel_info);
+					clearTextComponents(panel_contact);
 					panel_operations.setVisible(true);
 					table.setVisible(true);
 					break;
@@ -642,12 +936,14 @@ public class BrandMgmView extends JDialog {
 			public void mouseClicked(MouseEvent arg0) {
 				btnValider.setEnabled(true);
 				btnSortir.setEnabled(true);
-				enableComponents(panel_formulaire, true);
+				enableComponents(panel_info, true);
+				enableComponents(panel_contact, true);
 				loadImage.setEnabled(true);
 				loadImage.setVisible(true);
 				panel_imgdisplay.setVisible(true);
 				panel_operations.setVisible(false);
-				clearTextComponents(panel_formulaire);
+				clearTextComponents(panel_info);
+				clearTextComponents(panel_contact);
 				clearImage(imgLabel);
 				btnUpdate.setEnabled(false);
 				btnDelete.setEnabled(false);
@@ -663,7 +959,8 @@ public class BrandMgmView extends JDialog {
 			public void mouseClicked(MouseEvent arg0) {
 				btnValider.setEnabled(true);
 				btnSortir.setEnabled(true);
-				enableComponents(panel_formulaire, true);
+				enableComponents(panel_info, true);
+				enableComponents(panel_contact, true);
 				loadImage.setEnabled(true);
 				loadImage.setVisible(true);
 				panel_imgdisplay.setVisible(true);
@@ -682,12 +979,14 @@ public class BrandMgmView extends JDialog {
 			public void mouseClicked(MouseEvent e) {
 				btnValider.setEnabled(false);
 				btnSortir.setEnabled(false);
-				enableComponents(panel_formulaire, false);
+				enableComponents(panel_info, false);
+				enableComponents(panel_contact, false);
 				loadImage.setEnabled(false);
 				loadImage.setVisible(false);
 				panel_imgdisplay.setVisible(false);
 				imgLabel.setIcon(null);
-				clearTextComponents(panel_formulaire);
+				clearTextComponents(panel_info);
+				clearTextComponents(panel_contact);
 				clearImage(imgLabel);
 				panel_operations.setVisible(true);
 				btnUpdate.setEnabled(false);
@@ -701,11 +1000,12 @@ public class BrandMgmView extends JDialog {
 		btnDelete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				String webservice = "http://localhost:8080/wikifood/rest/brand";
-				deleteForm(brand, webservice, contentPanel);
-				table.setModel(getBrandTable(contentPanel));
+				String webservice = "http://localhost:8080/wikifood/rest/merchant";
+				deleteForm(merchant, webservice, contentPanel);
+				table.setModel(getMerchantTable(contentPanel));
 				imgLabel.setIcon(null);
-				clearTextComponents(panel_formulaire);
+				clearTextComponents(panel_info);
+				clearTextComponents(panel_contact);
 				btnUpdate.setEnabled(false);
 				btnDelete.setEnabled(false);
 			}

@@ -3,7 +3,6 @@ package com.websystique.spring.dao;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +18,7 @@ public class CategoryDaoImpl extends AbstractDao implements CategoryDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Category> findAllCategorys(int id) {
+	public List<Category> findCategory(int id) {
 		Criteria criteria = getSession().createCriteria(Category.class)
 				.add(Restrictions.eq("id",id));
 		return (List<Category>) criteria.list();
@@ -31,11 +30,6 @@ public class CategoryDaoImpl extends AbstractDao implements CategoryDao {
 		return (List<Category>) criteria.list();
 	}
 
-	public void deleteCategoryById(String id) {
-		Query query = getSession().createSQLQuery("delete from Category where id = :id");
-		query.setString("id", id);
-		query.executeUpdate();
-	}
 
 	public void deleteCategory(Category Category) {
 		getSession().delete(Category);

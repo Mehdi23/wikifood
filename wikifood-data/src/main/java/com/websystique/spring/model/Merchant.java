@@ -1,8 +1,7 @@
 package com.websystique.spring.model;
 
-
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,40 +13,45 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "merchant")
-public class Merchant {
+public class Merchant{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;                // Identifiant du commercant
-	private String label1;         // Libelle du commercant en Francais
-	private String label2;         // Libelle du commercant en Arabe
-	private String desc1;          // Description du commercant en Francais
-	private String desc2;          // Description du commercant en Arabe
-	
+	private int id; // Identifiant du commercant
+	private String label1; // Libelle du commercant en Francais
+	private String label2; // Libelle du commercant en Arabe
+	private String desc1; // Description du commercant en Francais
+	private String desc2; // Description du commercant en Arabe
+
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img; // Logo du commerçant
+
+	@OneToMany(targetEntity = Address.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Address> addresslist = new ArrayList<Address>();
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
-	private Set<Phone> phone = new HashSet<Phone>(0);
+	@OneToMany(targetEntity = Phone.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Phone> phonelist = new ArrayList<Phone>();
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
-	private Set<Email> email = new HashSet<Email>(0);
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
-	private Set<Address> address = new HashSet<Address>(0);
-     
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
-	private Set<Product> product = new HashSet<Product>(0);
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "merchant_id", cascade = CascadeType.ALL)
-	private Set<User> user = new HashSet<User>(0);
+	@OneToMany(targetEntity = Email.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Email> emaillist = new ArrayList<Email>();
 
 	public Merchant() {
 
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -55,7 +59,6 @@ public class Merchant {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public String getLabel1() {
 		return label1;
@@ -89,22 +92,71 @@ public class Merchant {
 		this.desc2 = desc2;
 	}
 
-
-	public Set<Phone> getPhone() {
-		return phone;
+	public List<Address> getAddresslist() {
+		return addresslist;
 	}
 
-	public void setPhone(Set<Phone> phone) {
-		this.phone = phone;
+	public void setAddresslist(List<Address> addresslist) {
+		this.addresslist = addresslist;
+	}
+	
+	
+
+	public List<Phone> getPhonelist() {
+		return phonelist;
 	}
 
-	public Set<Address> getAddress() {
-		return address;
+	public void setPhonelist(List<Phone> phonelist) {
+		this.phonelist = phonelist;
 	}
 
-	public void setAddress(Set<Address> address) {
-		this.address = address;
+	public List<Email> getEmaillist() {
+		return emaillist;
 	}
+
+	public void setEmaillist(List<Email> emaillist) {
+		this.emaillist = emaillist;
+	}
+
+	public void add(Address address) {
+		if (address == null) {
+			return;
+		}
+		address.setMerchant(this);
+		if (addresslist == null) {
+			addresslist = new ArrayList<Address>();
+			addresslist.add(address);
+		} else if (!addresslist.contains(address)) {
+			addresslist.add(address);
+		}
+	}
+	
+	public void add(Phone phone) {
+		if (phone == null) {
+			return;
+		}
+		phone.setMerchant(this);
+		if (phonelist == null) {
+			phonelist = new ArrayList<Phone>();
+			phonelist.add(phone);
+		} else if (!phonelist.contains(phone)) {
+			phonelist.add(phone);
+		}
+	}
+	
+	public void add(Email email) {
+		if (email == null) {
+			return;
+		}
+		email.setMerchant(this);
+		if (emaillist == null) {
+			emaillist = new ArrayList<Email>();
+			emaillist.add(email);
+		} else if (!emaillist.contains(email)) {
+			emaillist.add(email);
+		}
+	}
+	
 
 	public byte[] getImg() {
 		return img;
@@ -114,29 +166,4 @@ public class Merchant {
 		this.img = img;
 	}
 
-	public Set<Product> getProduct() {
-		return product;
-	}
-
-	public void setProduct(Set<Product> product) {
-		this.product = product;
-	}
-
-	public Set<Email> getEmail() {
-		return email;
-	}
-
-	public void setEmail(Set<Email> email) {
-		this.email = email;
-	}
-
-	public Set<User> getUser() {
-		return user;
-	}
-
-	public void setUser(Set<User> user) {
-		this.user = user;
-	}
-	
-	
 }

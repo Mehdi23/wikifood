@@ -21,8 +21,8 @@ public class CategoryServiceImpl implements CategoryService{
 	}
 
 	
-	public List<Category> findAllCategorys(int id) {
-		return dao.findAllCategorys(id);
+	public List<Category> findCategory(int id) {
+		return dao.findCategory(id);
 	}
 	
 	public List<Category> findAllCategorys() {

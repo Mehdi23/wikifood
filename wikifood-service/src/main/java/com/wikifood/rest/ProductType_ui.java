@@ -30,18 +30,18 @@ public class ProductType_ui {
 	}
 
 	@GET
-	@Path("get")
+	@Path("getall")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<ProductType> findAll() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (ProductTypeService) context.getBean("ProductTypeService");
 			return service.findAllProductTypes();
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@POST
@@ -49,53 +49,53 @@ public class ProductType_ui {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(ProductType p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (ProductTypeService) context.getBean("ProductTypeService");
 			service.saveProductType(p);
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<ProductType> find(@QueryParam("id") int id) {
-		System.out.println("id : " + id);
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (ProductTypeService) context.getBean("ProductTypeService");
-			return service.findAllProductTypes(id);
+			return service.findProductType(id);
+		
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void update(ProductType p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (ProductTypeService) context.getBean("ProductTypeService");
 			service.updateProductType(p);
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@DELETE
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void remove(ProductType ProductType) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (ProductTypeService) context.getBean("ProductTypeService");
 			service.deleteProductType(ProductType);
 		} finally {
 			context.close();
 		}
+		
 
 	}
 

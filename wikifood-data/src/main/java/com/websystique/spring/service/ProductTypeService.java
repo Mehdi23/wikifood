@@ -8,7 +8,7 @@ public interface ProductTypeService {
 
 	void saveProductType(ProductType ProductType);
 
-	List<ProductType> findAllProductTypes(int id);
+	List<ProductType> findProductType (int id);
 	
 	List<ProductType> findAllProductTypes();
 

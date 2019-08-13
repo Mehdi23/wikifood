@@ -30,19 +30,18 @@ public class Merchant_ui {
 	}
 
 	@GET
-	@Path("get")
+	@Path("getall")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Merchant> findAll() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (MerchantService) context.getBean("MerchantService");
 			return service.findAllMerchants();
-
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@POST
@@ -50,59 +49,53 @@ public class Merchant_ui {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(Merchant p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-		
-		
 		try {
 			service = (MerchantService) context.getBean("MerchantService");
 			service.saveMerchant(p);
-
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Merchant> find(@QueryParam("id") int id) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-		
 		try {
 			service = (MerchantService) context.getBean("MerchantService");
-			return service.findAllMerchants(id);
-
+			return service.findMerchant(id);
+		
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void update(Merchant p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-		
-		
 		try {
 			service = (MerchantService) context.getBean("MerchantService");
 			service.updateMerchant(p);
-
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@DELETE
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void remove(Merchant Merchant) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-		
-		
 		try {
 			service = (MerchantService) context.getBean("MerchantService");
 			service.deleteMerchant(Merchant);
-
 		} finally {
 			context.close();
 		}
+		
 
 	}
 

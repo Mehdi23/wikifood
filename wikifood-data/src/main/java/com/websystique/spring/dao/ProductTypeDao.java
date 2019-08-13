@@ -10,9 +10,7 @@ public interface ProductTypeDao {
 	
 	List<ProductType> findAllProductTypes();
 	
-	List<ProductType> findAllProductTypes(int id);
-	
-	void deleteProductTypeById(String id);
+	List<ProductType> findProductType(int id);
 	
 	void deleteProductType(ProductType ProductType);
 	

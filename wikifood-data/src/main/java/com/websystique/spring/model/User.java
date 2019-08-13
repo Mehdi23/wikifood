@@ -20,6 +20,7 @@ public class User {
 	private String nom; // Nom de l'utilisateur
 	private String login; //Login de l'utilisateur
 	private String password; //Mot de passe de l'utilisateur
+	private String profile;
 	private String description; //Description de l'utilisateur
 	private String lastconnect; //Date heure de derniere connexion
 	private boolean active; //Utilisateur active/desactive
@@ -65,6 +66,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	public String getDescription() {

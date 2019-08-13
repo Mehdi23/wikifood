@@ -21,8 +21,8 @@ public class ProductTypeServiceImpl implements ProductTypeService{
 	}
 
 	
-	public List<ProductType> findAllProductTypes(int id) {
-		return dao.findAllProductTypes(id);
+	public List<ProductType> findProductType(int id) {
+		return dao.findProductType(id);
 	}
 	
 	public List<ProductType> findAllProductTypes() {

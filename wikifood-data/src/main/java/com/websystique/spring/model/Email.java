@@ -9,21 +9,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "email")
 public class Email {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id; // Id 
-	private String type; //type adresse email (professionnel/ personnel)
-	private String email; //adresse email
-	private int merchant_id; // Id
-	
+	private int id; // Id
+	private String type; // type adresse email (professionnel/ personnel)
+	private String email; // adresse email
+	private int rank;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
+	@JsonBackReference
+	private Merchant merchant; // Id
+
 	public Email() {
 
 	}
-	
+
+	public Email(int id, String type, String email) {
+		super();
+		this.type = type;
+		this.email = email;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -48,15 +61,20 @@ public class Email {
 		this.type = type;
 	}
 
-	public int getMerchant_id() {
-		return merchant_id;
+	/*
+	 * public Merchant getMerchant() { return merchant; }
+	 */
+
+	public void setMerchant(Merchant merchant) {
+		this.merchant = merchant;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MERCHANT_ID", nullable = false)
-	public void setMerchant_id(int merchant_id) {
-		this.merchant_id = merchant_id;
+	public int getRank() {
+		return rank;
 	}
-	
-		
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
 }

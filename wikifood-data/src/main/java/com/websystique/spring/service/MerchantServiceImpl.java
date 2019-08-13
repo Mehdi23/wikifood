@@ -21,8 +21,8 @@ public class MerchantServiceImpl implements MerchantService{
 	}
 
 	
-	public List<Merchant> findAllMerchants(int id) {
-		return dao.findAllMerchants(id);
+	public List<Merchant> findMerchant(int id) {
+		return dao.findMerchant(id);
 	}
 	
 	public List<Merchant> findAllMerchants() {

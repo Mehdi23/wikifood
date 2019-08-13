@@ -30,18 +30,18 @@ public class Category_ui {
 	}
 
 	@GET
-	@Path("get")
+	@Path("getall")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Category> findAll() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (CategoryService) context.getBean("CategoryService");
 			return service.findAllCategorys();
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@POST
@@ -49,52 +49,53 @@ public class Category_ui {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(Category p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (CategoryService) context.getBean("CategoryService");
 			service.saveCategory(p);
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Category> find(@QueryParam("id") int id) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (CategoryService) context.getBean("CategoryService");
-			return service.findAllCategorys(id);
+			return service.findCategory(id);
+		
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void update(Category p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (CategoryService) context.getBean("CategoryService");
 			service.updateCategory(p);
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@DELETE
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void remove(Category Category) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (CategoryService) context.getBean("CategoryService");
 			service.deleteCategory(Category);
 		} finally {
 			context.close();
 		}
+		
 
 	}
 
