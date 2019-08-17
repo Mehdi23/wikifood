@@ -1,18 +1,11 @@
 package com.websystique.spring.model;
 
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -28,16 +21,11 @@ public class Category {
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img; //Logo de la categorie
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "category_id", cascade = CascadeType.ALL)
-	private Set<Product> product = new HashSet<Product>(0);
-
 
 	public Category() {
 
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CATEGORY_ID", nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -68,14 +56,6 @@ public class Category {
 
 	public void setImg(byte[] img) {
 		this.img = img;
-	}
-
-	public Set<Product> getProduct() {
-		return product;
-	}
-
-	public void setProduct(Set<Product> product) {
-		this.product = product;
 	}
 	
 }

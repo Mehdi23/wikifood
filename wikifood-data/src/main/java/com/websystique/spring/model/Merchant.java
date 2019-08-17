@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "merchant")
-public class Merchant{
+public class Merchant {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,16 +37,21 @@ public class Merchant{
 	@JsonManagedReference
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Address> addresslist = new ArrayList<Address>();
-	
+
 	@OneToMany(targetEntity = Phone.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Phone> phonelist = new ArrayList<Phone>();
-	
+
 	@OneToMany(targetEntity = Email.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Email> emaillist = new ArrayList<Email>();
+
+	@OneToMany(targetEntity = Brand.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Brand> brandlist = new ArrayList<Brand>();
 
 	public Merchant() {
 
@@ -99,8 +104,6 @@ public class Merchant{
 	public void setAddresslist(List<Address> addresslist) {
 		this.addresslist = addresslist;
 	}
-	
-	
 
 	public List<Phone> getPhonelist() {
 		return phonelist;
@@ -118,6 +121,22 @@ public class Merchant{
 		this.emaillist = emaillist;
 	}
 
+	public List<Brand> getBrandlist() {
+		return brandlist;
+	}
+
+	public void setBrandlist(List<Brand> brandlist) {
+		this.brandlist = brandlist;
+	}
+
+	public byte[] getImg() {
+		return img;
+	}
+
+	public void setImg(byte[] img) {
+		this.img = img;
+	}
+
 	public void add(Address address) {
 		if (address == null) {
 			return;
@@ -130,7 +149,7 @@ public class Merchant{
 			addresslist.add(address);
 		}
 	}
-	
+
 	public void add(Phone phone) {
 		if (phone == null) {
 			return;
@@ -143,7 +162,7 @@ public class Merchant{
 			phonelist.add(phone);
 		}
 	}
-	
+
 	public void add(Email email) {
 		if (email == null) {
 			return;
@@ -156,14 +175,23 @@ public class Merchant{
 			emaillist.add(email);
 		}
 	}
+
+	public void add(Brand brand) {
+		if (brand == null) {
+			return;
+		}
+		brand.setMerchant(this);
+		if (brandlist == null) {
+			brandlist = new ArrayList<Brand>();
+			brandlist.add(brand);
+		} else if (!brandlist.contains(brand)) {
+			brandlist.add(brand);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Merchant [id=" + id + ", label1=" + label1 + "]";
+	}
 	
-
-	public byte[] getImg() {
-		return img;
-	}
-
-	public void setImg(byte[] img) {
-		this.img = img;
-	}
-
 }

@@ -1,17 +1,16 @@
 package com.websystique.spring.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "brand")
@@ -20,17 +19,18 @@ public class Brand {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id; // Id de la marque
-	private String label1; //Libelle de la marque en Francais
-	private String label2; //Libelle de la marque en Arabe
-	private String desc1; //Description de la marque en Francais
-	private String desc2; //Description de la marque en Arabe
-	
-	@Column(columnDefinition = "LONGBLOB")
-	private byte[] img; //Logo de la marque
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "brand_id", cascade = CascadeType.ALL)
-	private Set<Product> product = new HashSet<Product>(0);
+	private String label1; // Libelle de la marque en Francais
+	private String label2; // Libelle de la marque en Arabe
+	private String desc1; // Description de la marque en Francais
+	private String desc2; // Description de la marque en Arabe
 
+	@Column(columnDefinition = "LONGBLOB")
+	private byte[] img; // Logo de la marque
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
+	@JsonBackReference
+	private Merchant merchant; // Id
 
 	public Brand() {
 
@@ -75,7 +75,7 @@ public class Brand {
 	public void setDesc2(String desc2) {
 		this.desc2 = desc2;
 	}
-	
+
 	public byte[] getImg() {
 		return img;
 	}
@@ -84,13 +84,16 @@ public class Brand {
 		this.img = img;
 	}
 
-	public Set<Product> getProduct() {
-		return product;
-	}
+	/*
+	 * public Merchant getMerchant() { return merchant; }
+	 */
 
-	public void setProduct(Set<Product> product) {
-		this.product = product;
+	public void setMerchant(Merchant merchant) {
+		this.merchant = merchant;
 	}
-
 	
+	
+	public Merchant displayMerchant() { return merchant; }
+	 
+
 }

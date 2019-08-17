@@ -799,20 +799,20 @@ public class MerchantMgmView extends JDialog {
 				textField2.setText(merchant.getLabel2());
 				textField3.setText(merchant.getDesc1());
 				textField4.setText(merchant.getDesc2());
-				
+
 				address_line1.setText(findAddressByRank(1, merchant.getAddresslist()).getLine1());
 				address_line2.setText(findAddressByRank(1, merchant.getAddresslist()).getLine2());
 				address_line3.setText(findAddressByRank(1, merchant.getAddresslist()).getLine3());
 				address_zipcode.setText(findAddressByRank(1, merchant.getAddresslist()).getZipcode());
 				address_city.setText(findAddressByRank(1, merchant.getAddresslist()).getCity());
 				address_country.setText(findAddressByRank(1, merchant.getAddresslist()).getCountry());
-				
+
 				phone_type.setSelectedItem(findPhoneByRank(1, merchant.getPhonelist()).getType());
 				phone_num.setText(findPhoneByRank(1, merchant.getPhonelist()).getNumber());
-				
+
 				email_type.setSelectedItem(findEmailByRank(1, merchant.getEmaillist()).getType());
 				email_email.setText(findEmailByRank(1, merchant.getEmaillist()).getEmail());
-				
+
 				displayImage(imgLabel, merchant.getImg());
 				btnUpdate.setEnabled(true);
 				btnDelete.setEnabled(true);
@@ -892,20 +892,20 @@ public class MerchantMgmView extends JDialog {
 					if (imgPath.getText().length() != 0) {
 						merchant.setImg(readImageFromPath(imgPath.getText()));
 					}
-					
+
 					findAddressByRank(1, merchant.getAddresslist()).setLine1(address_line1.getText());
 					findAddressByRank(1, merchant.getAddresslist()).setLine2(address_line2.getText());
 					findAddressByRank(1, merchant.getAddresslist()).setLine3(address_line3.getText());
 					findAddressByRank(1, merchant.getAddresslist()).setZipcode(address_zipcode.getText());
 					findAddressByRank(1, merchant.getAddresslist()).setCity(address_city.getText());
 					findAddressByRank(1, merchant.getAddresslist()).setCountry(address_country.getText());
-					
+
 					findPhoneByRank(1, merchant.getPhonelist()).setType(String.valueOf(phone_type.getSelectedItem()));
 					findPhoneByRank(1, merchant.getPhonelist()).setNumber(phone_num.getText());
-					
+
 					findEmailByRank(1, merchant.getEmaillist()).setType(String.valueOf(email_type.getSelectedItem()));
 					findEmailByRank(1, merchant.getEmaillist()).setEmail(email_email.getText());
-					
+
 					putForm(merchant, webservice, contentPanel);
 					table.setModel(getMerchantTable(contentPanel));
 					btnValider.setEnabled(false);
