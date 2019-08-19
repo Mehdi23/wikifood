@@ -98,6 +98,7 @@ public class MenuView {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				BrandMgmView brandMgmView= new BrandMgmView();
+				brandMgmView.setLocationRelativeTo(null);
 				brandMgmView.setVisible(true);
 			}
 		});
@@ -120,6 +121,7 @@ public class MenuView {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				CategoryMgmView categoryMgmView= new CategoryMgmView();
+				categoryMgmView.setLocationRelativeTo(null);
 				categoryMgmView.setVisible(true);
 			}
 		});
@@ -142,6 +144,7 @@ public class MenuView {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				ProductTypeMgmView productTypeMgmView= new ProductTypeMgmView();
+				productTypeMgmView.setLocationRelativeTo(null);
 				productTypeMgmView.setVisible(true);
 			}
 		});
@@ -164,6 +167,7 @@ public class MenuView {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				MerchantMgmView merchantMgmView= new MerchantMgmView();
+				merchantMgmView.setLocationRelativeTo(null);
 				merchantMgmView.setVisible(true);
 			}
 		});

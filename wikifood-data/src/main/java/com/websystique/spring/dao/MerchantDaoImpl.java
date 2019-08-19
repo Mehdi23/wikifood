@@ -17,6 +17,7 @@ public class MerchantDaoImpl extends AbstractDao implements MerchantDao {
 		Merchant.getEmaillist().forEach(email->email.setMerchant(Merchant));
 		Merchant.getPhonelist().forEach(phone->phone.setMerchant(Merchant));
 		Merchant.getBrandlist().forEach(brand->brand.setMerchant(Merchant));
+		Merchant.getCategorylist().forEach(category->category.setMerchant(Merchant));
 		persist(Merchant);
 	}
 
@@ -43,6 +44,7 @@ public class MerchantDaoImpl extends AbstractDao implements MerchantDao {
 		Merchant.getEmaillist().forEach(email->email.setMerchant(Merchant));
 		Merchant.getPhonelist().forEach(phone->phone.setMerchant(Merchant));
 		Merchant.getBrandlist().forEach(brand->brand.setMerchant(Merchant));
+		Merchant.getCategorylist().forEach(category->category.setMerchant(Merchant));
 		getSession().update(Merchant);
 		   
 	}

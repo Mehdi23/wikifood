@@ -1,17 +1,16 @@
 package com.websystique.spring.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "producttype")
@@ -24,11 +23,12 @@ public class ProductType {
 	private String label2;
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img;
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "producttype_id", cascade = CascadeType.ALL)
-	private Set<Product> product = new HashSet<Product>(0);
-	
- 
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "category_id", nullable = false, updatable = false, insertable = true)
+	@JsonBackReference
+	private Category category; // Id
+
 	public byte[] getImg() {
 		return img;
 	}
@@ -65,14 +65,12 @@ public class ProductType {
 		this.label2 = label2;
 	}
 
-	public Set<Product> getProduct() {
-		return product;
+	/*
+	 * public Category getCategory() { return category; }
+	 */
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
-	public void setProduct(Set<Product> product) {
-		this.product = product;
-	}
-	
-	
-	
 }

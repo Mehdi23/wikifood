@@ -38,10 +38,12 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.JTextField;
@@ -54,6 +56,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DropMode;
 import java.awt.Color;
 import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class BrandMgmView extends JDialog {
@@ -67,6 +72,7 @@ public class BrandMgmView extends JDialog {
 	public static Brand brand;
 	public static List<Merchant> merchantlist;
 	public static Merchant merchant;
+	public static String serverUrl;
 
 	/**
 	 * Launch the application.
@@ -79,6 +85,24 @@ public class BrandMgmView extends JDialog {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+	}
+
+	private static String getServerUrl() {
+		try (InputStream input = new FileInputStream("emerchant.properties")) {
+
+			Properties prop = new Properties();
+
+			// load a properties file
+			prop.load(input);
+
+			// get the property value and print it out
+			return prop.getProperty("server.url");
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return null;
 		}
 
 	}
@@ -148,7 +172,7 @@ public class BrandMgmView extends JDialog {
 			if (response.getStatus() != 204) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
-			JOptionPane.showMessageDialog(contentPanel, "Donnée enregistrée");
+			JOptionPane.showMessageDialog(contentPanel, "Donnée sauvegardée");
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(contentPanel, "Connexion impossible");
@@ -173,7 +197,7 @@ public class BrandMgmView extends JDialog {
 			if (response.getStatus() != 204) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
-			JOptionPane.showMessageDialog(contentPanel, "Donnée modifiée");
+			JOptionPane.showMessageDialog(contentPanel, "Donnée sauvegardée");
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(contentPanel, "Connexion impossible");
@@ -206,45 +230,13 @@ public class BrandMgmView extends JDialog {
 
 	}
 
-	private static DefaultTableModel getBrandTable(JPanel contentPanel) {
-		String jsonString = null;
-		ObjectMapper mapper = new ObjectMapper();
-		ClientResponse response = null;
-
-		Client client = Client.create();
-		WebResource webResource = client.resource("http://localhost:8080/wikifood/rest/brand/getall");
-		try {
-			response = webResource.type("application/json").get(ClientResponse.class);
-			jsonString = response.getEntity(String.class);
-			brandlist = Arrays.asList(mapper.readValue(jsonString, Brand[].class));
-			String[] columnNames = { "Id", "Label 1", "Label 1", "Description 1", "Description 2" };
-			DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
-			for (Brand brand : brandlist) {
-				Vector<String> row = new Vector<String>();
-				row.add("" + brand.getId());
-				row.add(brand.getLabel1());
-				row.add(brand.getLabel2());
-				row.add(brand.getDesc1());
-				row.add(brand.getDesc2());
-				model.addRow(row);
-			}
-			return model;
-
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(contentPanel, "Connexion impossible");
-			return null;
-		}
-	}
-
 	private static List<Merchant> getMerchantList(JPanel contentPanel) {
 		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
 		ClientResponse response = null;
 
 		Client client = Client.create();
-		WebResource webResource = client.resource("http://localhost:8080/wikifood/rest/merchant/getall");
+		WebResource webResource = client.resource(serverUrl + "/merchant/getall");
 		try {
 			response = webResource.type("application/json").get(ClientResponse.class);
 			jsonString = response.getEntity(String.class);
@@ -258,6 +250,23 @@ public class BrandMgmView extends JDialog {
 		}
 	}
 
+	private static DefaultTableModel getBrandTable(JPanel contentPanel, List<Brand> BrandList) {
+
+		String[] columnNames = { "Id", "Label 1", "Label 1", "Description 1", "Description 2" };
+		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+		for (Brand brand : BrandList) {
+			Vector<String> row = new Vector<String>();
+			row.add("" + brand.getId());
+			row.add(brand.getLabel1());
+			row.add(brand.getLabel2());
+			row.add(brand.getDesc1());
+			row.add(brand.getDesc2());
+			model.addRow(row);
+		}
+		return model;
+	}
+
 	public void enableComponents(Container container, boolean enable) {
 		Component[] components = container.getComponents();
 		for (Component component : components) {
@@ -267,7 +276,7 @@ public class BrandMgmView extends JDialog {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public void clearTextComponents(Container container) {
 		Component[] components = container.getComponents();
@@ -315,8 +324,10 @@ public class BrandMgmView extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public BrandMgmView() {
+		serverUrl = getServerUrl();
+		System.out.println(serverUrl);
+		setType(Type.POPUP);
 		setBounds(100, 100, 885, 695);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -328,27 +339,8 @@ public class BrandMgmView extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		}
 
-		JPanel panel_operations = new JPanel();
-		panel_operations.setBounds(33, 318, 462, 40);
-		contentPanel.add(panel_operations);
-		GridBagLayout gbl_panel_operations = new GridBagLayout();
-		gbl_panel_operations.columnWidths = new int[] { 129, 79, 71, 81, 0 };
-		gbl_panel_operations.rowHeights = new int[] { 23, 0 };
-		gbl_panel_operations.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panel_operations.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		panel_operations.setLayout(gbl_panel_operations);
-
-		JButton btnAjouter = new JButton("Ajouter une marque");
-		btnAjouter.setIcon(new ImageIcon(BrandMgmView.class
-				.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/edit-add.png")));
-		GridBagConstraints gbc_btnAjouter = new GridBagConstraints();
-		gbc_btnAjouter.insets = new Insets(0, 0, 0, 5);
-		gbc_btnAjouter.gridx = 0;
-		gbc_btnAjouter.gridy = 0;
-		panel_operations.add(btnAjouter, gbc_btnAjouter);
-
 		JPanel panel_imgdisplay = new JPanel();
-		panel_imgdisplay.setBounds(689, 76, 163, 162);
+		panel_imgdisplay.setBounds(674, 160, 163, 162);
 		contentPanel.add(panel_imgdisplay);
 		GridBagLayout gbl_panel_imgdisplay = new GridBagLayout();
 		gbl_panel_imgdisplay.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -422,14 +414,51 @@ public class BrandMgmView extends JDialog {
 		gbc_btnDelete.gridy = 0;
 		panel_control.add(btnDelete, gbc_btnDelete);
 
+		JButton btnAjouter = new JButton("Add");
+		GridBagConstraints gbc_btnAjouter = new GridBagConstraints();
+		gbc_btnAjouter.insets = new Insets(0, 0, 0, 5);
+		gbc_btnAjouter.gridx = 5;
+		gbc_btnAjouter.gridy = 0;
+		panel_control.add(btnAjouter, gbc_btnAjouter);
+		btnAjouter.setIcon(new ImageIcon(BrandMgmView.class
+				.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/edit-add.png")));
+
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(33, 76, 598, 31);
+		contentPanel.add(panel_1);
+		GridBagLayout gbl_panel_1 = new GridBagLayout();
+		gbl_panel_1.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panel_1.rowHeights = new int[] { 0, 0 };
+		gbl_panel_1.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_panel_1.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		panel_1.setLayout(gbl_panel_1);
+
+		JLabel lblCommercant = new JLabel("Commercant");
+		GridBagConstraints gbc_lblCommercant = new GridBagConstraints();
+		gbc_lblCommercant.insets = new Insets(0, 0, 0, 5);
+		gbc_lblCommercant.gridx = 1;
+		gbc_lblCommercant.gridy = 0;
+		panel_1.add(lblCommercant, gbc_lblCommercant);
+		lblCommercant.setEnabled(false);
+
+		merchantlist = getMerchantList(contentPanel);
+		JComboBox<Object> comboBox = new JComboBox<>(merchantlist.toArray());
+		GridBagConstraints gbc_comboBox = new GridBagConstraints();
+		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox.gridx = 5;
+		gbc_comboBox.gridy = 0;
+		panel_1.add(comboBox, gbc_comboBox);
+
+		merchant = (Merchant) comboBox.getSelectedItem();
+
 		JPanel panel = new JPanel();
-		panel.setBounds(33, 369, 619, 245);
+		panel.setBounds(33, 402, 619, 234);
 		contentPanel.add(panel);
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
 
 		JTable table = new JTable();
 
-		table.setModel(getBrandTable(contentPanel));
+		table.setModel(getBrandTable(contentPanel, merchant.getBrandlist()));
 
 		table.getColumnModel().getColumn(0).setPreferredWidth(102);
 		table.getColumnModel().getColumn(1).setPreferredWidth(140);
@@ -440,35 +469,20 @@ public class BrandMgmView extends JDialog {
 		JScrollPane scrollPane = new JScrollPane(table);
 		panel.add(scrollPane);
 
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(33, 139, 598, 232);
+		contentPanel.add(tabbedPane);
+
 		JPanel panel_formulaire = new JPanel();
-		panel_formulaire.setBounds(33, 76, 598, 235);
-		contentPanel.add(panel_formulaire);
+		tabbedPane.addTab("Informations", null, panel_formulaire, null);
 
 		enableComponents(panel_formulaire, false);
 		GridBagLayout gbl_panel_formulaire = new GridBagLayout();
 		gbl_panel_formulaire.columnWidths = new int[] { 30, 148, 356, 0 };
-		gbl_panel_formulaire.rowHeights = new int[] { 20, 20, 20, 40, 40, 20, 25, 0 };
+		gbl_panel_formulaire.rowHeights = new int[] { 30, 20, 35, 22, 22, 20, 25, 0 };
 		gbl_panel_formulaire.columnWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_panel_formulaire.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_formulaire.setLayout(gbl_panel_formulaire);
-
-		JLabel lblCommercant = new JLabel("Commercant");
-		lblCommercant.setEnabled(false);
-		GridBagConstraints gbc_lblCommercant = new GridBagConstraints();
-		gbc_lblCommercant.anchor = GridBagConstraints.WEST;
-		gbc_lblCommercant.insets = new Insets(0, 0, 5, 5);
-		gbc_lblCommercant.gridx = 1;
-		gbc_lblCommercant.gridy = 0;
-		panel_formulaire.add(lblCommercant, gbc_lblCommercant);
-
-		JComboBox comboBox = new JComboBox();
-		comboBox.setEnabled(false);
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_comboBox.gridx = 2;
-		gbc_comboBox.gridy = 0;
-		panel_formulaire.add(comboBox, gbc_comboBox);
 
 		JLabel libelle1 = new JLabel("Libelle de la marque (FR)");
 		libelle1.setEnabled(false);
@@ -582,9 +596,6 @@ public class BrandMgmView extends JDialog {
 
 		loadImage.setVisible(false);
 
-		merchantlist = getMerchantList(contentPanel);
-		comboBox.setModel(new DefaultComboBoxModel(merchantlist.toArray()));
-
 		// Lorsqu'on click sur le FileChooser pour selectionner une photo
 		loadImage.addMouseListener(new MouseAdapter() {
 
@@ -616,6 +627,16 @@ public class BrandMgmView extends JDialog {
 				}
 			}
 		});
+		enableComponents(tabbedPane, false);
+
+		// Lorsqu'on selectionne un element dans le ComboBox
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				merchant = (Merchant) comboBox.getSelectedItem();
+				table.setModel(getBrandTable(contentPanel, merchant.getBrandlist()));
+				clearTextComponents(panel_formulaire);
+			}
+		});
 
 		// Lorsqu'on click sur un enregitrement du tableau
 		table.addMouseListener(new MouseAdapter() {
@@ -623,16 +644,42 @@ public class BrandMgmView extends JDialog {
 			public void mouseClicked(MouseEvent arg0) {
 				int row = table.rowAtPoint(arg0.getPoint());
 				int s = Integer.parseInt(table.getModel().getValueAt(row, 0) + "");
-				brand = findBrandById(s, brandlist);
+				brand = findBrandById(s, merchant.getBrandlist());
 				textField1.setText(brand.getLabel1());
 				textField2.setText(brand.getLabel2());
 				textField3.setText(brand.getDesc1());
 				textField4.setText(brand.getDesc2());
-				displayImage(imgLabel, brand.getImg());
-				comboBox.setSelectedItem(findMerchantByBrandId(s, merchantlist));
+				if (brand.getImg() != null) {
+					imgLabel.setVisible(true);
+					displayImage(imgLabel, brand.getImg());
+				} else {
+					imgLabel.setVisible(false);
+
+				}
+				;
 				btnUpdate.setEnabled(true);
 				btnDelete.setEnabled(true);
 				panel_imgdisplay.setVisible(true);
+			}
+		});
+
+		// Lorsqu'on click sur le bouton "Ajouter"
+		btnAjouter.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnValider.setEnabled(true);
+				btnSortir.setEnabled(true);
+				enableComponents(panel_formulaire, true);
+				loadImage.setEnabled(true);
+				loadImage.setVisible(true);
+				panel_imgdisplay.setVisible(true);
+				clearTextComponents(panel_formulaire);
+				clearImage(imgLabel);
+				btnUpdate.setEnabled(false);
+				btnDelete.setEnabled(false);
+				table.setVisible(false);
+				comboBox.setEnabled(true);
+				typeOperation = "Create";
 			}
 		});
 
@@ -657,9 +704,9 @@ public class BrandMgmView extends JDialog {
 
 					merchant = (Merchant) comboBox.getSelectedItem();
 					merchant.add(brand);
-					webservice = "http://localhost:8080/wikifood/rest/merchant";
+					webservice = serverUrl + "/merchant";
 					putForm(merchant, webservice, contentPanel);
-					table.setModel(getBrandTable(contentPanel));
+					table.setModel(getBrandTable(contentPanel, merchant.getBrandlist()));
 					btnValider.setEnabled(false);
 					btnSortir.setEnabled(false);
 					enableComponents(panel_formulaire, false);
@@ -668,8 +715,11 @@ public class BrandMgmView extends JDialog {
 					panel_imgdisplay.setVisible(true);
 					imgLabel.setIcon(null);
 					clearTextComponents(panel_formulaire);
-					panel_operations.setVisible(true);
 					table.setVisible(true);
+					merchantlist = getMerchantList(contentPanel);
+					comboBox.setModel(new DefaultComboBoxModel<Object>(merchantlist.toArray()));
+					merchant = (Merchant) comboBox.getSelectedItem();
+					table.setModel(getBrandTable(contentPanel, merchant.getBrandlist()));
 					break;
 
 				case "Update":
@@ -681,9 +731,8 @@ public class BrandMgmView extends JDialog {
 						brand.setImg(readImageFromPath(imgPath.getText()));
 					}
 
-					webservice = "http://localhost:8080/wikifood/rest/brand";
+					webservice = serverUrl + "/brand";
 					putForm(brand, webservice, contentPanel);
-					table.setModel(getBrandTable(contentPanel));
 					btnValider.setEnabled(false);
 					btnSortir.setEnabled(false);
 					enableComponents(panel_formulaire, false);
@@ -692,34 +741,17 @@ public class BrandMgmView extends JDialog {
 					panel_imgdisplay.setVisible(true);
 					imgLabel.setIcon(null);
 					clearTextComponents(panel_formulaire);
-					panel_operations.setVisible(true);
 					table.setVisible(true);
+					merchantlist = getMerchantList(contentPanel);
+					comboBox.setModel(new DefaultComboBoxModel<Object>(merchantlist.toArray()));
+					merchant = (Merchant) comboBox.getSelectedItem();
+					table.setModel(getBrandTable(contentPanel, merchant.getBrandlist()));
+
 					break;
-					
+
 				default:
 					// code block
 				}
-			}
-		});
-
-		// Lorsqu'on click sur le bouton "Ajouter"
-		btnAjouter.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				btnValider.setEnabled(true);
-				btnSortir.setEnabled(true);
-				enableComponents(panel_formulaire, true);
-				loadImage.setEnabled(true);
-				loadImage.setVisible(true);
-				panel_imgdisplay.setVisible(true);
-				panel_operations.setVisible(false);
-				clearTextComponents(panel_formulaire);
-				clearImage(imgLabel);
-				btnUpdate.setEnabled(false);
-				btnDelete.setEnabled(false);
-				table.setVisible(false);
-				comboBox.setEnabled(true);
-				typeOperation = "Create";
 			}
 		});
 
@@ -733,11 +765,10 @@ public class BrandMgmView extends JDialog {
 				loadImage.setEnabled(true);
 				loadImage.setVisible(true);
 				panel_imgdisplay.setVisible(true);
-				panel_operations.setVisible(false);
 				btnUpdate.setEnabled(false);
 				btnDelete.setEnabled(false);
 				table.setVisible(false);
-				comboBox.setEnabled(false);
+				comboBox.setEnabled(true);
 				typeOperation = "Update";
 			}
 		});
@@ -755,10 +786,10 @@ public class BrandMgmView extends JDialog {
 				imgLabel.setIcon(null);
 				clearTextComponents(panel_formulaire);
 				clearImage(imgLabel);
-				panel_operations.setVisible(true);
 				btnUpdate.setEnabled(false);
 				btnDelete.setEnabled(false);
 				table.setVisible(true);
+				comboBox.setEnabled(true);
 
 			}
 		});
@@ -767,13 +798,16 @@ public class BrandMgmView extends JDialog {
 		btnDelete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				String webservice = "http://localhost:8080/wikifood/rest/brand";
+				String webservice = serverUrl + "/brand";
 				deleteForm(brand, webservice, contentPanel);
-				table.setModel(getBrandTable(contentPanel));
 				imgLabel.setIcon(null);
 				clearTextComponents(panel_formulaire);
 				btnUpdate.setEnabled(false);
 				btnDelete.setEnabled(false);
+				merchantlist = getMerchantList(contentPanel);
+				comboBox.setModel(new DefaultComboBoxModel<Object>(merchantlist.toArray()));
+				merchant = (Merchant) comboBox.getSelectedItem();
+				table.setModel(getBrandTable(contentPanel, merchant.getBrandlist()));
 			}
 		});
 

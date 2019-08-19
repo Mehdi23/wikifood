@@ -14,6 +14,7 @@ public class CategoryDaoImpl extends AbstractDao implements CategoryDao {
 	/*private static final Logger logger = LogManager.getLogger("HelloWorld");*/
 
 	public void saveCategory(Category Category) {
+		Category.getProductTypelist().forEach(producttype->producttype.setCategory(Category));
 		persist(Category);
 	}
 
@@ -36,6 +37,7 @@ public class CategoryDaoImpl extends AbstractDao implements CategoryDao {
 	}
 	
 	public void updateCategory(Category Category) {
+		Category.getProductTypelist().forEach(producttype->producttype.setCategory(Category));
 		getSession().update(Category);
 		   
 	}

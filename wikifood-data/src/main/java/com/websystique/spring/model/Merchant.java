@@ -53,6 +53,11 @@ public class Merchant {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Brand> brandlist = new ArrayList<Brand>();
 
+	@OneToMany(targetEntity = Category.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Category> categorylist = new ArrayList<Category>();
+
 	public Merchant() {
 
 	}
@@ -129,6 +134,14 @@ public class Merchant {
 		this.brandlist = brandlist;
 	}
 
+	public List<Category> getCategorylist() {
+		return categorylist;
+	}
+
+	public void setCategorylist(List<Category> categorylist) {
+		this.categorylist = categorylist;
+	}
+
 	public byte[] getImg() {
 		return img;
 	}
@@ -188,10 +201,25 @@ public class Merchant {
 			brandlist.add(brand);
 		}
 	}
+	
+	public void add(Category category) {
+		if (category == null) {
+			return;
+		}
+		category.setMerchant(this);
+		if (categorylist == null) {
+			categorylist = new ArrayList<Category>();
+			categorylist.add(category);
+		} else if (!categorylist.contains(category)) {
+			categorylist.add(category);
+		}
+	}
 
 	@Override
 	public String toString() {
 		return "Merchant [id=" + id + ", label1=" + label1 + "]";
 	}
 	
+	
+
 }
