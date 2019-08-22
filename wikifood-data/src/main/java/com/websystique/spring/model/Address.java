@@ -29,7 +29,7 @@ public class Address {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference
+	@JsonBackReference("merchantaddress")
 	private Merchant merchant; // Id
 
 	public Address() {

@@ -80,9 +80,9 @@ public class MenuView {
 		panel.add(panel_1);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
 		gbl_panel_1.columnWidths = new int[]{0, 0, 0, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
 		Label label_1 = new Label("Gestion des marques \r\nde produits");
@@ -157,7 +157,7 @@ public class MenuView {
 		Label label_4 = new Label("Gestion des commerçants");
 		GridBagConstraints gbc_label_4 = new GridBagConstraints();
 		gbc_label_4.anchor = GridBagConstraints.WEST;
-		gbc_label_4.insets = new Insets(0, 0, 0, 5);
+		gbc_label_4.insets = new Insets(0, 0, 5, 5);
 		gbc_label_4.gridx = 0;
 		gbc_label_4.gridy = 3;
 		panel_1.add(label_4, gbc_label_4);
@@ -172,8 +172,31 @@ public class MenuView {
 			}
 		});
 		GridBagConstraints gbc_button_3 = new GridBagConstraints();
+		gbc_button_3.insets = new Insets(0, 0, 5, 0);
 		gbc_button_3.gridx = 2;
 		gbc_button_3.gridy = 3;
 		panel_1.add(button_3, gbc_button_3);
+		
+		Label label_5 = new Label("Gestion des produits");
+		GridBagConstraints gbc_label_5 = new GridBagConstraints();
+		gbc_label_5.anchor = GridBagConstraints.WEST;
+		gbc_label_5.insets = new Insets(0, 0, 0, 5);
+		gbc_label_5.gridx = 0;
+		gbc_label_5.gridy = 4;
+		panel_1.add(label_5, gbc_label_5);
+		
+		Button button_4 = new Button("New button");
+		button_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ProductMgmView productMgmView= new ProductMgmView();
+				productMgmView.setLocationRelativeTo(null);
+				productMgmView.setVisible(true);
+			}
+		});
+		GridBagConstraints gbc_button_4 = new GridBagConstraints();
+		gbc_button_4.gridx = 2;
+		gbc_button_4.gridy = 4;
+		panel_1.add(button_4, gbc_button_4);
 	}
 }

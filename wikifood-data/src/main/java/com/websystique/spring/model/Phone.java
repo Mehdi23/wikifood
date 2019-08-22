@@ -24,7 +24,7 @@ public class Phone {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference
+	@JsonBackReference("merchantphone")
 	private Merchant merchant; // Id
 
 	public Phone() {

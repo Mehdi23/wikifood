@@ -240,6 +240,7 @@ public class BrandMgmView extends JDialog {
 		try {
 			response = webResource.type("application/json").get(ClientResponse.class);
 			jsonString = response.getEntity(String.class);
+	        System.out.println(jsonString);
 			List<Merchant> merchantlist = Arrays.asList(mapper.readValue(jsonString, Merchant[].class));
 			return merchantlist;
 

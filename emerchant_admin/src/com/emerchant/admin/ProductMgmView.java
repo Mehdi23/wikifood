@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.websystique.spring.model.Category;
+import com.websystique.spring.model.Product;
 import com.websystique.spring.model.Merchant;
 
 import java.awt.GridBagLayout;
@@ -53,6 +53,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.GridLayout;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DropMode;
 import java.awt.Color;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
@@ -60,15 +61,15 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
-public class CategoryMgmView extends JDialog {
+public class ProductMgmView extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField1;
 	private JTextField textField2;
 	private JTextField imgPath;
 	public String typeOperation;
-	public static List<Category> categorylist;
-	public static Category category;
+	public static List<Product> Productlist;
+	public static Product Product;
 	public static List<Merchant> merchantlist;
 	public static Merchant merchant;
 	public static String serverUrl;
@@ -78,7 +79,7 @@ public class CategoryMgmView extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			CategoryMgmView dialog = new CategoryMgmView();
+			ProductMgmView dialog = new ProductMgmView();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 
@@ -154,7 +155,7 @@ public class CategoryMgmView extends JDialog {
 	}
 
 	@SuppressWarnings("unused")
-	private static void postForm(Category o, String webservice, JPanel contentPanel) {
+	private static void postForm(Merchant o, String webservice, JPanel contentPanel) {
 		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -204,7 +205,7 @@ public class CategoryMgmView extends JDialog {
 
 	}
 
-	private static void deleteForm(Category o, String webservice, JPanel contentPanel) {
+	private static void deleteForm(Product o, String webservice, JPanel contentPanel) {
 		String jsonString = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -239,8 +240,8 @@ public class CategoryMgmView extends JDialog {
 		try {
 			response = webResource.type("application/json").get(ClientResponse.class);
 			jsonString = response.getEntity(String.class);
-			List<Merchant> Merchantlist = Arrays.asList(mapper.readValue(jsonString, Merchant[].class));
-			return Merchantlist;
+			List<Merchant> merchantlist = Arrays.asList(mapper.readValue(jsonString, Merchant[].class));
+			return merchantlist;
 
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
@@ -249,16 +250,18 @@ public class CategoryMgmView extends JDialog {
 		}
 	}
 
-	private static DefaultTableModel getCategoryTable(JPanel contentPanel, List<Category> categoryList) {
+	private static DefaultTableModel getProductTable(JPanel contentPanel, List<Product> ProductList) {
 
-		String[] columnNames = { "Id", "Label 1", "Label 1"};
+		String[] columnNames = { "Id", "Label 1", "Label 1", "Description 1", "Description 2" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-		for (Category category : categoryList) {
+		for (Product Product : ProductList) {
 			Vector<String> row = new Vector<String>();
-			row.add("" + category.getId());
-			row.add(category.getLabel1());
-			row.add(category.getLabel2());
+			row.add("" + Product.getId());
+			row.add(Product.getLabel1());
+			row.add(Product.getLabel2());
+			row.add(Product.getDesc1());
+			row.add(Product.getDesc2());
 			model.addRow(row);
 		}
 		return model;
@@ -296,21 +299,21 @@ public class CategoryMgmView extends JDialog {
 
 	}
 
-	public Category findCategoryById(int id, List<Category> Categorys) {
+	public Product findProductById(int id, List<Product> Products) {
 
-		for (Category category : Categorys) {
-			if (category.getId() == id) {
-				return category;
+		for (Product Product : Products) {
+			if (Product.getId() == id) {
+				return Product;
 			}
 		}
 		return null;
 	}
 
-	public Merchant findMerchantByCategoryId(int id, List<Merchant> merchants) {
+	public Merchant findMerchantByProductId(int id, List<Merchant> merchants) {
 
 		for (Merchant merchant : merchants) {
-			for (Category category : merchant.getCategorylist()) {
-				if (category.getId() == id) {
+			for (Product Product : merchant.getProductlist()) {
+				if (Product.getId() == id) {
 					return merchant;
 				}
 			}
@@ -321,8 +324,9 @@ public class CategoryMgmView extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public CategoryMgmView() {
+	public ProductMgmView() {
 		serverUrl = getServerUrl();
+		System.out.println(serverUrl);
 		setType(Type.POPUP);
 		setBounds(100, 100, 885, 695);
 		getContentPane().setLayout(new BorderLayout());
@@ -368,7 +372,7 @@ public class CategoryMgmView extends JDialog {
 		JButton btnValider = new JButton("valider");
 
 		btnValider.setEnabled(false);
-		btnValider.setIcon(new ImageIcon(CategoryMgmView.class
+		btnValider.setIcon(new ImageIcon(ProductMgmView.class
 				.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/status/dialog-clean.png")));
 		GridBagConstraints gbc_btnValider = new GridBagConstraints();
 		gbc_btnValider.insets = new Insets(0, 0, 0, 5);
@@ -379,7 +383,7 @@ public class CategoryMgmView extends JDialog {
 		JButton btnSortir = new JButton("Sortir");
 
 		btnSortir.setEnabled(false);
-		btnSortir.setIcon(new ImageIcon(CategoryMgmView.class.getResource(
+		btnSortir.setIcon(new ImageIcon(ProductMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/application-exit-3.png")));
 		GridBagConstraints gbc_btnSortir = new GridBagConstraints();
 		gbc_btnSortir.fill = GridBagConstraints.VERTICAL;
@@ -389,7 +393,7 @@ public class CategoryMgmView extends JDialog {
 		panel_control.add(btnSortir, gbc_btnSortir);
 
 		JButton btnUpdate = new JButton("Update");
-		btnUpdate.setIcon(new ImageIcon(CategoryMgmView.class.getResource(
+		btnUpdate.setIcon(new ImageIcon(ProductMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/apps/accessories-text-editor-5.png")));
 		btnUpdate.setEnabled(false);
 		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
@@ -399,7 +403,7 @@ public class CategoryMgmView extends JDialog {
 		panel_control.add(btnUpdate, gbc_btnUpdate);
 
 		JButton btnDelete = new JButton("Delete");
-		btnDelete.setIcon(new ImageIcon(CategoryMgmView.class.getResource(
+		btnDelete.setIcon(new ImageIcon(ProductMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/dialog-cancel-7.png")));
 		btnDelete.setEnabled(false);
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
@@ -416,7 +420,7 @@ public class CategoryMgmView extends JDialog {
 		gbc_btnAjouter.gridx = 5;
 		gbc_btnAjouter.gridy = 0;
 		panel_control.add(btnAjouter, gbc_btnAjouter);
-		btnAjouter.setIcon(new ImageIcon(CategoryMgmView.class
+		btnAjouter.setIcon(new ImageIcon(ProductMgmView.class
 				.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/edit-add.png")));
 
 		JPanel panel_1 = new JPanel();
@@ -454,11 +458,13 @@ public class CategoryMgmView extends JDialog {
 
 		JTable table = new JTable();
 
-		table.setModel(getCategoryTable(contentPanel, merchant.getCategorylist()));
+		table.setModel(getProductTable(contentPanel, merchant.getProductlist()));
 
 		table.getColumnModel().getColumn(0).setPreferredWidth(102);
 		table.getColumnModel().getColumn(1).setPreferredWidth(140);
 		table.getColumnModel().getColumn(2).setPreferredWidth(146);
+		table.getColumnModel().getColumn(3).setPreferredWidth(167);
+		table.getColumnModel().getColumn(4).setPreferredWidth(168);
 		panel.add(table);
 		JScrollPane scrollPane = new JScrollPane(table);
 		panel.add(scrollPane);
@@ -517,6 +523,48 @@ public class CategoryMgmView extends JDialog {
 		panel_formulaire.add(textField2, gbc_textField2);
 		textField2.setColumns(10);
 
+		JLabel libelle3 = new JLabel("Description de la marque (FR)  ");
+		libelle3.setEnabled(false);
+		GridBagConstraints gbc_libelle3 = new GridBagConstraints();
+		gbc_libelle3.insets = new Insets(0, 0, 5, 5);
+		gbc_libelle3.gridx = 1;
+		gbc_libelle3.gridy = 3;
+		panel_formulaire.add(libelle3, gbc_libelle3);
+
+		JTextArea textField3 = new JTextArea();
+		textField3.setRows(2);
+		textField3.setDropMode(DropMode.INSERT);
+		textField3.setLineWrap(true);
+		textField3.setWrapStyleWord(true);
+		GridBagConstraints gbc_textField3 = new GridBagConstraints();
+		gbc_textField3.fill = GridBagConstraints.BOTH;
+		gbc_textField3.insets = new Insets(0, 0, 5, 0);
+		gbc_textField3.gridx = 2;
+		gbc_textField3.gridy = 3;
+		panel_formulaire.add(textField3, gbc_textField3);
+
+		JLabel libelle4 = new JLabel("Description de la marque (EN)");
+		libelle4.setEnabled(false);
+		GridBagConstraints gbc_libelle4 = new GridBagConstraints();
+		gbc_libelle4.anchor = GridBagConstraints.WEST;
+		gbc_libelle4.insets = new Insets(0, 0, 5, 5);
+		gbc_libelle4.gridx = 1;
+		gbc_libelle4.gridy = 4;
+		panel_formulaire.add(libelle4, gbc_libelle4);
+
+		JTextArea textField4 = new JTextArea();
+		textField4.setRows(2);
+		textField4.setWrapStyleWord(true);
+		textField4.setLineWrap(true);
+		textField4.setBackground(Color.WHITE);
+		textField4.setDropMode(DropMode.INSERT);
+		GridBagConstraints gbc_textField4 = new GridBagConstraints();
+		gbc_textField4.fill = GridBagConstraints.BOTH;
+		gbc_textField4.insets = new Insets(0, 0, 5, 0);
+		gbc_textField4.gridx = 2;
+		gbc_textField4.gridy = 4;
+		panel_formulaire.add(textField4, gbc_textField4);
+
 		JLabel libelle5 = new JLabel("Logo de la marque");
 		libelle5.setEnabled(false);
 		GridBagConstraints gbc_libelle5 = new GridBagConstraints();
@@ -538,7 +586,7 @@ public class CategoryMgmView extends JDialog {
 		panel_formulaire.add(imgPath, gbc_imgPath);
 
 		JButton loadImage = new JButton("Load");
-		loadImage.setIcon(new ImageIcon(CategoryMgmView.class.getResource(
+		loadImage.setIcon(new ImageIcon(ProductMgmView.class.getResource(
 				"/META-INF/resources/webjars/open-icon-library/0.11/png/16x16/places/oxygen-style/folder.png")));
 		GridBagConstraints gbc_loadImage = new GridBagConstraints();
 		gbc_loadImage.anchor = GridBagConstraints.EAST;
@@ -585,7 +633,7 @@ public class CategoryMgmView extends JDialog {
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				merchant = (Merchant) comboBox.getSelectedItem();
-				table.setModel(getCategoryTable(contentPanel, merchant.getCategorylist()));
+				table.setModel(getProductTable(contentPanel, merchant.getProductlist()));
 				clearTextComponents(panel_formulaire);
 			}
 		});
@@ -596,13 +644,14 @@ public class CategoryMgmView extends JDialog {
 			public void mouseClicked(MouseEvent arg0) {
 				int row = table.rowAtPoint(arg0.getPoint());
 				int s = Integer.parseInt(table.getModel().getValueAt(row, 0) + "");
-				category = findCategoryById(s, merchant.getCategorylist());
-				textField1.setText(category.getLabel1());
-				textField2.setText(category.getLabel2());
-
-				if (category.getImg() != null) {
+				Product = findProductById(s, merchant.getProductlist());
+				textField1.setText(Product.getLabel1());
+				textField2.setText(Product.getLabel2());
+				textField3.setText(Product.getDesc1());
+				textField4.setText(Product.getDesc2());
+				if (Product.getImg() != null) {
 					imgLabel.setVisible(true);
-					displayImage(imgLabel, category.getImg());
+					displayImage(imgLabel, Product.getImg());
 				} else {
 					imgLabel.setVisible(false);
 
@@ -644,19 +693,20 @@ public class CategoryMgmView extends JDialog {
 
 				switch (typeOperation) {
 				case "Create":
-					category = new Category();
-					category.setLabel1(textField1.getText());
-					category.setLabel2(textField2.getText());
-
+					Product = new Product();
+					Product.setLabel1(textField1.getText());
+					Product.setLabel2(textField2.getText());
+					Product.setDesc1(textField3.getText());
+					Product.setDesc2(textField4.getText());
 					if (imgPath.getText().length() != 0) {
-						category.setImg(readImageFromPath(imgPath.getText()));
+						Product.setImg(readImageFromPath(imgPath.getText()));
 					}
 
 					merchant = (Merchant) comboBox.getSelectedItem();
-					merchant.add(category);
+					merchant.add(Product);
 					webservice = serverUrl + "/merchant";
 					putForm(merchant, webservice, contentPanel);
-					table.setModel(getCategoryTable(contentPanel, merchant.getCategorylist()));
+					table.setModel(getProductTable(contentPanel, merchant.getProductlist()));
 					btnValider.setEnabled(false);
 					btnSortir.setEnabled(false);
 					enableComponents(panel_formulaire, false);
@@ -669,19 +719,20 @@ public class CategoryMgmView extends JDialog {
 					merchantlist = getMerchantList(contentPanel);
 					comboBox.setModel(new DefaultComboBoxModel<Object>(merchantlist.toArray()));
 					merchant = (Merchant) comboBox.getSelectedItem();
-					table.setModel(getCategoryTable(contentPanel, merchant.getCategorylist()));
+					table.setModel(getProductTable(contentPanel, merchant.getProductlist()));
 					break;
 
 				case "Update":
-					category.setLabel1(textField1.getText());
-					category.setLabel2(textField2.getText());
-		
+					Product.setLabel1(textField1.getText());
+					Product.setLabel2(textField2.getText());
+					Product.setDesc1(textField3.getText());
+					Product.setDesc2(textField4.getText());
 					if (imgPath.getText().length() != 0) {
-						category.setImg(readImageFromPath(imgPath.getText()));
+						Product.setImg(readImageFromPath(imgPath.getText()));
 					}
 
-					webservice = serverUrl + "/category";
-					putForm(category, webservice, contentPanel);
+					webservice = serverUrl + "/product";
+					putForm(Product, webservice, contentPanel);
 					btnValider.setEnabled(false);
 					btnSortir.setEnabled(false);
 					enableComponents(panel_formulaire, false);
@@ -694,7 +745,7 @@ public class CategoryMgmView extends JDialog {
 					merchantlist = getMerchantList(contentPanel);
 					comboBox.setModel(new DefaultComboBoxModel<Object>(merchantlist.toArray()));
 					merchant = (Merchant) comboBox.getSelectedItem();
-					table.setModel(getCategoryTable(contentPanel, merchant.getCategorylist()));
+					table.setModel(getProductTable(contentPanel, merchant.getProductlist()));
 
 					break;
 
@@ -747,8 +798,8 @@ public class CategoryMgmView extends JDialog {
 		btnDelete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				String webservice = serverUrl + "/category";
-				deleteForm(category, webservice, contentPanel);
+				String webservice = serverUrl + "/product";
+				deleteForm(Product, webservice, contentPanel);
 				imgLabel.setIcon(null);
 				clearTextComponents(panel_formulaire);
 				btnUpdate.setEnabled(false);
@@ -756,7 +807,7 @@ public class CategoryMgmView extends JDialog {
 				merchantlist = getMerchantList(contentPanel);
 				comboBox.setModel(new DefaultComboBoxModel<Object>(merchantlist.toArray()));
 				merchant = (Merchant) comboBox.getSelectedItem();
-				table.setModel(getCategoryTable(contentPanel, merchant.getCategorylist()));
+				table.setModel(getProductTable(contentPanel, merchant.getProductlist()));
 			}
 		});
 

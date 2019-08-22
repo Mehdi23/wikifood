@@ -41,9 +41,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.JTextField;
@@ -75,6 +77,7 @@ public class MerchantMgmView extends JDialog {
 	private JTextField phone_num;
 	private JTextField email_email;
 	private JTextField address_zipcode;
+	public static String serverUrl;
 
 	/**
 	 * Launch the application.
@@ -87,6 +90,24 @@ public class MerchantMgmView extends JDialog {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+	}
+
+	private static String getServerUrl() {
+		try (InputStream input = new FileInputStream("emerchant.properties")) {
+
+			Properties prop = new Properties();
+
+			// load a properties file
+			prop.load(input);
+
+			// get the property value and print it out
+			return prop.getProperty("server.url");
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return null;
 		}
 
 	}
@@ -217,7 +238,7 @@ public class MerchantMgmView extends JDialog {
 		ClientResponse response = null;
 
 		Client client = Client.create();
-		WebResource webResource = client.resource("http://localhost:8080/wikifood/rest/merchant/getall");
+		WebResource webResource = client.resource(serverUrl+"/merchant/getall");
 
 		try {
 			response = webResource.type("application/json").get(ClientResponse.class);
@@ -316,6 +337,7 @@ public class MerchantMgmView extends JDialog {
 	 * Create the dialog.
 	 */
 	public MerchantMgmView() {
+		serverUrl = getServerUrl();
 		setBounds(100, 100, 993, 632);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -327,27 +349,8 @@ public class MerchantMgmView extends JDialog {
 			getContentPane().add(MerchantInfo, BorderLayout.SOUTH);
 		}
 
-		JPanel panel_operations = new JPanel();
-		panel_operations.setBounds(33, 318, 462, 40);
-		contentPanel.add(panel_operations);
-		GridBagLayout gbl_panel_operations = new GridBagLayout();
-		gbl_panel_operations.columnWidths = new int[] { 129, 79, 71, 81, 0 };
-		gbl_panel_operations.rowHeights = new int[] { 23, 0 };
-		gbl_panel_operations.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panel_operations.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		panel_operations.setLayout(gbl_panel_operations);
-
-		JButton btnAjouter = new JButton("Ajouter un commerçant");
-		btnAjouter.setIcon(new ImageIcon(MerchantMgmView.class
-				.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/edit-add.png")));
-		GridBagConstraints gbc_btnAjouter = new GridBagConstraints();
-		gbc_btnAjouter.insets = new Insets(0, 0, 0, 5);
-		gbc_btnAjouter.gridx = 0;
-		gbc_btnAjouter.gridy = 0;
-		panel_operations.add(btnAjouter, gbc_btnAjouter);
-
 		JPanel panel_imgdisplay = new JPanel();
-		panel_imgdisplay.setBounds(804, 76, 163, 162);
+		panel_imgdisplay.setBounds(788, 98, 163, 162);
 		contentPanel.add(panel_imgdisplay);
 		GridBagLayout gbl_panel_imgdisplay = new GridBagLayout();
 		gbl_panel_imgdisplay.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -420,7 +423,17 @@ public class MerchantMgmView extends JDialog {
 		gbc_btnDelete.gridx = 3;
 		gbc_btnDelete.gridy = 0;
 		panel_control.add(btnDelete, gbc_btnDelete);
-
+		
+				JButton btnAjouter = new JButton("Add");
+				GridBagConstraints gbc_btnAjouter = new GridBagConstraints();
+				gbc_btnAjouter.insets = new Insets(0, 0, 0, 5);
+				gbc_btnAjouter.gridx = 5;
+				gbc_btnAjouter.gridy = 0;
+				panel_control.add(btnAjouter, gbc_btnAjouter);
+				btnAjouter.setIcon(new ImageIcon(MerchantMgmView.class
+						.getResource("/META-INF/resources/webjars/open-icon-library/0.11/png/24x24/actions/edit-add.png")));
+				
+						
 		JPanel panel = new JPanel();
 		panel.setBounds(33, 369, 619, 193);
 		contentPanel.add(panel);
@@ -440,7 +453,7 @@ public class MerchantMgmView extends JDialog {
 		panel.add(scrollPane);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(33, 76, 745, 231);
+		tabbedPane.setBounds(33, 76, 745, 275);
 		contentPanel.add(tabbedPane);
 
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -450,9 +463,9 @@ public class MerchantMgmView extends JDialog {
 		scrollPane_1.setRowHeaderView(panel_info);
 		GridBagLayout gbl_panel_info = new GridBagLayout();
 		gbl_panel_info.columnWidths = new int[] { 30, 130, 49, 156, 0 };
-		gbl_panel_info.rowHeights = new int[] { 20, 20, 36, 36, 0, 0 };
+		gbl_panel_info.rowHeights = new int[] { 20, 20, 36, 36, 0, 0, 0 };
 		gbl_panel_info.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
-		gbl_panel_info.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_info.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_info.setLayout(gbl_panel_info);
 
 		JLabel libelle1 = new JLabel("Libelle du commerçant (FR)");
@@ -472,7 +485,7 @@ public class MerchantMgmView extends JDialog {
 		gbc_textField1.gridx = 3;
 		gbc_textField1.gridy = 0;
 		panel_info.add(textField1, gbc_textField1);
-		textField1.setColumns(10);
+		textField1.setColumns(35);
 
 		JLabel libelle2 = new JLabel("Libelle du commerçant (EN)");
 		libelle2.setEnabled(false);
@@ -542,29 +555,63 @@ public class MerchantMgmView extends JDialog {
 		libelle5.setEnabled(false);
 		GridBagConstraints gbc_libelle5 = new GridBagConstraints();
 		gbc_libelle5.anchor = GridBagConstraints.WEST;
-		gbc_libelle5.insets = new Insets(0, 0, 0, 5);
+		gbc_libelle5.insets = new Insets(0, 0, 5, 5);
 		gbc_libelle5.gridx = 1;
 		gbc_libelle5.gridy = 4;
 		panel_info.add(libelle5, gbc_libelle5);
-
-		JButton loadImage = new JButton("Load");
-		loadImage.setIcon(new ImageIcon(MerchantMgmView.class.getResource(
-				"/META-INF/resources/webjars/open-icon-library/0.11/png/16x16/places/oxygen-style/folder.png")));
-		GridBagConstraints gbc_loadImage = new GridBagConstraints();
-		gbc_loadImage.insets = new Insets(0, 0, 0, 5);
-		gbc_loadImage.gridx = 2;
-		gbc_loadImage.gridy = 4;
-		panel_info.add(loadImage, gbc_loadImage);
 
 		imgPath = new JTextField();
 		libelle5.setLabelFor(imgPath);
 		imgPath.setEnabled(false);
 		imgPath.setColumns(10);
 		GridBagConstraints gbc_imgPath = new GridBagConstraints();
+		gbc_imgPath.insets = new Insets(0, 0, 5, 0);
 		gbc_imgPath.fill = GridBagConstraints.HORIZONTAL;
 		gbc_imgPath.gridx = 3;
 		gbc_imgPath.gridy = 4;
 		panel_info.add(imgPath, gbc_imgPath);
+		
+				JButton loadImage = new JButton("Load");
+				loadImage.setIcon(new ImageIcon(MerchantMgmView.class.getResource(
+						"/META-INF/resources/webjars/open-icon-library/0.11/png/16x16/places/oxygen-style/folder.png")));
+				GridBagConstraints gbc_loadImage = new GridBagConstraints();
+				gbc_loadImage.anchor = GridBagConstraints.EAST;
+				gbc_loadImage.gridx = 3;
+				gbc_loadImage.gridy = 5;
+				panel_info.add(loadImage, gbc_loadImage);
+				loadImage.setVisible(false);
+				
+						// Lorsqu'on click sur le FileChooser pour selectionner une photo
+						loadImage.addMouseListener(new MouseAdapter() {
+				
+							@Override
+							public void mouseClicked(MouseEvent arg0) {
+								FileFilter imagesFilter = new FileNameExtensionFilter("Images", "bmp", "gif", "jpg", "jpeg", "png");
+								JFileChooser dialogue = new JFileChooser();
+								dialogue.addChoosableFileFilter(imagesFilter);
+								dialogue.setAcceptAllFileFilterUsed(false);
+								File fichier;
+								BufferedImage bImage = null;
+				
+								if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+									fichier = dialogue.getSelectedFile();
+									try {
+										bImage = ImageIO.read(fichier);
+										int type = bImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bImage.getType();
+										BufferedImage resizedImage = resizeImage(bImage, type);
+				
+										ImageIcon img = new ImageIcon(resizedImage);
+										imgLabel.setIcon(img);
+										imgPath.setText(fichier.getPath());
+				
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+				
+								}
+							}
+						});
 
 		JScrollPane scrollPane_2 = new JScrollPane();
 		tabbedPane.addTab("Contact", null, scrollPane_2, null);
@@ -754,39 +801,29 @@ public class MerchantMgmView extends JDialog {
 		panel_contact.add(email_type, gbc_email_type);
 
 		enableComponents(panel_contact, false);
-		loadImage.setVisible(false);
-
-		// Lorsqu'on click sur le FileChooser pour selectionner une photo
-		loadImage.addMouseListener(new MouseAdapter() {
-
+		
+		// Lorsqu'on click sur le bouton "Ajouter"
+		btnAjouter.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				FileFilter imagesFilter = new FileNameExtensionFilter("Images", "bmp", "gif", "jpg", "jpeg", "png");
-				JFileChooser dialogue = new JFileChooser();
-				dialogue.addChoosableFileFilter(imagesFilter);
-				dialogue.setAcceptAllFileFilterUsed(false);
-				File fichier;
-				BufferedImage bImage = null;
+				btnValider.setEnabled(true);
+				btnSortir.setEnabled(true);
+				enableComponents(panel_info, true);
+				enableComponents(panel_contact, true);
+				loadImage.setEnabled(true);
+				loadImage.setVisible(true);
+				panel_imgdisplay.setVisible(true);
+				clearTextComponents(panel_info);
+				clearTextComponents(panel_contact);
+				clearImage(imgLabel);
+				btnUpdate.setEnabled(false);
+				btnDelete.setEnabled(false);
+				table.setVisible(false);
+				typeOperation = "Create";
 
-				if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					fichier = dialogue.getSelectedFile();
-					try {
-						bImage = ImageIO.read(fichier);
-						int type = bImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bImage.getType();
-						BufferedImage resizedImage = resizeImage(bImage, type);
-
-						ImageIcon img = new ImageIcon(resizedImage);
-						imgLabel.setIcon(img);
-						imgPath.setText(fichier.getPath());
-
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				}
 			}
 		});
+
 
 		// Lorsqu'on click sur un enregitrement du tableau
 		table.addMouseListener(new MouseAdapter() {
@@ -863,7 +900,7 @@ public class MerchantMgmView extends JDialog {
 
 					merchant.add(email);
 
-					webservice = "http://localhost:8080/wikifood/rest/merchant/save";
+					webservice = serverUrl+"/merchant/save";
 					postForm(merchant, webservice, contentPanel);
 
 					table.setModel(getMerchantTable(contentPanel));
@@ -877,14 +914,13 @@ public class MerchantMgmView extends JDialog {
 					imgLabel.setIcon(null);
 					clearTextComponents(panel_info);
 					clearTextComponents(panel_contact);
-					panel_operations.setVisible(true);
 					table.setVisible(true);
 					break;
 				case "Read":
 					// code block
 					break;
 				case "Update":
-					webservice = "http://localhost:8080/wikifood/rest/merchant";
+					webservice = serverUrl+"/merchant";
 					merchant.setLabel1(textField1.getText());
 					merchant.setLabel2(textField2.getText());
 					merchant.setDesc1(textField3.getText());
@@ -918,7 +954,6 @@ public class MerchantMgmView extends JDialog {
 					imgLabel.setIcon(null);
 					clearTextComponents(panel_info);
 					clearTextComponents(panel_contact);
-					panel_operations.setVisible(true);
 					table.setVisible(true);
 					break;
 				case "Delete":
@@ -927,29 +962,6 @@ public class MerchantMgmView extends JDialog {
 				default:
 					// code block
 				}
-			}
-		});
-
-		// Lorsqu'on click sur le bouton "Ajouter"
-		btnAjouter.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				btnValider.setEnabled(true);
-				btnSortir.setEnabled(true);
-				enableComponents(panel_info, true);
-				enableComponents(panel_contact, true);
-				loadImage.setEnabled(true);
-				loadImage.setVisible(true);
-				panel_imgdisplay.setVisible(true);
-				panel_operations.setVisible(false);
-				clearTextComponents(panel_info);
-				clearTextComponents(panel_contact);
-				clearImage(imgLabel);
-				btnUpdate.setEnabled(false);
-				btnDelete.setEnabled(false);
-				table.setVisible(false);
-				typeOperation = "Create";
-
 			}
 		});
 
@@ -964,7 +976,6 @@ public class MerchantMgmView extends JDialog {
 				loadImage.setEnabled(true);
 				loadImage.setVisible(true);
 				panel_imgdisplay.setVisible(true);
-				panel_operations.setVisible(false);
 				btnUpdate.setEnabled(false);
 				btnDelete.setEnabled(false);
 				table.setVisible(false);
@@ -988,7 +999,6 @@ public class MerchantMgmView extends JDialog {
 				clearTextComponents(panel_info);
 				clearTextComponents(panel_contact);
 				clearImage(imgLabel);
-				panel_operations.setVisible(true);
 				btnUpdate.setEnabled(false);
 				btnDelete.setEnabled(false);
 				table.setVisible(true);
@@ -1000,7 +1010,7 @@ public class MerchantMgmView extends JDialog {
 		btnDelete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				String webservice = "http://localhost:8080/wikifood/rest/merchant";
+				String webservice = serverUrl+"/merchant";
 				deleteForm(merchant, webservice, contentPanel);
 				table.setModel(getMerchantTable(contentPanel));
 				imgLabel.setIcon(null);

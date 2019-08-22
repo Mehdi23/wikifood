@@ -1,9 +1,5 @@
 package com.websystique.spring.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,8 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "product")
@@ -22,30 +19,43 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String cab; //code a barres du produit
-	private String label1; //Libelle du produit en Français
-	private String label2; //Libelle du produit en Français
-	private String desc1; //Description du produit en Francais
-	private String desc2; //Description du produit en Francais
-	private String publication_date; //Date de publication sur le site
-	private String modification_date; //Date de modification
-	private String Expiry_date; //Date d'expiration
-	private int merchant_id;
-	private int brand_id;
-	private int category_id;
-	private int producttype_id;
+	private String cab; // code a barres du produit
+	private String label1; // Libelle du produit en Français
+	private String label2; // Libelle du produit en Français
+	private String desc1; // Description du produit en Francais
+	private String desc2; // Description du produit en Francais
+	private String publication_date; // Date de publication sur le site
+	private String modification_date; // Date de modification
+	private String Expiry_date; // Date d'expiration
+	private String unit; // Unite de vente (kg, litre, unite, ...)
+	private String currency; // Devise de vente
+	private float price; // Prix standard de vente
+	private boolean available; // Disponibilité en stock
+	private boolean promotion; // Disponibilité en promotion
+	private float promo_price;// prix de promotion
 
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img; // Image du produit
-		
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "product_id", cascade = CascadeType.ALL)
-	private Set<ProductPrice> productPrice = new HashSet<ProductPrice>(0);
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
+	@JsonBackReference("merchantproduct")
+	private Merchant merchant; // Id
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "producttype_id", nullable = true, updatable = false, insertable = true)
+	@JsonBackReference("producttypeproduct")
+	private ProductType producttype; // Id
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "brand_id", nullable = true, updatable = false, insertable = true)
+	@JsonBackReference("brandproduct")
+	private Brand brand; // Id
 
 	public Product() {
 
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -93,7 +103,7 @@ public class Product {
 	public void setDesc2(String desc2) {
 		this.desc2 = desc2;
 	}
-	
+
 	public String getPublication_date() {
 		return publication_date;
 	}
@@ -126,53 +136,76 @@ public class Product {
 		this.img = img;
 	}
 
-	public Set<ProductPrice> getProductPrice() {
-		return productPrice;
+	public String getUnit() {
+		return unit;
 	}
 
-	public void setProductPrice(Set<ProductPrice> productPrice) {
-		this.productPrice = productPrice;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MERCHANT_ID", nullable = false)
-	public int getMerchant_id() {
-		return merchant_id;
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
-	public void setMerchant_id(int merchant_id) {
-		this.merchant_id = merchant_id;
-	}
-	
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "BRAND_ID", nullable = false)
-	public int getBrand_id() {
-		return brand_id;
+	public String getCurrency() {
+		return currency;
 	}
 
-	public void setBrand_id(int brand_id) {
-		this.brand_id = brand_id;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CATEGORY_ID", nullable = false)
-	public int getCategory_id() {
-		return category_id;
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
-	public void setCategory_id(int category_id) {
-		this.category_id = category_id;
+	public float getPrice() {
+		return price;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRODUCTTYPE_ID", nullable = false)
-	public int getProducttype_id() {
-		return producttype_id;
+	public void setPrice(float price) {
+		this.price = price;
 	}
 
-	public void setProducttype_id(int producttype_id) {
-		this.producttype_id = producttype_id;
-	}	
-	
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+
+	public boolean isPromotion() {
+		return promotion;
+	}
+
+	public void setPromotion(boolean promotion) {
+		this.promotion = promotion;
+	}
+
+	public float getPromo_price() {
+		return promo_price;
+	}
+
+	public void setPromo_price(float promo_price) {
+		this.promo_price = promo_price;
+	}
+
+	/*
+	 * public Merchant getMerchant() { return merchant; }
+	 */
+
+	public void setMerchant(Merchant merchant) {
+		this.merchant = merchant;
+	}
+
+	/*public ProductType getProducttype() {
+		return producttype;
+	}*/
+
+	public void setProducttype(ProductType producttype) {
+		this.producttype = producttype;
+	}
+
+	/*public Brand getBrand() {
+		return brand;
+	}*/
+
+	public void setBrand(Brand brand) {
+		this.brand = brand;
+	}
+
 }

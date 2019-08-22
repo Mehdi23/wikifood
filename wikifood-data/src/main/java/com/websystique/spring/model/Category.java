@@ -36,11 +36,11 @@ public class Category {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference
+	@JsonBackReference("merchantcategory")
 	private Merchant merchant; // Id
 
 	@OneToMany(targetEntity = ProductType.class, mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference
+	@JsonManagedReference("categoryproducttype")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<ProductType> productTypelist = new ArrayList<ProductType>();
 

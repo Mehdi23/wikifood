@@ -24,7 +24,7 @@ public class Email {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference
+	@JsonBackReference("merchantemail")
 	private Merchant merchant; // Id
 
 	public Email() {

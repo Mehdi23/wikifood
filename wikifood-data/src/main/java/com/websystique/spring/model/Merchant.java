@@ -18,6 +18,10 @@ import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+/**
+ * @author malaoui
+ *
+ */
 @Entity
 @Table(name = "merchant")
 public class Merchant {
@@ -34,29 +38,34 @@ public class Merchant {
 	private byte[] img; // Logo du commerçant
 
 	@OneToMany(targetEntity = Address.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference
+	@JsonManagedReference("merchantaddress")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Address> addresslist = new ArrayList<Address>();
 
 	@OneToMany(targetEntity = Phone.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference
+	@JsonManagedReference("merchantphone")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Phone> phonelist = new ArrayList<Phone>();
 
 	@OneToMany(targetEntity = Email.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference
+	@JsonManagedReference("merchantemail")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Email> emaillist = new ArrayList<Email>();
 
 	@OneToMany(targetEntity = Brand.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference
+	@JsonManagedReference("merchantbrand")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Brand> brandlist = new ArrayList<Brand>();
 
 	@OneToMany(targetEntity = Category.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference
+	@JsonManagedReference("merchantcategory")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Category> categorylist = new ArrayList<Category>();
+	
+	@OneToMany(targetEntity = Product.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference("merchantproduct")
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Product> productlist = new ArrayList<Product>();
 
 	public Merchant() {
 
@@ -142,6 +151,14 @@ public class Merchant {
 		this.categorylist = categorylist;
 	}
 
+	public List<Product> getProductlist() {
+		return productlist;
+	}
+
+	public void setProductlist(List<Product> productlist) {
+		this.productlist = productlist;
+	}
+
 	public byte[] getImg() {
 		return img;
 	}
@@ -215,6 +232,19 @@ public class Merchant {
 		}
 	}
 
+	public void add(Product product) {
+		if (product == null) {
+			return;
+		}
+		product.setMerchant(this);
+		if (productlist == null) {
+			productlist = new ArrayList<Product>();
+			productlist.add(product);
+		} else if (!productlist.contains(product)) {
+			productlist.add(product);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "Merchant [id=" + id + ", label1=" + label1 + "]";

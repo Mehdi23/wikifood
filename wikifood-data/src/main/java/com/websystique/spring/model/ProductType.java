@@ -1,5 +1,9 @@
 package com.websystique.spring.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,9 +12,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "producttype")
@@ -26,8 +35,13 @@ public class ProductType {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference
+	@JsonBackReference("categoryproducttype")
 	private Category category; // Id
+
+	@OneToMany(targetEntity = Product.class, mappedBy = "producttype", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference("producttypeproduct")
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Product> productlist = new ArrayList<Product>();
 
 	public byte[] getImg() {
 		return img;
@@ -65,12 +79,33 @@ public class ProductType {
 		this.label2 = label2;
 	}
 
-	/*
-	 * public Category getCategory() { return category; }
-	 */
+	/*public Category getCategory() {
+		return category;
+	}*/
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	public List<Product> getProductlist() {
+		return productlist;
+	}
+
+	public void setProductlist(List<Product> productlist) {
+		this.productlist = productlist;
+	}
+
+	public void add(Product product) {
+		if (product == null) {
+			return;
+		}
+		product.setProducttype(this);
+		if (productlist == null) {
+			productlist = new ArrayList<Product>();
+			productlist.add(product);
+		} else if (!productlist.contains(product)) {
+			productlist.add(product);
+		}
 	}
 
 }
