@@ -18,15 +18,16 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "producttype")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class ProductType {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private int id; // identifiant
 	private String label1;
 	private String label2;
@@ -35,11 +36,11 @@ public class ProductType {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference("categoryproducttype")
+	/*@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)*/
 	private Category category; // Id
 
 	@OneToMany(targetEntity = Product.class, mappedBy = "producttype", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference("producttypeproduct")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Product> productlist = new ArrayList<Product>();
 
@@ -79,9 +80,9 @@ public class ProductType {
 		this.label2 = label2;
 	}
 
-	/*public Category getCategory() {
-		return category;
-	}*/
+	/*
+	 * public Category getCategory() { return category; }
+	 */
 
 	public void setCategory(Category category) {
 		this.category = category;
@@ -106,6 +107,11 @@ public class ProductType {
 		} else if (!productlist.contains(product)) {
 			productlist.add(product);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "ProductType [id=" + id + ", label1=" + label1 + "]";
 	}
 
 }

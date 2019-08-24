@@ -10,9 +10,7 @@ public interface ProductDao {
 	
 	List<Product> findAllProducts();
 	
-	List<Product> findAllProducts(int id);
-	
-	void deleteProductById(String id);
+	List<Product> findProduct(int id);
 	
 	void deleteProduct(Product Product);
 	

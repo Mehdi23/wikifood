@@ -16,7 +16,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * @author malaoui
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
  */
 @Entity
 @Table(name = "merchant")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Merchant {
 
 	@Id
@@ -38,32 +40,26 @@ public class Merchant {
 	private byte[] img; // Logo du commerçant
 
 	@OneToMany(targetEntity = Address.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference("merchantaddress")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Address> addresslist = new ArrayList<Address>();
 
 	@OneToMany(targetEntity = Phone.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference("merchantphone")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Phone> phonelist = new ArrayList<Phone>();
 
 	@OneToMany(targetEntity = Email.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference("merchantemail")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Email> emaillist = new ArrayList<Email>();
 
 	@OneToMany(targetEntity = Brand.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference("merchantbrand")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Brand> brandlist = new ArrayList<Brand>();
 
 	@OneToMany(targetEntity = Category.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference("merchantcategory")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Category> categorylist = new ArrayList<Category>();
 	
 	@OneToMany(targetEntity = Product.class, mappedBy = "merchant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference("merchantproduct")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Product> productlist = new ArrayList<Product>();
 

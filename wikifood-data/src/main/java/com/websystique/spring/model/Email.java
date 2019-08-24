@@ -9,10 +9,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "email")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Email {
 
 	@Id
@@ -24,7 +26,9 @@ public class Email {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference("merchantemail")
+	/*@JsonProperty(value = "merchantid")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)*/
 	private Merchant merchant; // Id
 
 	public Email() {

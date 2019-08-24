@@ -18,15 +18,16 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "brand")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Brand {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private int id; // Id de la marque
 	private String label1; // Libelle de la marque en Francais
 	private String label2; // Libelle de la marque en Arabe
@@ -38,11 +39,12 @@ public class Brand {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference("merchantbrand")
+	/*@JsonProperty(value = "merchantid")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)*/
 	private Merchant merchant; // Id
 
 	@OneToMany(targetEntity = Product.class, mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference("brandproduct")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Product> productlist = new ArrayList<Product>();
 
@@ -112,6 +114,11 @@ public class Brand {
 
 	public void setProductlist(List<Product> productlist) {
 		this.productlist = productlist;
+	}
+
+	@Override
+	public String toString() {
+		return "Brand [id=" + id + ", label1=" + label1 + "]";
 	}
 
 }

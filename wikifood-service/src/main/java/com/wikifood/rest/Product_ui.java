@@ -30,18 +30,18 @@ public class Product_ui {
 	}
 
 	@GET
-	@Path("get")
+	@Path("getall")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Product> findAll() {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
 		try {
 			service = (ProductService) context.getBean("ProductService");
 			return service.findAllProducts();
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@POST
@@ -49,53 +49,53 @@ public class Product_ui {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void create(Product p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-		
 		try {
 			service = (ProductService) context.getBean("ProductService");
 			service.saveProduct(p);
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Product> find(@QueryParam("id") int id) {
-		System.out.println("id : " + id);
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-			
 		try {
 			service = (ProductService) context.getBean("ProductService");
-			return service.findAllProducts(id);
+			return service.findProduct(id);
+		
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void update(Product p) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-				
 		try {
 			service = (ProductService) context.getBean("ProductService");
 			service.updateProduct(p);
 		} finally {
 			context.close();
 		}
+		
 	}
 
 	@DELETE
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public void remove(Product Product) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-			
 		try {
 			service = (ProductService) context.getBean("ProductService");
 			service.deleteProduct(Product);
 		} finally {
 			context.close();
 		}
+		
 
 	}
 

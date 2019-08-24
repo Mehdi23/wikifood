@@ -3,7 +3,6 @@ package com.websystique.spring.dao;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +18,7 @@ public class ProductDaoImpl extends AbstractDao implements ProductDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Product> findAllProducts(int id) {
+	public List<Product> findProduct(int id) {
 		Criteria criteria = getSession().createCriteria(Product.class)
 				.add(Restrictions.eq("id",id));
 		return (List<Product>) criteria.list();
@@ -31,11 +30,6 @@ public class ProductDaoImpl extends AbstractDao implements ProductDao {
 		return (List<Product>) criteria.list();
 	}
 
-	public void deleteProductById(String id) {
-		Query query = getSession().createSQLQuery("delete from Product where id = :id");
-		query.setString("id", id);
-		query.executeUpdate();
-	}
 
 	public void deleteProduct(Product Product) {
 		getSession().delete(Product);

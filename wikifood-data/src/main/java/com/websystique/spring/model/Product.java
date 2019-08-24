@@ -1,5 +1,7 @@
 package com.websystique.spring.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,10 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "product")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Product {
 
 	@Id
@@ -24,32 +28,40 @@ public class Product {
 	private String label2; // Libelle du produit en Français
 	private String desc1; // Description du produit en Francais
 	private String desc2; // Description du produit en Francais
-	private String publication_date; // Date de publication sur le site
-	private String modification_date; // Date de modification
-	private String Expiry_date; // Date d'expiration
+	private Date publication_date; // Date de publication sur le site
+	private Date modification_date; // Date de modification
+	private Date expiryDate; // Date d'expiration
 	private String unit; // Unite de vente (kg, litre, unite, ...)
 	private String currency; // Devise de vente
 	private float price; // Prix standard de vente
 	private boolean available; // Disponibilité en stock
+	private int items_number; // Nombre d'articles disponibles en stock
 	private boolean promotion; // Disponibilité en promotion
 	private float promo_price;// prix de promotion
+	private Date promo_expiryDate; // Date d'expiration
 
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] img; // Image du produit
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference("merchantproduct")
+	/*@JsonProperty(value = "merchantid")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)*/
 	private Merchant merchant; // Id
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "producttype_id", nullable = true, updatable = false, insertable = true)
-	@JsonBackReference("producttypeproduct")
+	/*@JsonProperty(value = "product_typeid")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)*/
 	private ProductType producttype; // Id
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "brand_id", nullable = true, updatable = false, insertable = true)
-	@JsonBackReference("brandproduct")
+	/*@JsonProperty(value = "brandid")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)*/
 	private Brand brand; // Id
 
 	public Product() {
@@ -104,28 +116,20 @@ public class Product {
 		this.desc2 = desc2;
 	}
 
-	public String getPublication_date() {
+	public Date getPublication_date() {
 		return publication_date;
 	}
 
-	public void setPublication_date(String publication_date) {
+	public void setPublication_date(Date publication_date) {
 		this.publication_date = publication_date;
 	}
 
-	public String getModification_date() {
+	public Date getModification_date() {
 		return modification_date;
 	}
 
-	public void setModification_date(String modification_date) {
+	public void setModification_date(Date modification_date) {
 		this.modification_date = modification_date;
-	}
-
-	public String getExpiry_date() {
-		return Expiry_date;
-	}
-
-	public void setExpiry_date(String expiry_date) {
-		Expiry_date = expiry_date;
 	}
 
 	public byte[] getImg() {
@@ -184,28 +188,57 @@ public class Product {
 		this.promo_price = promo_price;
 	}
 
-	/*
-	 * public Merchant getMerchant() { return merchant; }
-	 */
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
+	public int getItems_number() {
+		return items_number;
+	}
+
+	public void setItems_number(int items_number) {
+		this.items_number = items_number;
+	}
+
+	public Date getPromo_expiryDate() {
+		return promo_expiryDate;
+	}
+
+	public void setPromo_expiryDate(Date promo_expiryDate) {
+		this.promo_expiryDate = promo_expiryDate;
+	}
+
+	public Merchant getMerchant() {
+		return merchant;
+	}
 
 	public void setMerchant(Merchant merchant) {
 		this.merchant = merchant;
 	}
 
-	/*public ProductType getProducttype() {
+	public ProductType getProducttype() {
 		return producttype;
-	}*/
+	}
 
 	public void setProducttype(ProductType producttype) {
 		this.producttype = producttype;
 	}
 
-	/*public Brand getBrand() {
+	public Brand getBrand() {
 		return brand;
-	}*/
+	}
 
 	public void setBrand(Brand brand) {
 		this.brand = brand;
+	}
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", label1=" + label1 + "]";
 	}
 
 }

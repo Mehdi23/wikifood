@@ -18,11 +18,12 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "category")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Category {
 
 	@Id
@@ -36,11 +37,12 @@ public class Category {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "merchant_id", nullable = false, updatable = false, insertable = true)
-	@JsonBackReference("merchantcategory")
+	/*@JsonProperty(value = "merchantid")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)*/
 	private Merchant merchant; // Id
 
 	@OneToMany(targetEntity = ProductType.class, mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference("categoryproducttype")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<ProductType> productTypelist = new ArrayList<ProductType>();
 
