@@ -46,6 +46,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -497,11 +498,10 @@ public class ProductMgmView extends JDialog {
 
 		JPanel panel_formulaire = new JPanel();
 		tabbedPane.addTab("Informations", null, panel_formulaire, null);
-
 		GridBagLayout gbl_panel_formulaire = new GridBagLayout();
-		gbl_panel_formulaire.columnWidths = new int[] { 30, 148, 356, 0 };
-		gbl_panel_formulaire.rowHeights = new int[] { 30, 20, 35, 22, 22, 20, 25, 0 };
-		gbl_panel_formulaire.columnWeights = new double[] { 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_panel_formulaire.columnWidths = new int[] { 30, 139, 415, 0 };
+		gbl_panel_formulaire.rowHeights = new int[] { 20, 20, 30, 22, 22, 20, 25, 0 };
+		gbl_panel_formulaire.columnWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_panel_formulaire.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_formulaire.setLayout(gbl_panel_formulaire);
 
@@ -523,7 +523,7 @@ public class ProductMgmView extends JDialog {
 		panel_formulaire.add(cab, gbc_cab);
 		cab.setColumns(10);
 
-		JLabel libelle1 = new JLabel("Libelle de la marque (FR)");
+		JLabel libelle1 = new JLabel("Libelle du produit (FR)");
 		libelle1.setEnabled(false);
 		GridBagConstraints gbc_libelle1 = new GridBagConstraints();
 		gbc_libelle1.anchor = GridBagConstraints.WEST;
@@ -542,7 +542,7 @@ public class ProductMgmView extends JDialog {
 		panel_formulaire.add(label1, gbc_label1);
 		label1.setColumns(35);
 
-		JLabel libelle2 = new JLabel("Libelle de la marque (EN)");
+		JLabel libelle2 = new JLabel("Libelle du produit (EN)");
 		libelle2.setEnabled(false);
 		GridBagConstraints gbc_libelle2 = new GridBagConstraints();
 		gbc_libelle2.anchor = GridBagConstraints.WEST;
@@ -562,7 +562,7 @@ public class ProductMgmView extends JDialog {
 		panel_formulaire.add(label2, gbc_label2);
 		label2.setColumns(10);
 
-		JLabel libelle3 = new JLabel("Description de la marque (FR)  ");
+		JLabel libelle3 = new JLabel("Description du produit (FR)  ");
 		libelle3.setEnabled(false);
 		GridBagConstraints gbc_libelle3 = new GridBagConstraints();
 		gbc_libelle3.insets = new Insets(0, 0, 5, 5);
@@ -582,7 +582,7 @@ public class ProductMgmView extends JDialog {
 		gbc_desc1.gridy = 3;
 		panel_formulaire.add(desc1, gbc_desc1);
 
-		JLabel libelle4 = new JLabel("Description de la marque (EN)");
+		JLabel libelle4 = new JLabel("Description du produit (EN)");
 		libelle4.setEnabled(false);
 		GridBagConstraints gbc_libelle4 = new GridBagConstraints();
 		gbc_libelle4.anchor = GridBagConstraints.WEST;
@@ -604,7 +604,7 @@ public class ProductMgmView extends JDialog {
 		gbc_desc2.gridy = 4;
 		panel_formulaire.add(desc2, gbc_desc2);
 
-		JLabel libelle5 = new JLabel("Logo de la marque");
+		JLabel libelle5 = new JLabel("Image du produit");
 		libelle5.setEnabled(false);
 		GridBagConstraints gbc_libelle5 = new GridBagConstraints();
 		gbc_libelle5.anchor = GridBagConstraints.WEST;
@@ -634,6 +634,38 @@ public class ProductMgmView extends JDialog {
 		panel_formulaire.add(loadImage, gbc_loadImage);
 
 		loadImage.setVisible(false);
+
+		// Lorsqu'on click sur le FileChooser pour selectionner une photo
+		loadImage.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				FileFilter imagesFilter = new FileNameExtensionFilter("Images", "bmp", "gif", "jpg", "jpeg", "png");
+				JFileChooser dialogue = new JFileChooser();
+				dialogue.addChoosableFileFilter(imagesFilter);
+				dialogue.setAcceptAllFileFilterUsed(false);
+				File fichier;
+				BufferedImage bImage = null;
+
+				if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					fichier = dialogue.getSelectedFile();
+					try {
+						bImage = ImageIO.read(fichier);
+						int type = bImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bImage.getType();
+						BufferedImage resizedImage = resizeImage(bImage, type);
+
+						ImageIcon img = new ImageIcon(resizedImage);
+						imgLabel.setIcon(img);
+						imgPath.setText(fichier.getPath());
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+			}
+		});
 
 		JPanel planel_typeproduit = new JPanel();
 		tabbedPane.addTab("Classification", null, planel_typeproduit, null);
@@ -772,6 +804,7 @@ public class ProductMgmView extends JDialog {
 		gbc_datePicker.gridy = 4;
 
 		UtilDateModel model = new UtilDateModel();
+		model.setDate(2019, 8, 24);
 		Properties p = new Properties();
 		p.put("text.today", "Today");
 		p.put("text.month", "Month");
@@ -843,7 +876,13 @@ public class ProductMgmView extends JDialog {
 		gbc_lblDateDexpiration_1.gridy = 3;
 		panel_promo.add(lblDateDexpiration_1, gbc_lblDateDexpiration_1);
 
-		JDatePanelImpl promo_expiryDatePanel = new JDatePanelImpl(model, p);
+		UtilDateModel model2 = new UtilDateModel();
+		model2.setDate(2019, 8, 24);
+		Properties p2 = new Properties();
+		p2.put("text.today", "Today");
+		p2.put("text.month", "Month");
+		p2.put("text.year", "Year");
+		JDatePanelImpl promo_expiryDatePanel = new JDatePanelImpl(model2, p2);
 		JDatePickerImpl promo_expiryDatePicker = new JDatePickerImpl(promo_expiryDatePanel, new DateLabelFormatter());
 		GridBagConstraints gbc_promo_expiryDatePicker = new GridBagConstraints();
 		gbc_promo_expiryDatePicker.fill = GridBagConstraints.HORIZONTAL;
@@ -852,38 +891,6 @@ public class ProductMgmView extends JDialog {
 		panel_promo.add(promo_expiryDatePicker, gbc_promo_expiryDatePicker);
 
 		enableComponents(tabbedPane, false);
-
-		// Lorsqu'on click sur le FileChooser pour selectionner une photo
-		loadImage.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				FileFilter imagesFilter = new FileNameExtensionFilter("Images", "bmp", "gif", "jpg", "jpeg", "png");
-				JFileChooser dialogue = new JFileChooser();
-				dialogue.addChoosableFileFilter(imagesFilter);
-				dialogue.setAcceptAllFileFilterUsed(false);
-				File fichier;
-				BufferedImage bImage = null;
-
-				if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					fichier = dialogue.getSelectedFile();
-					try {
-						bImage = ImageIO.read(fichier);
-						int type = bImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bImage.getType();
-						BufferedImage resizedImage = resizeImage(bImage, type);
-
-						ImageIcon img = new ImageIcon(resizedImage);
-						imgLabel.setIcon(img);
-						imgPath.setText(fichier.getPath());
-
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				}
-			}
-		});
 
 		// Lorsqu'on selectionne un element dans le ComboBox
 		comboBox.addActionListener(new ActionListener() {
@@ -929,13 +936,34 @@ public class ProductMgmView extends JDialog {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				Calendar calendar = Calendar.getInstance();
 				int row = table.rowAtPoint(arg0.getPoint());
 				int s = Integer.parseInt(table.getModel().getValueAt(row, 0) + "");
 				Product = findProductById(s, merchant.getProductlist());
+				cab.setText(Product.getCab());
 				label1.setText(Product.getLabel1());
 				label2.setText(Product.getLabel2());
 				desc1.setText(Product.getDesc1());
 				desc2.setText(Product.getDesc2());
+				
+				calendar.setTime(Product.getExpiryDate());
+				expiryDatePicker.getJFormattedTextField().setText((calendar.get(Calendar.YEAR)+"-"+
+						calendar.get(Calendar.MONTH)+"-"+ calendar.get(Calendar.DAY_OF_MONTH)));
+				
+				comboBox_currency.setSelectedItem(Product.getCurrency());
+				comboBox_unit.setSelectedItem(Product.getUnit());
+				price.setText(Float.toString(Product.getPrice()));
+				available.setSelected(Product.isAvailable());
+				items_number.setValue(Product.getItems_number());
+				promotion.setSelected(Product.isPromotion());
+				promo_price.setText(Float.toString(Product.getPromo_price()));
+				calendar.setTime(Product.getPromo_expiryDate());
+				promo_expiryDatePicker.getJFormattedTextField().setText((calendar.get(Calendar.YEAR)+"-"+
+						calendar.get(Calendar.MONTH)+"-"+ calendar.get(Calendar.DAY_OF_MONTH)));
+				
+				comboBox_brand.setSelectedItem(Product.getBrand());
+				comboBox_producttype.setSelectedItem(Product.getProducttype());
+				
 				if (Product.getImg() != null) {
 					imgLabel.setVisible(true);
 					displayImage(imgLabel, Product.getImg());
@@ -975,7 +1003,6 @@ public class ProductMgmView extends JDialog {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Merchant merchant;
 				String webservice;
 
 				switch (typeOperation) {
@@ -991,6 +1018,12 @@ public class ProductMgmView extends JDialog {
 					Product.setExpiryDate((Date) expiryDatePicker.getModel().getValue());
 					Product.setCurrency((String) comboBox_currency.getSelectedItem());
 					Product.setUnit((String) comboBox_unit.getSelectedItem());
+					Product.setPrice(Float.parseFloat(price.getText()));
+					Product.setAvailable(available.isSelected());
+					Product.setItems_number((int) items_number.getValue());
+					Product.setPromotion(promotion.isSelected());
+					Product.setPromo_price(Float.parseFloat(promo_price.getText()));
+					Product.setPromo_expiryDate((Date) promo_expiryDatePicker.getModel().getValue());
 					Product.setBrand((Brand) comboBox_brand.getSelectedItem());
 					Product.setProducttype((ProductType) comboBox_producttype.getSelectedItem());
 					Product.setMerchant((Merchant) comboBox.getSelectedItem());
@@ -1004,6 +1037,8 @@ public class ProductMgmView extends JDialog {
 					// putForm(merchant, webservice, contentPanel);
 					webservice = serverUrl + "/product/save";
 					postForm(Product, webservice, contentPanel);
+
+					merchantlist = getMerchantList(contentPanel);
 					table.setModel(getProductTable(contentPanel, merchant.getProductlist()));
 					btnValider.setEnabled(false);
 					btnSortir.setEnabled(false);
@@ -1014,17 +1049,31 @@ public class ProductMgmView extends JDialog {
 					imgLabel.setIcon(null);
 					clearTextComponents(panel_formulaire);
 					table.setVisible(true);
-					merchantlist = getMerchantList(contentPanel);
 					comboBox.setModel(new DefaultComboBoxModel<Object>(merchantlist.toArray()));
 					merchant = (Merchant) comboBox.getSelectedItem();
 					table.setModel(getProductTable(contentPanel, merchant.getProductlist()));
 					break;
 
 				case "Update":
+					Product.setCab(cab.getText());
 					Product.setLabel1(label1.getText());
 					Product.setLabel2(label2.getText());
 					Product.setDesc1(desc1.getText());
 					Product.setDesc2(desc2.getText());
+					Product.setPublication_date(new Date(System.currentTimeMillis()));
+					Product.setModification_date(new Date(System.currentTimeMillis()));
+					Product.setExpiryDate((Date) expiryDatePicker.getModel().getValue());
+					Product.setCurrency((String) comboBox_currency.getSelectedItem());
+					Product.setUnit((String) comboBox_unit.getSelectedItem());
+					Product.setPrice(Float.parseFloat(price.getText()));
+					Product.setAvailable(available.isSelected());
+					Product.setItems_number((int) items_number.getValue());
+					Product.setPromotion(promotion.isSelected());
+					Product.setPromo_price(Float.parseFloat(promo_price.getText()));
+					Product.setPromo_expiryDate((Date) promo_expiryDatePicker.getModel().getValue());
+					Product.setBrand((Brand) comboBox_brand.getSelectedItem());
+					Product.setProducttype((ProductType) comboBox_producttype.getSelectedItem());
+					Product.setMerchant((Merchant) comboBox.getSelectedItem());
 					if (imgPath.getText().length() != 0) {
 						Product.setImg(readImageFromPath(imgPath.getText()));
 					}
