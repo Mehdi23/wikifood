@@ -60,7 +60,7 @@ public class Merchant_ui {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<Merchant> find(@QueryParam("id") int id) {
+	public Merchant find(@QueryParam("id") int id) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 		try {
 			service = (MerchantService) context.getBean("MerchantService");

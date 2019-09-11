@@ -10,7 +10,7 @@ public interface MerchantDao {
 	
 	List<Merchant> findAllMerchants();
 	
-	List<Merchant> findMerchant(int id);
+	Merchant findMerchant(int id);
 	
 	void deleteMerchant(Merchant Merchant);
 	

@@ -21,7 +21,7 @@ public class MerchantServiceImpl implements MerchantService{
 	}
 
 	
-	public List<Merchant> findMerchant(int id) {
+	public Merchant findMerchant(int id) {
 		return dao.findMerchant(id);
 	}
 	

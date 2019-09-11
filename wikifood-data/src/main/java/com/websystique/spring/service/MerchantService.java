@@ -8,7 +8,7 @@ public interface MerchantService {
 
 	void saveMerchant(Merchant Merchant);
 
-	List<Merchant> findMerchant (int id);
+	Merchant findMerchant (int id);
 	
 	List<Merchant> findAllMerchants();
 
