@@ -12,6 +12,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -32,18 +33,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class Emerchant_client implements EntryPoint {
 	private String json_response;
+	private JSONObject merchant;
 
 	// Layout components
 	private DockLayoutPanel main_panel = new DockLayoutPanel(Unit.EM);
 	private VerticalPanel content_panel = new VerticalPanel();
 	private VerticalPanel nav_panel = new VerticalPanel();
-
-	// Navigation bar components
-	private Button nav_button1 = new Button("Catégorie 1");
-	private Button nav_button2 = new Button("Catégorie 2");
-	private Button nav_button3 = new Button("Catégorie 3");
-	private Button nav_button4 = new Button("Catégorie 4");
-	private Button nav_button5 = new Button("Catégorie 5");
 
 	// Content Panel Components
 	private FlexTable stocksFlexTable = new FlexTable();
@@ -70,7 +65,7 @@ public class Emerchant_client implements EntryPoint {
 
 	public void parseData() {
 
-		String JSON_URL = "http://localhost:8080/wikifood/rest/merchant?id=2";
+		String JSON_URL = "http://localhost:8080/wikifood/rest/merchant?id=1";
 		String url = URL.encode(JSON_URL);
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 		builder.setHeader("Content-Type", "application/json");
@@ -82,7 +77,6 @@ public class Emerchant_client implements EntryPoint {
 				@Override
 				public void onError(Request request, Throwable exception) {
 					Window.alert("Some error occurred: " + exception.getMessage());
-					Window.alert("no");
 
 				}
 
@@ -90,10 +84,7 @@ public class Emerchant_client implements EntryPoint {
 				public void onResponseReceived(Request request, Response response) {
 					json_response = response.getText();
 					JSONValue value = JSONParser.parseStrict(json_response);
-					JSONObject merchant = (JSONObject) value.isObject();
-					
-					//JavaScriptObject merchant = parseJson(json_response);
-					Window.alert("Affichage d'objet: " + merchant.get("emaillist"));
+					merchant = (JSONObject) value.isObject();
 					LoadMainPage();
 				}
 
@@ -108,12 +99,31 @@ public class Emerchant_client implements EntryPoint {
 	}
 
 	private void LoadMainPage() {
+
 		// Navigation bar load
-		nav_panel.add(nav_button1);
-		nav_panel.add(nav_button2);
-		nav_panel.add(nav_button3);
-		nav_panel.add(nav_button4);
-		nav_panel.add(nav_button5);
+		LoadNavPanel();
+				
+		// Content panel load
+		LoadContentPanel(); 
+
+		main_panel.addNorth(new HTML("header"), 10);
+		main_panel.addSouth(new HTML("footer"), 2);
+		main_panel.addWest(nav_panel, 15);
+		main_panel.add(content_panel);
+
+		// Associate the Main panel with the HTML host page.
+		RootLayoutPanel.get().add(main_panel);
+
+		nav_panel.addStyleName("nav_panel");
+		content_panel.addStyleName("content_panel");
+
+	}
+
+	public static <T extends JavaScriptObject> T parseJson(String jsonStr) {
+		return JsonUtils.safeEval(jsonStr);
+	}
+
+	private void LoadContentPanel() {
 
 		// Create table for stock data.
 		stocksFlexTable.setText(0, 0, "Symbol");
@@ -138,18 +148,37 @@ public class Emerchant_client implements EntryPoint {
 		content_panel.add(addPanel);
 		content_panel.add(lastUpdatedLabel);
 
-		main_panel.addNorth(new HTML("header"), 10);
-		main_panel.addSouth(new HTML("footer"), 2);
-		main_panel.addWest(nav_panel, 10);
-		main_panel.add(content_panel);
-
-		// Associate the Main panel with the HTML host page.
-		RootLayoutPanel.get().add(main_panel);
-
 	}
 
-	public static <T extends JavaScriptObject> T parseJson(String jsonStr) {
-		return JsonUtils.safeEval(jsonStr);
+	private void LoadNavPanel() {
+		Label category_label = new Label("Nos Categories");
+		category_label.addStyleName("category_label");
+
+		FlexTable categoryFlexTable = new FlexTable();
+
+		nav_panel.add(category_label);
+
+		JSONArray categorylist = (JSONArray) merchant.get("categorylist");
+		JSONObject category;
+
+		for (int i = 0; i < categorylist.size(); i++) {
+			category = (JSONObject) categorylist.get(i);
+			final Button nav_button = new Button(category.get("label1").toString());
+			// nav_panel.add(nav_button);
+			categoryFlexTable.setWidget(i, 1, nav_button);
+			nav_button.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					Window.alert("hello " + nav_button.getText());
+				}
+			});
+
+			nav_button.addStyleName("button_category");
+		}
+
+		nav_panel.add(categoryFlexTable);
+
 	}
 
 }

@@ -22,7 +22,6 @@ public class MerchantDaoImpl extends AbstractDao implements MerchantDao {
 		persist(Merchant);
 	}
 
-	@SuppressWarnings("unchecked")
 	public Merchant findMerchant(int id) {
 		Criteria criteria= getSession().createCriteria(Merchant.class)
 				.add(Restrictions.eq("id",id));

@@ -3,6 +3,28 @@ body {
 	padding: 10px;
 }
 
+.nav_panel {
+	width: 400px;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+.content_panel {
+	padding: 40px;
+}
+
+.category_label {
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 10px;
+	margin-left: 0px;
+}
+
+.button_category {
+	width: 150px;
+	margin-bottom: 10px;
+}
+
 /* stock list header row */
 .watchListHeader {
 	background-color: #2062B8;
