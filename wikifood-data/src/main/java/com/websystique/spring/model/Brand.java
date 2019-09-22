@@ -1,9 +1,5 @@
 package com.websystique.spring.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,11 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -43,10 +35,6 @@ public class Brand {
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 	@JsonIdentityReference(alwaysAsId = true)*/
 	private Merchant merchant; // Id
-
-	@OneToMany(targetEntity = Product.class, mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
-	private List<Product> productlist = new ArrayList<Product>();
 
 	public Brand() {
 
@@ -106,14 +94,6 @@ public class Brand {
 
 	public void setMerchant(Merchant merchant) {
 		this.merchant = merchant;
-	}
-
-	public List<Product> getProductlist() {
-		return productlist;
-	}
-
-	public void setProductlist(List<Product> productlist) {
-		this.productlist = productlist;
 	}
 
 	@Override

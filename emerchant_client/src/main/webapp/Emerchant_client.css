@@ -9,8 +9,9 @@ body {
 	margin-left: 10px;
 }
 
-.content_panel {
-	padding: 40px;
+.productImg {
+    max-width:100%;
+    height:auto;
 }
 
 .category_label {

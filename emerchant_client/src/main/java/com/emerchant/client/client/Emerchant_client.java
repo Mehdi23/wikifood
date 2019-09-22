@@ -18,15 +18,25 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -40,13 +50,9 @@ public class Emerchant_client implements EntryPoint {
 	private VerticalPanel content_panel = new VerticalPanel();
 	private VerticalPanel nav_panel = new VerticalPanel();
 
-	// Content Panel Components
-	private FlexTable stocksFlexTable = new FlexTable();
-	private HorizontalPanel addPanel = new HorizontalPanel();
-	private TextBox newSymbolTextBox = new TextBox();
-	private Button addStockButton = new Button("Add");
-	private Label lastUpdatedLabel = new Label();
-
+	
+	
+	
 	public void onModuleLoad() {
 
 		Button submit = new Button("JSON");
@@ -65,7 +71,7 @@ public class Emerchant_client implements EntryPoint {
 
 	public void parseData() {
 
-		String JSON_URL = "http://localhost:8080/wikifood/rest/merchant?id=1";
+		String JSON_URL = "http://localhost:8080/wikifood/rest/merchant?id=2";
 		String url = URL.encode(JSON_URL);
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 		builder.setHeader("Content-Type", "application/json");
@@ -102,9 +108,9 @@ public class Emerchant_client implements EntryPoint {
 
 		// Navigation bar load
 		LoadNavPanel();
-				
+
 		// Content panel load
-		LoadContentPanel(); 
+		LoadContentPanel();
 
 		main_panel.addNorth(new HTML("header"), 10);
 		main_panel.addSouth(new HTML("footer"), 2);
@@ -125,31 +131,48 @@ public class Emerchant_client implements EntryPoint {
 
 	private void LoadContentPanel() {
 
-		// Create table for stock data.
-		stocksFlexTable.setText(0, 0, "Symbol");
-		stocksFlexTable.setText(0, 1, "Price");
-		stocksFlexTable.setText(0, 2, "Change");
-		stocksFlexTable.setText(0, 3, "Remove");
+		JSONArray categorylist = (JSONArray) merchant.get("categorylist");
+		JSONObject category;
+		JSONArray productTypelist;
+		JSONObject productType;
+		JSONArray productlist;
+		JSONObject product;
+		FlexTable galeryFlexTable = new FlexTable();
 
-		// Add styles to elements in the stock list table.
-		stocksFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
-		stocksFlexTable.addStyleName("watchList");
-		stocksFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
-		stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
-		stocksFlexTable.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
+		for (int i = 0; i < categorylist.size(); i++) {
+			category = (JSONObject) categorylist.get(i);
+			final Label category_label = new Label(category.get("label1").toString());
+			productTypelist = (JSONArray) category.get("productTypelist");
 
-		// Assemble Add Stock panel.
-		addPanel.add(newSymbolTextBox);
-		addPanel.add(addStockButton);
-		addPanel.addStyleName("addPanel");
+			galeryFlexTable.setWidget(i * 12, 0, category_label);
 
-		// Assemble Main panel.
-		content_panel.add(stocksFlexTable);
-		content_panel.add(addPanel);
-		content_panel.add(lastUpdatedLabel);
+			if (productTypelist.size() > 0) {
+				for (int j = 0; j < productTypelist.size(); j++) {
+					productType = (JSONObject) productTypelist.get(j);
+					final Label productType_label = new Label(productType.get("label1").toString());
+					galeryFlexTable.setWidget(i * 12 + 2 * j + 1, 1, productType_label);
+
+					productlist = (JSONArray) productType.get("productlist");
+
+					if (productlist.size() > 0) {
+						for (int k = 0; k < productlist.size(); k++) {
+							product = (JSONObject) productlist.get(k);
+							//final Label product_label = new Label(product.get("label1").toString());
+							//galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k+2, product_label);
+							galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k+1, createProductForm());		
+						}
+
+					}
+
+				}
+
+			}
+		}
+		content_panel.add(galeryFlexTable);
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void LoadNavPanel() {
 		Label category_label = new Label("Nos Categories");
 		category_label.addStyleName("category_label");
@@ -161,24 +184,119 @@ public class Emerchant_client implements EntryPoint {
 		JSONArray categorylist = (JSONArray) merchant.get("categorylist");
 		JSONObject category;
 
+		Label nos_promo = new Label("Nos promotions");
+		Label nos_contact = new Label("Contactez nous");
+
+		StackPanel stackPanel = new StackPanel();
+
 		for (int i = 0; i < categorylist.size(); i++) {
 			category = (JSONObject) categorylist.get(i);
-			final Button nav_button = new Button(category.get("label1").toString());
-			// nav_panel.add(nav_button);
-			categoryFlexTable.setWidget(i, 1, nav_button);
-			nav_button.addClickHandler(new ClickHandler() {
+			final Hyperlink nav_link = new Hyperlink(category.get("label1").toString(), "");
+			categoryFlexTable.setWidget(i, 1, nav_link);
+			nav_link.addClickHandler(new ClickHandler() {
 
 				@Override
 				public void onClick(ClickEvent event) {
-					Window.alert("hello " + nav_button.getText());
+					Window.alert("hello " + nav_link.getText());
 				}
 			});
 
-			nav_button.addStyleName("button_category");
+			nav_link.addStyleName("button_category");
 		}
 
-		nav_panel.add(categoryFlexTable);
+		stackPanel.add(categoryFlexTable, "Nos Categories");
+		stackPanel.add(nos_promo, "Nos promotions");
+		stackPanel.add(nos_contact, "Contactez nous");
+
+		nav_panel.add(stackPanel);
 
 	}
+	
+	
+	private Widget createProductForm() {
+	    // Create a table to layout the form options
+	    FlexTable layout = new FlexTable();
+	    layout.setCellSpacing(6);
+	    layout.setWidth("200px");
+	    FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
+
+	    // Add a title to the form
+	    layout.setHTML(0, 0, "Pizza Hawaienne");
+	    cellFormatter.setColSpan(0, 0, 2);
+	    cellFormatter.setHorizontalAlignment(
+	        0, 0, HasHorizontalAlignment.ALIGN_CENTER);
+	    
+	    Image productImg = new Image();
+	    productImg.setUrl("http://www.google.com/images/logo.gif");
+	    
+	    productImg.addStyleName("productImg");
+ 
+	    layout.setWidget(1, 0, productImg);
+	    cellFormatter.setColSpan(1, 0, 2);
+	    cellFormatter.setHorizontalAlignment(
+	        1, 0, HasHorizontalAlignment.ALIGN_CENTER);
+	    
+	    // Add some standard form options
+	    layout.setHTML(2, 0, "Prix");
+	    layout.setWidget(2, 1, new Label("100 MAD"));
+	    layout.setHTML(3, 0, "Promotion");
+	    layout.setWidget(3, 1, new Label("99 MAD"));
+
+	    // Wrap the contents in a DecoratorPanel
+	    DecoratorPanel decPanel = new DecoratorPanel();
+	    decPanel.setWidget(layout);
+	    return decPanel;
+	  }
+	
+	/*
+	private Widget createProductForm() {
+	    // Create a table to layout the form options
+	    FlexTable layout = new FlexTable();
+	    layout.setCellSpacing(6);
+	    layout.setWidth("300px");
+	    FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
+
+	    // Add a title to the form
+	    layout.setHTML(0, 0, "Saisissez Vos critère de recherche");
+	    cellFormatter.setColSpan(0, 0, 2);
+	    cellFormatter.setHorizontalAlignment(
+	        0, 0, HasHorizontalAlignment.ALIGN_CENTER);
+
+	    // Add some standard form options
+	    layout.setHTML(1, 0, "Nom");
+	    layout.setWidget(1, 1, new TextBox());
+	    layout.setHTML(2, 0, "Description");
+	    layout.setWidget(2, 1, new TextBox());
+
+	    // Create some advanced options
+	    HorizontalPanel genderPanel = new HorizontalPanel();
+	    
+	    String[] genderOptions = {"Masculin", "Feminin"};
+	    for (int i = 0; i < genderOptions.length; i++) {
+	      genderPanel.add(new RadioButton("gender", genderOptions[i]));
+	    }
+	    Grid advancedOptions = new Grid(2, 2);
+	    advancedOptions.setCellSpacing(6);
+	    advancedOptions.setHTML(0, 0, "Lieu");
+	    advancedOptions.setWidget(0, 1, new TextBox());
+	    advancedOptions.setHTML(1, 0, "Sex");
+	    advancedOptions.setWidget(1, 1, genderPanel);
+
+	    // Add advanced options to form in a disclosure panel
+	    DisclosurePanel advancedDisclosure = new DisclosurePanel(
+	        "Critères avances");
+	    advancedDisclosure.setAnimationEnabled(true);
+	    advancedDisclosure.ensureDebugId("cwDisclosurePanel");
+	    advancedDisclosure.setContent(advancedOptions);
+	    layout.setWidget(3, 0, advancedDisclosure);
+	    cellFormatter.setColSpan(3, 0, 2);
+
+	    // Wrap the contents in a DecoratorPanel
+	    DecoratorPanel decPanel = new DecoratorPanel();
+	    decPanel.setWidget(layout);
+	    return decPanel;
+	  }*/
+
+	
 
 }
