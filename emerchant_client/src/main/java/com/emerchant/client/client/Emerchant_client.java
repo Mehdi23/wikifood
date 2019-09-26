@@ -19,22 +19,18 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.StackPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -47,7 +43,8 @@ public class Emerchant_client implements EntryPoint {
 
 	// Layout components
 	private DockLayoutPanel main_panel = new DockLayoutPanel(Unit.EM);
-	private VerticalPanel content_panel = new VerticalPanel();
+	private ScrollPanel content_panel = new ScrollPanel();
+	//private VerticalPanel content_panel = new VerticalPanel();
 	private VerticalPanel nav_panel = new VerticalPanel();
 
 	
@@ -71,7 +68,7 @@ public class Emerchant_client implements EntryPoint {
 
 	public void parseData() {
 
-		String JSON_URL = "http://localhost:8080/wikifood/rest/merchant?id=2";
+		String JSON_URL = "http://localhost:8080/wikifood/rest/merchant?id=1";
 		String url = URL.encode(JSON_URL);
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 		builder.setHeader("Content-Type", "application/json");
@@ -159,7 +156,7 @@ public class Emerchant_client implements EntryPoint {
 							product = (JSONObject) productlist.get(k);
 							//final Label product_label = new Label(product.get("label1").toString());
 							//galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k+2, product_label);
-							galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k+1, createProductForm());		
+							galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k+1, createProductForm(product));		
 						}
 
 					}
@@ -213,7 +210,7 @@ public class Emerchant_client implements EntryPoint {
 	}
 	
 	
-	private Widget createProductForm() {
+	private Widget createProductForm(JSONObject product) {
 	    // Create a table to layout the form options
 	    FlexTable layout = new FlexTable();
 	    layout.setCellSpacing(6);
@@ -221,7 +218,7 @@ public class Emerchant_client implements EntryPoint {
 	    FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
 
 	    // Add a title to the form
-	    layout.setHTML(0, 0, "Pizza Hawaienne");
+	    layout.setHTML(0, 0, product.get("label1").toString());
 	    cellFormatter.setColSpan(0, 0, 2);
 	    cellFormatter.setHorizontalAlignment(
 	        0, 0, HasHorizontalAlignment.ALIGN_CENTER);
@@ -238,9 +235,9 @@ public class Emerchant_client implements EntryPoint {
 	    
 	    // Add some standard form options
 	    layout.setHTML(2, 0, "Prix");
-	    layout.setWidget(2, 1, new Label("100 MAD"));
+	    layout.setWidget(2, 1, new Label(product.get("price").toString()+" "+product.get("currency").toString() ));
 	    layout.setHTML(3, 0, "Promotion");
-	    layout.setWidget(3, 1, new Label("99 MAD"));
+	    layout.setWidget(3, 1, new Label(product.get("promo_price").toString()+" "+product.get("currency").toString()));
 
 	    // Wrap the contents in a DecoratorPanel
 	    DecoratorPanel decPanel = new DecoratorPanel();
