@@ -12,13 +12,16 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
@@ -44,31 +47,27 @@ public class Emerchant_client implements EntryPoint {
 	// Layout components
 	private DockLayoutPanel main_panel = new DockLayoutPanel(Unit.EM);
 	private ScrollPanel content_panel = new ScrollPanel();
-	//private VerticalPanel content_panel = new VerticalPanel();
+	// private VerticalPanel content_panel = new VerticalPanel();
 	private VerticalPanel nav_panel = new VerticalPanel();
 
-	
-	
-	
 	public void onModuleLoad() {
 
-		Button submit = new Button("JSON");
-		submit.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				parseData();
-			}
-		});
-
-		RootPanel.get("stockList").add(submit);
+		/*
+		 * Button submit = new Button("JSON"); submit.addClickHandler(new ClickHandler()
+		 * {
+		 * 
+		 * @Override public void onClick(ClickEvent event) { parseData(); } });
+		 * 
+		 * RootPanel.get("stockList").add(submit);
+		 */
+		parseData();
 
 		// LoadMainPage();
 	}
 
 	public void parseData() {
 
-		String JSON_URL = "http://localhost:8080/wikifood/rest/merchant?id=1";
+		String JSON_URL = "http://localhost:8080/wikifood/rest/merchant?id=2";
 		String url = URL.encode(JSON_URL);
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 		builder.setHeader("Content-Type", "application/json");
@@ -122,10 +121,6 @@ public class Emerchant_client implements EntryPoint {
 
 	}
 
-	public static <T extends JavaScriptObject> T parseJson(String jsonStr) {
-		return JsonUtils.safeEval(jsonStr);
-	}
-
 	private void LoadContentPanel() {
 
 		JSONArray categorylist = (JSONArray) merchant.get("categorylist");
@@ -154,9 +149,9 @@ public class Emerchant_client implements EntryPoint {
 					if (productlist.size() > 0) {
 						for (int k = 0; k < productlist.size(); k++) {
 							product = (JSONObject) productlist.get(k);
-							//final Label product_label = new Label(product.get("label1").toString());
-							//galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k+2, product_label);
-							galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k+1, createProductForm(product));		
+							// final Label product_label = new Label(product.get("label1").toString());
+							// galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k+2, product_label);
+							galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k + 1, createProductForm(product));
 						}
 
 					}
@@ -171,129 +166,162 @@ public class Emerchant_client implements EntryPoint {
 
 	@SuppressWarnings("deprecation")
 	private void LoadNavPanel() {
-		Label category_label = new Label("Nos Categories");
-		category_label.addStyleName("category_label");
 
 		FlexTable categoryFlexTable = new FlexTable();
 
-		nav_panel.add(category_label);
-
 		JSONArray categorylist = (JSONArray) merchant.get("categorylist");
 		JSONObject category;
-
-		Label nos_promo = new Label("Nos promotions");
-		Label nos_contact = new Label("Contactez nous");
+		JSONArray productTypelist;
+		JSONObject productType;
 
 		StackPanel stackPanel = new StackPanel();
 
 		for (int i = 0; i < categorylist.size(); i++) {
 			category = (JSONObject) categorylist.get(i);
-			final Hyperlink nav_link = new Hyperlink(category.get("label1").toString(), "");
-			categoryFlexTable.setWidget(i, 1, nav_link);
-			nav_link.addClickHandler(new ClickHandler() {
-
-				@Override
-				public void onClick(ClickEvent event) {
-					Window.alert("hello " + nav_link.getText());
+			VerticalPanel filtersPanel = new VerticalPanel();
+			filtersPanel.setSpacing(4);
+			/*
+			 * final Hyperlink nav_link = new
+			 * Hyperlink(category.get("label1").toString().replaceAll("\"", ""), "");
+			 * categoryFlexTable.setWidget(i, 1, nav_link);
+			 * stackPanel.add(categoryFlexTable,
+			 * category.get("label1").toString().replaceAll("\"", ""));
+			 * nav_link.addClickHandler(new ClickHandler() {
+			 * 
+			 * @Override public void onClick(ClickEvent event) { Window.alert("hello " +
+			 * nav_link.getText()); } });
+			 * 
+			 * nav_link.addStyleName("button_category");
+			 */
+			productTypelist = (JSONArray) category.get("productTypelist");
+			if (productTypelist.size() > 0) {
+				for (int j = 0; j < productTypelist.size(); j++) {
+					productType = (JSONObject) productTypelist.get(j);
+					filtersPanel.add(new CheckBox(productType.get("label1").toString().replaceAll("\"", "")));
 				}
-			});
+			}
 
-			nav_link.addStyleName("button_category");
+			stackPanel.add(filtersPanel, category.get("label1").toString().replaceAll("\"", ""));
+
 		}
-
-		stackPanel.add(categoryFlexTable, "Nos Categories");
-		stackPanel.add(nos_promo, "Nos promotions");
-		stackPanel.add(nos_contact, "Contactez nous");
 
 		nav_panel.add(stackPanel);
 
 	}
-	
-	
+
 	private Widget createProductForm(JSONObject product) {
-	    // Create a table to layout the form options
-	    FlexTable layout = new FlexTable();
-	    layout.setCellSpacing(6);
-	    layout.setWidth("200px");
-	    FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
+		// Create a table to layout the form options
+		FlexTable layout = new FlexTable();
+		layout.setCellSpacing(6);
+		layout.setWidth("250px");
+		FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
 
-	    // Add a title to the form
-	    layout.setHTML(0, 0, product.get("label1").toString());
-	    cellFormatter.setColSpan(0, 0, 2);
-	    cellFormatter.setHorizontalAlignment(
-	        0, 0, HasHorizontalAlignment.ALIGN_CENTER);
-	    
-	    Image productImg = new Image();
-	    productImg.setUrl("http://www.google.com/images/logo.gif");
-	    
-	    productImg.addStyleName("productImg");
- 
-	    layout.setWidget(1, 0, productImg);
-	    cellFormatter.setColSpan(1, 0, 2);
-	    cellFormatter.setHorizontalAlignment(
-	        1, 0, HasHorizontalAlignment.ALIGN_CENTER);
-	    
-	    // Add some standard form options
-	    layout.setHTML(2, 0, "Prix");
-	    layout.setWidget(2, 1, new Label(product.get("price").toString()+" "+product.get("currency").toString() ));
-	    layout.setHTML(3, 0, "Promotion");
-	    layout.setWidget(3, 1, new Label(product.get("promo_price").toString()+" "+product.get("currency").toString()));
+		// Add a title to the form
+		layout.setHTML(0, 0, "<b>" + product.get("label1").toString().replaceAll("\"", "") + "</b>");
+		cellFormatter.setColSpan(0, 0, 3);
+		cellFormatter.setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_CENTER);
 
-	    // Wrap the contents in a DecoratorPanel
-	    DecoratorPanel decPanel = new DecoratorPanel();
-	    decPanel.setWidget(layout);
-	    return decPanel;
-	  }
-	
-	/*
-	private Widget createProductForm() {
-	    // Create a table to layout the form options
-	    FlexTable layout = new FlexTable();
-	    layout.setCellSpacing(6);
-	    layout.setWidth("300px");
-	    FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
+		Image productImg = new Image("data:image/png;base64," + product.get("img").toString().replaceAll("\"", ""));
+		productImg.addStyleName("productImg");
 
-	    // Add a title to the form
-	    layout.setHTML(0, 0, "Saisissez Vos critÃ¨re de recherche");
-	    cellFormatter.setColSpan(0, 0, 2);
-	    cellFormatter.setHorizontalAlignment(
-	        0, 0, HasHorizontalAlignment.ALIGN_CENTER);
+		layout.setWidget(1, 0, productImg);
+		cellFormatter.setColSpan(1, 0, 3);
+		cellFormatter.setHorizontalAlignment(1, 0, HasHorizontalAlignment.ALIGN_CENTER);
 
-	    // Add some standard form options
-	    layout.setHTML(1, 0, "Nom");
-	    layout.setWidget(1, 1, new TextBox());
-	    layout.setHTML(2, 0, "Description");
-	    layout.setWidget(2, 1, new TextBox());
+		// Add some standard form options
+		layout.setHTML(2, 0, "<b>Prix   :</b>");
+		layout.setWidget(2, 1, new Label(
+				product.get("price").toString() + " " + product.get("currency").toString().replaceAll("\"", "")));
+		layout.setWidget(2, 2, new Label(
+				product.get("promo_price").toString() + " " + product.get("currency").toString().replaceAll("\"", "")));
 
-	    // Create some advanced options
-	    HorizontalPanel genderPanel = new HorizontalPanel();
-	    
-	    String[] genderOptions = {"Masculin", "Feminin"};
-	    for (int i = 0; i < genderOptions.length; i++) {
-	      genderPanel.add(new RadioButton("gender", genderOptions[i]));
-	    }
-	    Grid advancedOptions = new Grid(2, 2);
-	    advancedOptions.setCellSpacing(6);
-	    advancedOptions.setHTML(0, 0, "Lieu");
-	    advancedOptions.setWidget(0, 1, new TextBox());
-	    advancedOptions.setHTML(1, 0, "Sex");
-	    advancedOptions.setWidget(1, 1, genderPanel);
+		// Create the dialog box
+		final DialogBox dialogBox = detailDialogBox(product);
+		dialogBox.setGlassEnabled(true);
+		dialogBox.setAnimationEnabled(true);
+		Button detailButton = new Button("<image src='img/loupe.png' width='20px' height='20px'>  Details</image>",
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						dialogBox.center();
+						dialogBox.show();
+					}
+				});
 
-	    // Add advanced options to form in a disclosure panel
-	    DisclosurePanel advancedDisclosure = new DisclosurePanel(
-	        "CritÃ¨res avances");
-	    advancedDisclosure.setAnimationEnabled(true);
-	    advancedDisclosure.ensureDebugId("cwDisclosurePanel");
-	    advancedDisclosure.setContent(advancedOptions);
-	    layout.setWidget(3, 0, advancedDisclosure);
-	    cellFormatter.setColSpan(3, 0, 2);
+		Button buyButton = new Button(
+				"<image src='img/add_panier.png' width='20px' height='20px'>  Ajouter au panier</image>",
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						Window.alert("Hello");
+					}
+				});
 
-	    // Wrap the contents in a DecoratorPanel
-	    DecoratorPanel decPanel = new DecoratorPanel();
-	    decPanel.setWidget(layout);
-	    return decPanel;
-	  }*/
+		layout.setWidget(3, 0, detailButton);
+		cellFormatter.setColSpan(3, 1, 2);
+		layout.setWidget(3, 1, buyButton);
 
-	
+		// Wrap the contents in a DecoratorPanel
+		DecoratorPanel decPanel = new DecoratorPanel();
+		decPanel.setWidget(layout);
+		return decPanel;
+	}
+
+	private DialogBox detailDialogBox(JSONObject product) {
+		// Create a dialog box and set the caption text
+		final DialogBox dialogBox = new DialogBox();
+		dialogBox.ensureDebugId("cwDialogBox");
+		dialogBox.setText("Details du produit");
+
+		// Create a table to layout the content
+		VerticalPanel dialogContents = new VerticalPanel();
+		dialogContents.setSpacing(4);
+		dialogBox.setWidget(dialogContents);
+
+		// Add some text to the top of the dialog
+		// HTML details = new HTML("Details du produit");
+		// dialogContents.add(details);
+		// dialogContents.setCellHorizontalAlignment(details,
+		// HasHorizontalAlignment.ALIGN_CENTER);
+
+		FlexTable layout = new FlexTable();
+		layout.setCellSpacing(6);
+		layout.setWidth("400px");
+		FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
+
+		layout.setHTML(2, 0, "<b>Code barre :</b>");
+		layout.setWidget(2, 1, new Label(product.get("cab").toString().replaceAll("\"", "")));
+		layout.setHTML(3, 0, "<b>Description :</b>");
+		layout.setWidget(3, 1, new Label(product.get("desc1").toString().replaceAll("\"", "")));
+		layout.setHTML(4, 0, "<b>Unité de vente :</b>");
+		layout.setWidget(4, 1, new Label(product.get("unit").toString().replaceAll("\"", "")));
+		layout.setHTML(5, 0, "<b>Disponibilité en stock :</b>");
+		layout.setWidget(5, 1, new Label(product.get("available").toString().replaceAll("\"", "")));
+		layout.setHTML(6, 0, "<b>Quantité en stock :</b>");
+		layout.setWidget(6, 1, new Label(product.get("items_number").toString().replaceAll("\"", "")));
+		layout.setHTML(7, 0, "<b>Disponibilité en promotion :</b>");
+		layout.setWidget(7, 1, new Label(product.get("promotion").toString().replaceAll("\"", "")));
+		layout.setHTML(8, 0, "<b>Date de fin de promotion :</b>");
+		layout.setWidget(8, 1, new Label(product.get("promo_expiryDate").toString().replaceAll("\"", "")));
+		layout.setHTML(9, 0, "<b>Marque :</b>");
+		layout.setWidget(9, 1, new Label(product.get("brand").toString().replaceAll("\"", "")));
+
+		dialogContents.add(layout);
+
+		// Add a close button at the bottom of the dialog
+		Button closeButton = new Button("Fermer", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				dialogBox.hide();
+			}
+		});
+		dialogContents.add(closeButton);
+		if (LocaleInfo.getCurrentLocale().isRTL()) {
+			dialogContents.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_LEFT);
+
+		} else {
+			dialogContents.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
+		}
+
+		// Return the dialog box
+		return dialogBox;
+	}
 
 }

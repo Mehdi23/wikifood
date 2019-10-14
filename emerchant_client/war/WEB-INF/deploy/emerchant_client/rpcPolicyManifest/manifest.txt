@@ -1,3 +1,2 @@
 # Module emerchant_client
 # RPC service class, partial path of RPC policy file
-com.emerchant.client.client.GreetingService, A40708A33B3B373850A54D9D4338BA62.gwt.rpc

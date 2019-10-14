@@ -1,2 +1,0 @@
-serviceClass: com.emerchant.client.client.GreetingService
-path: A40708A33B3B373850A54D9D4338BA62.gwt.rpc

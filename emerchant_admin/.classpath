@@ -19,5 +19,22 @@
 	<classpathentry kind="src" path="/wikifood-dao"/>
 	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
 	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
+	<classpathentry kind="lib" path="C:/Users/malaoui/.p2/pool/plugins/com.gwtplugins.gwt.eclipse.sdkbundle.gwt27_2.7.0.201710131939/gwt-2.7.0/gwt-user.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/malaoui/.p2/pool/plugins/com.gwtplugins.gwt.eclipse.sdkbundle.gwt27_2.7.0.201710131939/gwt-2.7.0/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/malaoui/.p2/pool/plugins/com.gwtplugins.gwt.eclipse.sdkbundle.gwt27_2.7.0.201710131939/gwt-2.7.0/gwt-codeserver.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/malaoui/.p2/pool/plugins/com.gwtplugins.gwt.eclipse.sdkbundle.gwt27_2.7.0.201710131939/gwt-2.7.0/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/malaoui/.p2/pool/plugins/com.gwtplugins.gwt.eclipse.sdkbundle.gwt27_2.7.0.201710131939/gwt-2.7.0/gwt-dev.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/malaoui/.p2/pool/plugins/com.gwtplugins.gwt.eclipse.sdkbundle.gwt27_2.7.0.201710131939/gwt-2.7.0/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/malaoui/.p2/pool/plugins/com.gwtplugins.gwt.eclipse.sdkbundle.gwt27_2.7.0.201710131939/gwt-2.7.0/validation-api-1.0.0.GA-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/malaoui/.p2/pool/plugins/com.gwtplugins.gwt.eclipse.sdkbundle.gwt27_2.7.0.201710131939/gwt-2.7.0/validation-api-1.0.0.GA.jar" sourcepath="C:/Users/malaoui/.p2/pool/plugins/com.gwtplugins.gwt.eclipse.sdkbundle.gwt27_2.7.0.201710131939/gwt-2.7.0/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
