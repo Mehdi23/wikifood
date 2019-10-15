@@ -1,11 +1,16 @@
 package com.emerchant.client.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -14,6 +19,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -25,6 +31,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
+import com.websystique.spring.model.Brand;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -43,6 +50,14 @@ import com.google.gwt.user.client.ui.Widget;
 public class Emerchant_client implements EntryPoint {
 	private String json_response;
 	private JSONObject merchant;
+	private JSONArray categorylist;
+	private JSONObject category;
+	private JSONArray productTypelist;
+	private JSONObject productType;
+	private JSONArray productlist;
+	private JSONObject product;
+	private List<JSONObject> selectedproductlist;
+	private String[] unckeckedproducttypes;
 
 	// Layout components
 	private DockLayoutPanel main_panel = new DockLayoutPanel(Unit.EM);
@@ -51,18 +66,8 @@ public class Emerchant_client implements EntryPoint {
 	private VerticalPanel nav_panel = new VerticalPanel();
 
 	public void onModuleLoad() {
-
-		/*
-		 * Button submit = new Button("JSON"); submit.addClickHandler(new ClickHandler()
-		 * {
-		 * 
-		 * @Override public void onClick(ClickEvent event) { parseData(); } });
-		 * 
-		 * RootPanel.get("stockList").add(submit);
-		 */
 		parseData();
 
-		// LoadMainPage();
 	}
 
 	public void parseData() {
@@ -122,82 +127,50 @@ public class Emerchant_client implements EntryPoint {
 	}
 
 	private void LoadContentPanel() {
+		int i = 1;
+		int j = 1;
 
-		JSONArray categorylist = (JSONArray) merchant.get("categorylist");
-		JSONObject category;
-		JSONArray productTypelist;
-		JSONObject productType;
-		JSONArray productlist;
-		JSONObject product;
 		FlexTable galeryFlexTable = new FlexTable();
+		selectedproductlist = getSelectedProductlist();
 
-		for (int i = 0; i < categorylist.size(); i++) {
-			category = (JSONObject) categorylist.get(i);
-			final Label category_label = new Label(category.get("label1").toString());
-			productTypelist = (JSONArray) category.get("productTypelist");
-
-			galeryFlexTable.setWidget(i * 12, 0, category_label);
-
-			if (productTypelist.size() > 0) {
-				for (int j = 0; j < productTypelist.size(); j++) {
-					productType = (JSONObject) productTypelist.get(j);
-					final Label productType_label = new Label(productType.get("label1").toString());
-					galeryFlexTable.setWidget(i * 12 + 2 * j + 1, 1, productType_label);
-
-					productlist = (JSONArray) productType.get("productlist");
-
-					if (productlist.size() > 0) {
-						for (int k = 0; k < productlist.size(); k++) {
-							product = (JSONObject) productlist.get(k);
-							// final Label product_label = new Label(product.get("label1").toString());
-							// galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k+2, product_label);
-							galeryFlexTable.setWidget(i * 12 + 2 * j + 2, k + 1, createProductForm(product));
-						}
-
-					}
-
-				}
-
+		for (JSONObject product : selectedproductlist) {
+			if (j > 3) {
+				j = 1;
+				i++;
 			}
+				
+			galeryFlexTable.setWidget(i, j, createProductForm(product));
+			
+			j++;
+
 		}
+
 		content_panel.add(galeryFlexTable);
 
 	}
 
-	@SuppressWarnings("deprecation")
 	private void LoadNavPanel() {
-
-		FlexTable categoryFlexTable = new FlexTable();
-
-		JSONArray categorylist = (JSONArray) merchant.get("categorylist");
-		JSONObject category;
-		JSONArray productTypelist;
-		JSONObject productType;
-
+		categorylist = (JSONArray) merchant.get("categorylist");
 		StackPanel stackPanel = new StackPanel();
 
 		for (int i = 0; i < categorylist.size(); i++) {
 			category = (JSONObject) categorylist.get(i);
 			VerticalPanel filtersPanel = new VerticalPanel();
 			filtersPanel.setSpacing(4);
-			/*
-			 * final Hyperlink nav_link = new
-			 * Hyperlink(category.get("label1").toString().replaceAll("\"", ""), "");
-			 * categoryFlexTable.setWidget(i, 1, nav_link);
-			 * stackPanel.add(categoryFlexTable,
-			 * category.get("label1").toString().replaceAll("\"", ""));
-			 * nav_link.addClickHandler(new ClickHandler() {
-			 * 
-			 * @Override public void onClick(ClickEvent event) { Window.alert("hello " +
-			 * nav_link.getText()); } });
-			 * 
-			 * nav_link.addStyleName("button_category");
-			 */
+
 			productTypelist = (JSONArray) category.get("productTypelist");
 			if (productTypelist.size() > 0) {
 				for (int j = 0; j < productTypelist.size(); j++) {
 					productType = (JSONObject) productTypelist.get(j);
-					filtersPanel.add(new CheckBox(productType.get("label1").toString().replaceAll("\"", "")));
+					final CheckBox checkbox = new CheckBox(productType.get("label1").toString().replaceAll("\"", ""));
+					checkbox.getElement().setId("producttype-" + i + "-" + j);
+					filtersPanel.add(checkbox);
+					checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+						@Override
+						public void onValueChange(ValueChangeEvent<Boolean> event) {
+							Window.alert(checkbox.getElement().getId());
+						}
+					});
 				}
 			}
 
@@ -322,6 +295,33 @@ public class Emerchant_client implements EntryPoint {
 
 		// Return the dialog box
 		return dialogBox;
+	}
+
+	private List<JSONObject> getSelectedProductlist() {
+		List<JSONObject> list = new ArrayList<JSONObject>();
+		categorylist = (JSONArray) merchant.get("categorylist");
+
+		for (int i = 0; i < categorylist.size(); i++) {
+			category = (JSONObject) categorylist.get(i);
+			productTypelist = (JSONArray) category.get("productTypelist");
+
+			if (productTypelist.size() > 0) {
+				for (int j = 0; j < productTypelist.size(); j++) {
+					productType = (JSONObject) productTypelist.get(j);
+					productlist = (JSONArray) productType.get("productlist");
+					if (productlist.size() > 0) {
+						for (int k = 0; k < productlist.size(); k++) {
+							product = (JSONObject) productlist.get(k);
+							list.add(product);
+						}
+
+					}
+				}
+			}
+		}
+
+		return list;
+
 	}
 
 }
