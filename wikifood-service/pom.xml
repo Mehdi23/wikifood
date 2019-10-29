@@ -82,7 +82,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<jersey2.version>2.14</jersey2.version>
-		<jackson.version>2.3.2</jackson.version>
+		<jackson.version>2.10.0</jackson.version>
 		<jaxrs.version>2.0.1</jaxrs.version>
 	</properties>
 </project>
