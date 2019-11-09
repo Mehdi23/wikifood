@@ -6,12 +6,38 @@
 
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet"
+	href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<link type="text/css" rel="stylesheet" href="Emerchant_client.css" />
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript"
+	src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<style>
+/*this block should go in the styles.css file*/
+.ui-panel-inner {
+	padding: 0px; /*make the buttons flush edge to edge*/
+}
 
-<!--                                                               -->
-<!-- Consider inlining CSS to reduce the number of requested files -->
-<!--                                                               -->
-<link type="text/css" rel="stylesheet" href="Emerchant_client.css">
+.ui-controlgroup {
+	margin: 0; /*make the buttons flush to the top*/
+}
+
+#header {
+	height: 54px;
+}
+
+#bars-button {
+	margin: 7px;
+}
+
+#stack_panel {
+	position: relative;
+	top: 100px;
+	left: 0px;
+}
+</style>
 
 <!--                                           -->
 <!-- Any title is fine                         -->
@@ -33,14 +59,36 @@
 <!-- to create a completely dynamic UI.        -->
 <!--                                           -->
 <body>
-	<div id="stockList"></div>
-	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
-		style="position: absolute; width: 0; height: 0; border: 0"></iframe>
-	<noscript>
-		<div
-			style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
-			Your web browser must have JavaScript enabled in order for this
-			application to display correctly.</div>
-	</noscript>
+
+	<div data-role="page" id="home">
+
+		<div data-role="panel" id="navpanel" data-display="push"
+			data-position="left" data-position-fixed="true">
+			<div data-role="controlgroup" data-corners="false" id="nav_panel">
+				<div id="stack_panel"></div>
+
+			</div>
+		</div>
+
+		<div id="header" data-role="header" data-position="fixed">
+			<a id="bars-button" data-icon="bars" class="ui-btn-left"
+				style="margin-top: 10px;" href="#navpanel">Menu</a> 
+		</div>
+		<div data-role="content" id="content-div">
+			<div id="product-div"></div>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#" data-icon="home">Acceuil</a></li>
+					<li><a href="#" data-icon="grid" class="ui-btn-active">Produits</a></li>
+					<li><a href="#" data-icon="shop">Mon Panier</a></li>
+					<li><a href="#" data-icon="location">Nous contacter"</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

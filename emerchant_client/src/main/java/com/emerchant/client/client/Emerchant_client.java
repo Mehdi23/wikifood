@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsonUtils;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -19,7 +17,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -28,16 +25,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
-import com.websystique.spring.model.Brand;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.StackPanel;
@@ -57,10 +49,9 @@ public class Emerchant_client implements EntryPoint {
 	private JSONArray productlist;
 	private JSONObject product;
 	private List<JSONObject> selectedproductlist;
-	private String[] unckeckedproducttypes;
+	private List<String> selectedproducttypes = new ArrayList<String>();
+	private List<JSONObject> monPanier = new ArrayList<JSONObject>();
 
-	// Layout components
-	private DockLayoutPanel main_panel = new DockLayoutPanel(Unit.EM);
 	private ScrollPanel content_panel = new ScrollPanel();
 	// private VerticalPanel content_panel = new VerticalPanel();
 	private VerticalPanel nav_panel = new VerticalPanel();
@@ -113,13 +104,15 @@ public class Emerchant_client implements EntryPoint {
 		// Content panel load
 		LoadContentPanel();
 
-		main_panel.addNorth(new HTML("header"), 10);
-		main_panel.addSouth(new HTML("footer"), 2);
-		main_panel.addWest(nav_panel, 15);
-		main_panel.add(content_panel);
+		// main_panel.addNorth(new HTML("header"), 10);
+		// main_panel.addSouth(new HTML("footer"), 2);
+		// main_panel.addWest(nav_panel, 15);
+		// main_panel.add(content_panel);
 
 		// Associate the Main panel with the HTML host page.
-		RootLayoutPanel.get().add(main_panel);
+		// RootLayoutPanel.get().add(main_panel);
+		RootPanel.get("product-div").add(content_panel);
+		RootPanel.get("stack_panel").add(nav_panel);
 
 		nav_panel.addStyleName("nav_panel");
 		content_panel.addStyleName("content_panel");
@@ -127,6 +120,9 @@ public class Emerchant_client implements EntryPoint {
 	}
 
 	private void LoadContentPanel() {
+		int content_panel_size = RootPanel.get("product-div").getOffsetWidth();
+		int content_panel_columns_number = content_panel_size / 270;
+
 		int i = 1;
 		int j = 1;
 
@@ -134,13 +130,39 @@ public class Emerchant_client implements EntryPoint {
 		selectedproductlist = getSelectedProductlist();
 
 		for (JSONObject product : selectedproductlist) {
-			if (j > 3) {
+			if (j > content_panel_columns_number) {
 				j = 1;
 				i++;
 			}
-				
+
 			galeryFlexTable.setWidget(i, j, createProductForm(product));
-			
+
+			j++;
+
+		}
+		selectedproducttypes.clear();
+		content_panel.add(galeryFlexTable);
+
+	}
+
+	private void refrechContentPanel() {
+		content_panel.clear();
+		int content_panel_size = RootPanel.get("product-div").getOffsetWidth();
+		int content_panel_columns_number = content_panel_size / 270;
+		int i = 1;
+		int j = 1;
+
+		FlexTable galeryFlexTable = new FlexTable();
+		selectedproductlist = getSelectedProductlist();
+
+		for (JSONObject product : selectedproductlist) {
+			if (j > content_panel_columns_number) {
+				j = 1;
+				i++;
+			}
+
+			galeryFlexTable.setWidget(i, j, createProductForm(product));
+
 			j++;
 
 		}
@@ -163,12 +185,20 @@ public class Emerchant_client implements EntryPoint {
 				for (int j = 0; j < productTypelist.size(); j++) {
 					productType = (JSONObject) productTypelist.get(j);
 					final CheckBox checkbox = new CheckBox(productType.get("label1").toString().replaceAll("\"", ""));
-					checkbox.getElement().setId("producttype-" + i + "-" + j);
+					checkbox.getElement().setId(productType.get("id").toString().replaceAll("\"", ""));
+					selectedproducttypes.add(checkbox.getElement().getId());
 					filtersPanel.add(checkbox);
 					checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 						@Override
 						public void onValueChange(ValueChangeEvent<Boolean> event) {
-							Window.alert(checkbox.getElement().getId());
+							if (event.getValue()) {
+								selectedproducttypes.add(checkbox.getElement().getId());
+								refrechContentPanel();
+							} else {
+								selectedproducttypes.remove(checkbox.getElement().getId());
+								refrechContentPanel();
+							}
+
 						}
 					});
 				}
@@ -177,7 +207,7 @@ public class Emerchant_client implements EntryPoint {
 			stackPanel.add(filtersPanel, category.get("label1").toString().replaceAll("\"", ""));
 
 		}
-
+		stackPanel.setWidth("200px");
 		nav_panel.add(stackPanel);
 
 	}
@@ -186,7 +216,7 @@ public class Emerchant_client implements EntryPoint {
 		// Create a table to layout the form options
 		FlexTable layout = new FlexTable();
 		layout.setCellSpacing(6);
-		layout.setWidth("250px");
+		layout.setWidth("270px");
 		FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
 
 		// Add a title to the form
@@ -196,6 +226,8 @@ public class Emerchant_client implements EntryPoint {
 
 		Image productImg = new Image("data:image/png;base64," + product.get("img").toString().replaceAll("\"", ""));
 		productImg.addStyleName("productImg");
+
+		productImg.setHeight("200px");
 
 		layout.setWidget(1, 0, productImg);
 		cellFormatter.setColSpan(1, 0, 3);
@@ -224,10 +256,12 @@ public class Emerchant_client implements EntryPoint {
 				"<image src='img/add_panier.png' width='20px' height='20px'>  Ajouter au panier</image>",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						Window.alert("Hello");
+						Widget sender = (Widget) event.getSource();
+						Window.alert(getSelectedProductById(sender.getElement().getId()).get("label1").toString()
+								.replaceAll("\"", ""));
 					}
 				});
-
+		buyButton.getElement().setId(product.get("id").toString().replaceAll("\"", ""));
 		layout.setWidget(3, 0, detailButton);
 		cellFormatter.setColSpan(3, 1, 2);
 		layout.setWidget(3, 1, buyButton);
@@ -258,8 +292,6 @@ public class Emerchant_client implements EntryPoint {
 		FlexTable layout = new FlexTable();
 		layout.setCellSpacing(6);
 		layout.setWidth("400px");
-		FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
-
 		layout.setHTML(2, 0, "<b>Code barre :</b>");
 		layout.setWidget(2, 1, new Label(product.get("cab").toString().replaceAll("\"", "")));
 		layout.setHTML(3, 0, "<b>Description :</b>");
@@ -309,7 +341,9 @@ public class Emerchant_client implements EntryPoint {
 				for (int j = 0; j < productTypelist.size(); j++) {
 					productType = (JSONObject) productTypelist.get(j);
 					productlist = (JSONArray) productType.get("productlist");
-					if (productlist.size() > 0) {
+					if (productlist.size() > 0
+							&& selectedproducttypes.contains(productType.get("id").toString().replaceAll("\"", ""))) {
+						// if (productlist.size() > 0) {
 						for (int k = 0; k < productlist.size(); k++) {
 							product = (JSONObject) productlist.get(k);
 							list.add(product);
@@ -321,6 +355,18 @@ public class Emerchant_client implements EntryPoint {
 		}
 
 		return list;
+
+	}
+
+	private JSONObject getSelectedProductById(String id) {
+		for (JSONObject product : selectedproductlist) {
+			if (id.equals(product.get("id").toString().replaceAll("\"", ""))) {
+				return product;
+			}
+
+		}
+
+		return null;
 
 	}
 
