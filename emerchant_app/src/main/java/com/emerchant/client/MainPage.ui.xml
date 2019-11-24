@@ -19,6 +19,7 @@
 	}
 	
 	.table {
+		width: 1000px;
 		margin: 0 auto;
 	}
 	
@@ -33,7 +34,6 @@
 	}
 	</ui:style>
 
-
 	<jqm:JQMPage containerId="testPage1" backButton="false"
 		contentCentered="true" contentHeightPercent="98.0"
 		contentAddStyleNames="jqm4gwt-scrollable-page-content {style.contentBorder}">
@@ -47,8 +47,9 @@
 			<t:widget>
 				<g:FlowPanel ui:field="headerPanel1"
 					addStyleNames="{style.headerPanelLeft}">
-					<b:JQMButton ui:field="headerButton" text="Menu" href="#testView1Panel"
-						inline="true" mini="true" builtInIcon="BULLETS"/>
+					<b:JQMButton ui:field="headerButton" text="Menu"
+						href="#testView1Panel" inline="true" mini="true"
+						builtInIcon="BULLETS" />
 				</g:FlowPanel>
 			</t:widget>
 		</t:JQMHeader>
@@ -69,14 +70,12 @@
 			<t:widget>
 				<t:JQMNavBar iconPos="LEFT">
 					<t:button>
-						<b:JQMButton builtInIcon="BULLETS"
-							href="#testView1Panel" transition="NONE" text="Menu"
-							ui:field="menuButton" mini="true" />
+						<b:JQMButton builtInIcon="HOME" transition="NONE"
+							text="Acceuil" ui:field="mainButton" mini="true" />
 					</t:button>
 					<t:button>
-						<b:JQMButton builtInIcon="SHOP" href="searchRooms"
-							transition="NONE" text="Mon Panier" ui:field="shopButton"
-							mini="true" />
+						<b:JQMButton builtInIcon="SHOP" transition="NONE"
+							text="Mon Panier" ui:field="panierButton" mini="true" />
 					</t:button>
 					<t:button>
 						<b:JQMButton builtInIcon="MAIL" href="actions"
